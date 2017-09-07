@@ -1,0 +1,55 @@
+/*邮件设置&短信配置*/
+.emailConfigContent{
+    margin-top: 100px;
+    margin-left: 35%;
+    width:450px;
+    height: 240px;
+    text-align: center;
+    line-height: 30px;
+    border:solid 1px #000000;
+}
+
+.noteConfigContent{
+    width:450px;
+    height: 150px;
+    margin:150px auto;
+    text-align: center;
+    line-height: 30px;
+    border:solid 1px #000000;
+}
+
+.email_note_Config_title{
+    font-size: 16px;
+    height: 30px;
+    background-color: #343434;
+    color:white;
+    font-family: "Microsoft YaHei";
+    margin-bottom: 10px;
+}
+.email_note_Config_title img{
+    float: right;
+    margin-top: 1px;
+    margin-right: 1px;
+}
+.email_note_Config_left{
+    float: left;
+    width:30%;
+    text-align: right;
+}
+
+.email_note_Config_right{
+    float: left;
+    width:65%;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.email_note_Config_right input{
+    height: 26px;
+    margin-bottom: 10px;
+}
+
+.email_note_Config_bottom span{
+    font-size: 14px;
+    margin:0 15px;
+}

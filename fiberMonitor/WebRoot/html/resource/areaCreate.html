@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>新增区域</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName">
+            <p>区域名称</p>
+            <p>区域描述</p>
+        </div>
+        <div class="funcCoff">
+            <input type="text" id="CreateareaName"/>
+            <textarea name="" id="areaDescription" cols="24" rows="5"></textarea>
+
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li id="confirm">确定</li>          <!--添加确定对应事件-->
+                <li id="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $("#cancel").click(function(){
+    	 $(".contentDiv").html("");
+         $(".sidebarDiv").html("");
+    });
+    $("#confirm").click(function(){
+    	var areaName=document.getElementById("CreateareaName").value;
+    	var areaDescription=document.getElementById("areaDescription").value;
+    	 $(".sidebarDiv").html("");
+    	$.ajax({
+  			type : "post",
+  			async : false,  //异步请求 先执行后续操作，再执行sucess
+  			url : "area/addArea",
+  			dataType:"json",
+  			data : {
+  				      'areaName':areaName,
+  				      'areaDescription':areaDescription
+  				    },
+  			success: function(json){
+		    	var txt="";
+		    	if(json[0].status){
+		    		txt+="新增区域成功<br/>"
+		    	}
+		    	else{
+		    		txt+="增加失败，请重试";
+		    	}
+			     var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+								ListArea();//重新刷新表格
+							}
+						}
+				  window.wxc.xcConfirm(txt, "info", option);
+		      },
+		    error:function(XMLHttpRequest,Error,F,data)
+		      {
+		    	    var txt="新建区域失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限<br/>";
+		    	     }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+		  }
+		}); 
+    });
+</script>
+</body>
+</html>

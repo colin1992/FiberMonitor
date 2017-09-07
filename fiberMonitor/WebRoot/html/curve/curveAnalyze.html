@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Pragma" content="no-cache"><!-- http 1.0 -->
+	<meta http-equiv="Cache-Control" content="no-cache"><!-- http 1.1 -->
+     <script src="../../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../css/xcConfirm.css" type="text/css"/>
+    <script src="../../js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="../../css/eventListTable.css" type="text/css">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+    <style>
+      .hoverBGround{
+          background-color: #caffff;;
+      }
+    </style>
+    <script>
+    /**曲线查看范围内禁止系统右键**/
+        /**曲线区域范围内禁止系统右键，使用自定义右键**/
+        $(document).ready(function(){
+        	 $(".curveAnalyzeContent").bind("contextmenu",function(e){
+        	     e.preventDefault();
+        	  	  return false;   
+        	 });
+        	 /**给菜单按键添加阴影**/
+        	 $(".curveMenu").hover( 
+        		function () { 
+        		    $(this).addClass("hoverBGround"); 
+        		}, 
+        		function () { 
+        			$(this).removeClass("hoverBGround"); 
+        	});
+      })
+      
+ </script>
+</head>
+<body>
+    <div class="curveAnalyzeContent">
+        <div class="curveRightArea">
+            	 <div class="curveAnalyzeFunction" style="width:500px; margin: 10px auto;cursor:pointer">
+                        <span class="curveMenu" id="addEvent">新增事件</span>
+                        <span class="curveMenu" id="saveAsRefrence" style="margin-left:50px">设为参考曲线</span>
+                        <span class="curveMenu" id="openRefrence" style="margin-left:50px">打开参考曲线</span>
+               </div>
+              <div id="printArea">
+               <div class="setEventPara" id="eventPara">
+               </div>
+              <!-- 曲线显示区域 -->  
+              <div id='curveAndAxisPointer'> 
+              <!-- 曲线 -->
+              			<div id="curveDisplayArea" class="curveDisplayArea" ></div>
+              <!-- 游标 -->
+              			<div id='axisPointer' style="float:left;margin-left:40px;width:80%;position:absolute">
+              			   <hr id='lineA'   class="lineA" ><!-- 先把标线隐藏，不然看起来的效果是 -->
+              			   <hr id='lineB'  class="lineB">
+              			</div>
+              </div>
+              <!-- 测试参数显示-->
+               <div id="paraDisplayArea" class="paraDisplayArea" >
+                   <div class="areaTitle">--测量参数
+                   </div>
+                   <div class="curvePara">
+                       <span>量程:</span>
+                       <span id='P11'></span>
+                        <span >m</span>
+                   </div>
+                   <div class="curvePara">
+                       <span>脉宽:</span>
+                       <span id='P12'></span>
+                       <span>ns</span>
+                   </div>
+                    <div class="curvePara">
+                       <span>花费时间:</span>
+                       <span id='costTime'></span>
+                       <span> s</span>
+                   </div>
+                   <div class="curvePara">
+                       <span>波长:</span>
+                       <span id='P13'></span>
+                       <span>nm</span>
+                   </div>
+                   <div class="curvePara">
+                       <span>测量模式:</span>
+                       <span id='testMode'></span>
+                   </div>
+                   <div class="curvePara">
+                       <span>测量方式:</span>
+                       <span id='testWay'></span>
+                   </div>
+                    <div class="curvePara">
+                       <span>折射率:</span>
+                       <span id='P15'></span>
+                   </div>
+                    <div class="curvePara">
+                       <span>非反射门限:</span>
+                       <span id='P16'></span>
+                       <span>dB</span>
+                   </div>
+                   <div class="curvePara">
+                       <span>结束门限:</span>
+                       <span id='P17'></span>
+                       <span>dB</span>
+                   </div>
+               </div>  
+               
+               <!------- 测量结果------- -->          
+           <div id="resultDisplayArea" class="resultDisplayArea" >
+			    <div class="areaTitle">--测量结果
+			    </div>
+			    <div class="curvePara">
+			        <span>链长:</span>
+			        <span id='chainLength'></span>
+			         <span>m</span>
+			    </div>
+			    <div class="curvePara">
+			        <span>链损耗:</span>
+			        <span id='chainLoss'></span>
+			        <span>dB</span>
+			    </div>
+			     <div class="curvePara">
+			        <span>链衰减系数:</span>
+			        <span  id='chainLossIndex'></span>
+			         <span>dB/km</span>
+			    </div>
+			    <div class="curvePara">
+			        <span>AB距离:</span>
+			        <span id='ABGraps'></span>
+			        <span>m</span>
+			    </div>
+			    <div class="curvePara">
+			        <span>AB衰减:</span>
+			        <span id='ABAtten'></span>
+			        <span>dB</span>
+			    </div>
+			    <div class="curvePara">
+			        <span>AB衰减系数:</span>
+			        <span id='ABAttenIndex'></span>
+			         <span>dB/km</span>
+			    </div>
+			     <div class="curvePara">
+			        <span id='AorB'>A点衰减:</span>
+			        <span id='attenValue'></span>
+			         <span>dB</span>
+			    </div>
+			    <div class="curvePara">
+			        <span>测量日期:</span>
+			        <span id='testTime'></span>
+			    </div>
+		</div>           
+    <div style="float:left">
+         事件点列表
+    </div>
+    <div id="refrenceLabel" hidden="true" style="float:left;margin-left:39%">
+           参考事件列表
+    </div>
+    <div class="eventListArea">
+   
+     <table class="eventListTable" id="eventListTable">
+                <thead>
+                <tr>                                
+                <th width="3%">序号</th> 
+                <th width="5%">事件类型</th>                
+                <th width="5%">位置[m]</th> 
+                <th width="8%">插入损耗[dB]</th>
+   				<th width="8%">回波损耗[dB]</th>
+   				<th width="10%">衰减系数[dB/km]</th>
+                <th width="8%">累计损耗[dB]</th>  
+                <th id='exTH0' width="5%"></th>     
+                <th id='exTH1' width="3%"></th> 
+                <th id='exTH2' width="5%"></th>                
+                <th id='exTH3' width="5%"></th> 
+                <th id='exTH4' width="8%"></th>
+   				<th id='exTH5' width="8%"></th>
+   				<th id='exTH6' width="10%"></th>
+                <th id='exTH7' width="8%"></th>            
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                </tr>
+                <tr>
+                </tbody>
+            </table>
+     </div>
+    </div> 
+  </div>
+</div>  
+     <script src="../../js/draggabilly.js"></script>
+     <script src="../../js/theme/theme.js"></script>
+     <script src="../../js/echarts.js"></script>
+     <script src="../../js/curveAnalyze.js"></script> 
+</body>
+</html>

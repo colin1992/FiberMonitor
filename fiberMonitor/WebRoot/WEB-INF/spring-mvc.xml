@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/task 
+    http://www.springframework.org/schema/task/spring-task-4.0.xsd     
+    http://www.springframework.org/schema/aop 
+     http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+     http://www.springframework.org/schema/mvc
+     http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+     
+<!-- 扫描包 -->
+ <context:component-scan base-package="fiberMonitor"></context:component-scan>
+<!--配置定期获取光功率数据的bean-->
+	<bean id="PeriodGetOpticalListener" class="fiberMonitor.bean.PeriodGetOpticalListener">
+	</bean>
+	<!--配置一个触发器 配置触发器的参数-->
+	<bean id="scheduledTimerTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+	<property name="timerTask" ref="PeriodGetOpticalListener"></property>   <!--制定触发的类-->
+	      <property name="delay" value="2400000"></property>           <!--第一次启动延迟时间-->
+	      <property name="period" value="21600000"></property>          <!--间隔触发时间一小时-->
+	</bean>
+	<!-- 总调度,用于启动定时器 -->
+	<bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+	<property name="scheduledTimerTasks">
+	<list>
+	<ref bean="scheduledTimerTask"/>
+	</list>
+	</property>
+	</bean>   
+</beans>

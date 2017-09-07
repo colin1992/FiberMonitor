@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../../js/addEvent.js"></script>
+        <script src="js/inputLimit.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../css/sidebar.css" type="text/css">
+    <style>
+        .eventPara span{
+            width: 120px;
+			padding: 5px;
+			text-align: right;
+        }
+        .eventPara input{
+            width: 155px;
+		}
+		.overlay {   
+		            height:100%;
+		            width:100%;
+				    position: absolute;   
+				    top: 0px;   
+				    left: 0px;   
+				    z-index: 10002;   
+				    display:none;   
+				    filter:alpha(opacity=60);   
+				    background-color: #777;   
+				    opacity: 0.5;   
+				    -moz-opacity: 0.5;   
+        }
+		.sidebar{
+		   height:30%;
+		   margin-top:200px;
+		   z-index:10003
+		}
+        
+    </style>
+</head>
+<body>
+ <div class="overlay"></div>
+   <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>新增事件点</span>
+            <span class="closeEventCon"><img src="../../images/close.png" alt="close"/></span>
+        </div>
+       <div class="eventPara">
+          <p>
+             <label for="type"><span>事件类型</span></label>
+            <input type="text" name="type" id='type'/>
+          </p>
+           <p>
+             <label for="startSite"><span>开始位置</span></label>
+            <input type="text" readonly="readonly"  name="startSite" id="startSite"/>m
+          </p>
+          <p>
+             <label for="endSite"><span>结束位置</span></label>
+             <input type="text" readonly="readonly" id="endSite" id="endSite"/>m
+          </p>
+        </div>
+        <div class="funcConfirm" style="margin-top:10px">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+   </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style>
+		
+		.sidebar span {
+			width: 120px;
+			padding: 5px;
+			text-align: right;
+		}
+		
+		.sidebar select {
+			width: 155px;
+		}
+		.sidebar input {
+			width: 155px;
+		}
+		
+	</style>
+
+</head>
+
+<body>
+    <div class="overlay"></div><!-- 遮盖层 -->
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle">
+				<span>修改告警经验</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="topForm">
+			     <p>
+					<label for=""><span>经验标识:</span></label>
+					<input  id="bankId" style="width: 150px; height: 20px;" readonly />
+				</p>
+				<p>
+					<label for=""><span>告警来源:</span></label>
+					<select  id="sourceAdd" style="width: 150px; height: 20px;">
+					    <option value="点名测试">点名测试</option>
+						<option value="周期测试">周期测试</option>
+						<option value="障碍告警测试">障碍告警测试</option>
+					</select>
+				</p>
+				<p>
+					<label for=""><span>告警类型:</span></label>
+					<select id="typeAdd" style="width: 150px; height: 20px;">
+					    <option value="ODTR告警">ODTR告警</option>
+						<option value="光功率告警">光功率告警</option>
+				   </select>
+				</p>
+				<p>
+					<label for=""><span>告警原因:</span></label>
+					<select id="reasonAdd" style="width: 150px; height: 20px;">
+					    <option value="备纤断纤">备纤断纤</option>
+					    <option value="业务纤断纤">业务纤断纤</option>
+						<option value="OTDR曲线异常">OTDR曲线异常</option>
+						<option value="光功率一级告警">光功率一级告警</option>
+						<option value="光功率二级告警">光功率二级告警</option>
+						<option value="光功率三级告警">光功率三级告警</option>
+						<option value="光功率四级告警">光功率四级告警</option>
+				   </select>
+				</p>
+				<p>  
+                    <label for="handleExper"><span>处理经验:</span></label>     
+                    <textarea id="handleExper" name="handleExper" cols="20" rows="5"></textarea>
+               </p>
+			</div>
+			
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="confirm">确定</li>
+					<li class="cancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+	var trs = document.querySelectorAll("#warningBankTableDetail tbody tr");
+	for (var i = 0; i < trs.length; i++) {
+		if ($(trs[i]).hasClass("currtr")) {
+			$("#bankId").val(trs[i].children[1].innerHTML);
+			$("#sourceAdd").val(trs[i].children[2].innerHTML);
+			$("#typeAdd").val(trs[i].children[3].innerHTML);
+			$("#reasonAdd").val(trs[i].children[4].innerHTML);
+			$("#handleExper").val(trs[i].children[5].innerHTML);
+			i=trs.length;
+		}
+	} 
+	
+	 $(".cancel").click(function(){
+		 $(".sidebarDiv").html("");
+	 })
+	 $(".sidebar_close").click(function(){
+		 $(".sidebarDiv").html("");
+	 })
+	 /**确认**/
+	  $(".confirm").click(function(){
+		  $.ajax({
+				url:'alarm/modifyAlarmBank',
+			    type:'post', //数据发送方式
+			    dataType:'json', //接受数据格式
+			    async: false,
+			    data:{
+			    	   "id":$("#bankId").val(),
+			    	   "type":$("#typeAdd").val(),
+			    	   "source":$("#sourceAdd").val(),
+			    	   "reason":$("#reasonAdd").val(),
+			    	   "experience":$("#handleExper").val(),
+			     },
+			     success: function(json){
+			    	var txt="";
+			    	if(json[0].status){
+			    		$(".sidebarDiv").html("");
+			    		getAllWarnExperience();
+			    	    txt="修改成功。"; 
+			    	}
+			    	else{
+			    		 txt="修改失败，请稍后重试。";   
+			    	}
+			    	var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+							}
+						}
+				    window.wxc.xcConfirm(txt, "info", option);
+			     },
+			     error:function(XMLHttpRequest,Error)
+			      {
+			    	    var txt="修改失败。失败原因：";
+			    	    if(XMLHttpRequest.status==401){
+			    	    	 txt+="您不具有当前操作的权限，请联系管理员取得权限。";
+			    	    }
+			    	    else{
+			    	    	 txt+="网络错误<br/>";
+					    	 txt+="状态码："+XMLHttpRequest.status;
+			    	    }
+			    	   
+			    	    var option={
+			    	   					title: "提示",
+			    	   					btn: parseInt("0001",2),
+			    	   					onOk: function(){//点击确认的执行方法
+			    	   						
+			    	  			       }
+			    	   				}
+			    	   	window.wxc.xcConfirm(txt, "info", option);
+			  }
+		});
+	  })
+	  
+    </script>
+</body>
+
+</html>

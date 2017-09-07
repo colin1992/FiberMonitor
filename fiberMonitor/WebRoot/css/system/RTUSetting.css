@@ -1,0 +1,139 @@
+@CHARSET "UTF-8";
+ .controlContent{
+          width:98%;
+          margin-left:1%;
+          margin-top:20px;
+       }
+       .leftTree{
+          width:15%;
+          float:left;
+          height:660px;
+          border-top-left-radius: 8px;
+		  border-top-right-radius: 8px;
+		  overflow:auto;
+        }
+        .mapDiv{
+            width:83%;
+            float:right;
+        }
+        #controlMapArea{
+            margin-top:0px;
+            width: 100%;
+            height:100%;
+			float:right;
+            overflow: hidden;
+            font-family:"微软雅黑";
+        }
+       .rightArea{
+          width:80%;
+          float:right;
+          display:none;/**--进入页面时先显示地图--*/
+        }
+		.error {
+			color: red;
+			text-align: right;
+			margin-right: 10px;
+		}
+		.rightArea .title{
+		 	background-color: #343434;
+		    height: 30px;
+		    margin-bottom:20px;
+		    line-height: 30px;
+		    font-size: 16px;
+		    color:white;
+		    font-family: "Microsoft YaHei";
+		    border-top-left-radius: 8px;
+		    border-top-right-radius: 8px;
+		
+		}
+		.content span {
+			width:35%;
+			padding: 5px;
+			text-align:right;
+			margin-right:5px;
+			margin-top:15px;
+		}
+		
+		 .content select {
+			width:55%;
+			margin-top:15px;
+			height:25px;
+		}
+		 .content input {
+			width:55%;
+			margin-top:15px;
+			height:25px;
+		}
+		.rightArea #alarmArea{
+		    height:270px;
+		    float:left;
+		    width:30%;
+		    border:solid 1px #000000;
+		    border-top-left-radius: 8px;
+		    border-top-right-radius: 8px;
+		}
+		.rightArea #timeArea{
+		    height:270px;
+		    float:left;
+		    margin-left:4%;
+		    width:30%;
+		    border:solid 1px #000000;
+		    border-top-left-radius: 8px;
+		    border-top-right-radius: 8px;
+		}
+		.rightArea #ipArea{
+		    height:270px;
+		    float:left;
+		    margin-left:4%;
+		    width:30%;
+		    border:solid 1px #000000;
+		    border-top-left-radius: 8px;
+		    border-top-right-radius: 8px;
+		}
+		.rightArea #moudleArea{
+		    margin-top:40px;
+		    float:left;
+		    margin-left:20%;
+		    width:60%;
+		    border:solid 1px #000000;
+		    border-top-left-radius: 8px;
+		    border-top-right-radius: 8px;
+		    overflow:auto;
+		}
+	   .content .setMenu{
+			    margin-top:60px;
+			    cursor:pointer;
+			    text-align:center;
+			 }
+	   .moudleContent{
+		        width:100%;
+		        margin-top:0;
+			 }
+	   .moudleContent .setMenu{
+			    margin-top:60px;
+			    cursor:pointer;
+			    text-align:center;
+			 }
+	   .moudleContent table>tbody>tr>td{
+			    text-align: center;
+			    border:solid 1px white;
+			    height: 25px;
+			    background-color:#f3f3f3;
+			    text-overflow: ellipsis;
+			    white-space: nowrap;
+			    overflow: hidden;
+			}
+		.moudleContent table>thead>tr>th{
+			    text-align: center;
+			    vertical-align:middle;
+			    color:white;
+			    height: 30px;
+			    background-color:#7b7b7b;
+			    text-overflow: ellipsis;
+			}
+	 	.moudleContent table{
+			    width: 98%;
+			    cursor:default;
+			    margin-left:1%;
+			    margin-top:2px;
+		 }

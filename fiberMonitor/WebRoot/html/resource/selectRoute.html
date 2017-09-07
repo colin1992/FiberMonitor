@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" type="text/css" href="../../css/jquery.multiselect.css" />
+<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+<link rel="stylesheet" type="text/css" href="../../css/prettify.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/routeMultiList.css" />
+<script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../../js/json2.js"></script>
+<script type="text/javascript" src="../../js/jquery-ui.js"></script>
+<script type="text/javascript" src="../../js/prettify.js"></script>
+<script type="text/javascript" src="../../js/jquery.multiselect.js"></script>
+<script type="text/javascript" src="../../js/selectRoute.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#routeListSelect").multiselect({
+		noneSelectedText: "请选择",
+        checkAllText: "全选",
+        uncheckAllText: '全不选',
+        selectedList:0, 
+	});
+});
+</script>
+
+</head>
+<body>
+  <div class="sidebarContent">
+		<div class="sidebar" >
+        	<div class="sidebarTitle">
+	            <span>选择光路</span>
+	            <span class="sidebar_close"><img src="../../images/close.png" alt="close"/></span>
+        	</div>
+            <div style="margin-left:20px;margin-top:20px"> 系统根据您设置的路线，计算出以下光路.<br/>请选择光路并设定基本信息</div>
+            <div class="routeLi" style="width:90%; height:90%; margin-left:5%; margin-top:20px; position:relative;">
+	              <select title="routeLi" multiple="multiple" id="routeListSelect" size="4" style="position:relative;" >
+				 </select>
+            </div>
+         <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li  class="confirm">提交</li>
+               
+            </ul>
+        </div>
+    </div>
+    
+</div>
+<div class="sidebarRouteDiv" style="display: none;"></div>
+</body>
+</html>

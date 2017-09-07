@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <!-- http 1.0 -->
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <!-- http 1.1 -->
+	<script src="js/jquery.validate.js"></script>
+	<script src="js/additional-methods.js"></script>
+	<script src="js/system/RTUSetting.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/system/RTUSetting.css" type="text/css">
+	<style>
+		#menu {
+			height: 100%;
+			overflow-y: auto
+		}
+		
+		td {
+			font-size: 14px
+		}
+		
+		h4 {
+			margin: 0;
+		}
+		
+		.mapDiv {
+			width: 83%;
+			float: right;
+		}
+		
+		#controlMapArea {
+			margin-top: 0px;
+			width: 100%;
+			height: 100%;
+			float: right;
+			overflow: hidden;
+			font-family: "微软雅黑";
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="controlContent">
+		<div class="leftTree">
+			<div id="leftTree"></div>
+		</div>
+		<div class="mapDiv" style="height:680px;">
+			<div id="controlMapArea">
+				<iframe width="98.5%" height="100%" src="html/system/systemMap.html"></iframe>
+			</div>
+		</div>
+		<!-- 切换RTU -->
+		<div class="rightArea" id="switchRtu" style="display:none">
+		     <div class="controlSubarea" id="ipArea">
+				<div class="title">设置/获取RTU地址</div>
+				<div class="content">
+					<form class="switchNetForm">
+						<label for="submask"><span>子网掩码</span></label>
+						<input type="text" id="switchSubmask" name="submask" />
+						<label for="gateWay"><span>网关</span></label>
+						<input type="text" id="switchGateWay" name="gateWay" />
+						<label for="ipv4"><span>IP地址</span></label>
+						<input type="text" id="switchIpv4" name="ipv4" />
+						<div class="setMenu" style="margin-top:30px;">
+							<span class="spanbutton" id="setSwitchRtuIp">更新IP地址</span>
+							<span class="spanbutton" id="getSwitchRtuIp">获取RTU地址</span>
+							<span class="spanbutton" id="restartSwitchRtu">重启RTU</span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- 普通 RTU -->
+		<div class="rightArea" id="mainRtu" style="display:none">
+			<div class="controlSubarea" id="alarmArea">
+				<div class="title">RTU告警参数设置</div>
+				<div class="content">
+					<label for="currentAlarmWay"><span>当前告警方式</span></label>
+					<input type="text" id="currentAlarmWay" readonly>
+					<label for="alarmWay"><span>告警方式</span></label>
+					<select id="alarmWay"></select>
+					<div class="setMenu">
+						<span class="spanbutton" id="setAlarmWay">更新告警方式</span>
+					</div>
+				</div>
+			</div>
+			<div class="controlSubarea" id="timeArea">
+				<div class="title">设置/获取RTU时间</div>
+				<div class="content">
+					<label for="currentTime"><span>当前系统时间</span></label>
+					<input type="text" readonly id="currentTime" name="currentTime" />
+					<label for="rtuTime"><span>RTU时间</span></label>
+					<input type="text" id="rtuTime" readonly name="rtuTime" />
+					<div class="setMenu">
+						<span class="spanbutton" id="setRtuTime">更新RTU时间</span>
+						<span class="spanbutton" id="getRtuTime">获取RTU时间</span>
+					</div>
+				</div>
+			</div>
+			<div class="controlSubarea" id="ipArea">
+				<div class="title">设置/获取RTU地址</div>
+				<div class="content">
+					<form class="netForm">
+						<label for="submask"><span>子网掩码</span></label>
+						<input type="text" id="submask" name="submask" />
+						<label for="gateWay"><span>网关</span></label>
+						<input type="text" id="gateWay" name="gateWay" />
+						<label for="ipv4"><span>IP地址</span></label>
+						<input type="text" id="ipv4" name="ipv4" />
+						<div class="setMenu" style="margin-top:30px;">
+							<span class="spanbutton" id="setRtuIp">更新IP地址</span>
+							<span class="spanbutton" id="getRtuIp">获取RTU地址</span>
+							<span class="spanbutton" id="restartRtu">重启RTU</span>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="controlSubarea" id="moudleArea">
+				<div class="title" style="margin-bottom:0px;">RTU硬件模块信息</div>
+				<div class="moudleContent">
+					<table id="moudleTable">
+						<thead>
+							<tr>
+								<th>模块序号</th>
+								<th>模块类型</th>
+								<th>端口数</th>
+								<th>使用状态</th>
+								<th>使用端口数</th>
+								<th>建立日期</th>
+							</tr>
+						</thead>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+					<div class="setMenu"  style="margin-top:10px"><span class="spanbutton" id="getMoudleInfo">获取RTU模块信息</span></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+</html>

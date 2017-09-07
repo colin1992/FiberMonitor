@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="js/inputLimit.js" type="text/javascript"></script>
+<meta charset="UTF-8">
+<style>
+ .sidebar{
+     margin-top:80px;
+     height:260px;
+   }
+  .date{
+    cursor:pointer;
+  }
+  .datePara{
+     display:none;
+  }
+  #operatorPara span{
+      padding-left:15px;
+      width:85px;
+      float:left;
+      text-align:right;
+  }
+  #operatorPara input{
+      width:150px;
+      padding-left:10px;
+      margin-left:10px;
+  }
+  #setAsDate{
+     width:40px  !important;
+  }
+  #weekSet{
+        height:34px;
+        cursor:default;
+        margin-top:6px;
+        margin-bottom:6px;
+        line-height:38px;
+        margin-left:5px;
+        border:1px solid #b9b9b9;
+   }
+   .weekCheck {
+      width:15px !important;
+      float:left;
+   }
+   .weekSapn{
+        width:30px !important;
+        padding-left:5px !important;
+   }
+</style>
+<script>
+  
+    //全局变量，值班员Id
+    var operatorId="";
+    /**页面载入后设置页面信息***/
+    $(document).ready(function(){
+    	var trs = document.querySelectorAll("#operatorTableDetail tbody tr"); 
+    	var name="";
+        for (var i=0;i<trs.length;i++){
+            if($(trs[i]).hasClass("currtr")){
+            	name = trs[i].children[2].innerHTML;
+            	operatorId = trs[i].children[1].innerHTML;
+            	i=trs.length;
+            }
+        }
+        $("#operatorName").val(name);
+        /***点击取消键**/
+        $(".cancel").click(function(){
+        	$(".contentDiv").html("");
+        	$(".sidebar").html("");
+        })
+         /***点击关闭键**/
+        $(".sidebar_close").click(function(){
+        	$(".contentDiv").html("");
+        	$(".sidebar").html("");
+        })
+        /***点击确定键**/
+        $(".confirm").click(function(){
+        	var dutys=[];
+        	 $(".weekCheck").each(function(){
+        		 if($(this).is(':checked')) {
+        			 dutys.push(parseInt($(this).val()));
+        		}
+        	  });
+        	 console.log(dutys);
+        	 $.ajax({
+       			type : "post",
+       			async : false,  //异步请求 先执行后续操作，再执行sucess
+       			url : "operator/setDuty",
+       			dataType:"json",
+       			data : {
+     					 "operatorId":operatorId,
+     					 "dutys":JSON.stringify(dutys),
+     			},
+       			success:function(json){  				
+       				   if(json.status)
+       					 {
+       					  var txt="您已成功设定值班表。";
+       					  var option={
+       			   					title: "提示",
+       			   					btn: parseInt("0001",2),
+       			   					onOk: function(){//点击确认的执行方法
+       			   						
+       			  			       }
+       			   				}
+       			   		  window.wxc.xcConfirm(txt, "info", option);
+		       					$(".contentDiv").html("");
+		       		        	$(".sidebar").html("");
+       					 }  
+       				   else{
+       					 var txt="设置值班表失败，请重试。";
+       					 var option={
+       			   					title: "提示",
+       			   					btn: parseInt("0001",2),
+       			   					onOk: function(){//点击确认的执行方法
+       			   						
+       			  			       }
+       			   				}
+       			   		  window.wxc.xcConfirm(txt, "info", option);
+       				   }
+       					  
+       			},
+       		  	error:function(XMLHttpRequest,Error){
+		  		    var txt="设置失败，";
+		  			txt+="失败原因：";
+		  			if(XMLHttpRequest.status==401){
+		  			    txt+="您不具有当前操作的权限。";
+		  			}
+		  			else{
+		  			    	txt+="网络错误，";
+		  			    	txt+="状态码："+XMLHttpRequest.status;
+		  			   }
+		  			 var option={
+		  			    	   		title: "提示",
+		  			    	   		btn: parseInt("0001",2),
+		  			    	   		onOk: function(){//点击确认的执行方法
+		  			    	   						
+		  			    	  		}
+		  			  }
+		  			  window.wxc.xcConfirm(txt, "info", option);
+		  	}
+       		});
+        	
+        }) 
+    })
+
+</script>
+</head>
+<body>
+   <div class="contentDiv" id="contentDiv">
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>设置值班信息</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div id="operatorPara">
+            <p><label for="operatorName"><span>值班人员:</span></label>
+             <input type="text" id="operatorName" name="operatorName" readonly="readonly"/>
+            </p>
+             <p class="weekPara">
+                <label for=""><span>值班时间:</span></label>
+                      <input type="checkbox" class="weekCheck" value=1></input> <span class="weekSapn">周一</span>
+                      <input type="checkbox" class="weekCheck" value=2></input><span class="weekSapn">周二</span>
+                      <input type="checkbox" class="weekCheck" value=3></input><span class="weekSapn">周三</span>
+                      <br/>
+                      <input type="checkbox" class="weekCheck" value=4 style="margin-left:50px"></input><span class="weekSapn">周四</span>
+                      <input type="checkbox" class="weekCheck" value=5></input><span class="weekSapn">周五</span>
+                      <input type="checkbox" class="weekCheck" value=6></input><span class="weekSapn">周六</span>
+                      <input type="checkbox" class="weekCheck" value=7></input><span class="weekSapn">周天</span>
+            </p>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="spanbutton confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="spanbutton cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

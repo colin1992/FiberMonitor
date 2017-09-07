@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+    <style>
+		 .sidebar{
+		     margin-top:80px;
+		     height:260px;
+		   }
+   </style>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>修改值班人员</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName">
+            <p>姓名</p>
+            <p>邮箱</p>
+            <p>电话号码</p>
+        </div>
+        <div class="funcCoff">
+            <input type="text" id="alterOperatorName" disabled="disabled"/>
+            <input type="text" id="alterOperatorEmail"/>
+            <input type="text" id="alterOperatorTelephone"/>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+	//将原来的信息放到这三个输入框中
+	var trs = document.querySelectorAll("#operatorTableDetail tbody tr");  
+        var operatorId = 0;
+	    var name = "";
+        var oldEmail = "";
+        var oldPhone = "";
+        for (var i=0;i<trs.length;i++){
+            if($(trs[i]).hasClass("currtr")){
+            	operatorId = trs[i].children[1].innerHTML;
+            	name = trs[i].children[2].innerHTML;
+            	oldEmail = trs[i].children[3].innerHTML;
+            	oldPhone = trs[i].children[4].innerHTML;
+            	i=trs.length;
+            }
+        }
+	$("#alterOperatorName").val(name);
+	$("#alterOperatorEmail").val(oldEmail);
+	$("#alterOperatorTelephone").val(oldPhone);
+	
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $(".cancel").click(function(){
+    	 $(".contentDiv").html("");
+         $(".sidebarDiv").html("");
+    });
+    /***检查邮箱格式**/
+    function checkEmail(mail){
+    	var reg=/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+    	return reg.test(mail)
+    }
+    /***检查手机号格式**/
+    function checkPhone(phone){
+    	var reg=/^1\d{10}$/;
+    	return reg.test(phone)
+    }
+    $(".confirm").click(function(){
+    	var name=$("#addOperatorName").val();
+		var mail=$("#alterOperatorEmail").val();
+    	var phone= $("#alterOperatorTelephone").val();
+    	var txt="";
+    	if(name==""){
+    		txt="请输入值班人员姓名。";
+    	}
+    	else if(phone==""){
+    		txt="请输入值班员手机号";
+    	}
+    	else if(mail==""){
+    		txt="请输入值班员邮箱地址";
+    	}
+    	else if(!checkEmail(mail)){
+    		txt="您输入的邮箱地址无效，请输入合法的邮箱地址。";
+    	}
+    	else if(!checkPhone(phone)){
+    		txt="您输入的手机号无效，请输入合法的手机号。";
+    	}
+    	if(txt!=""){
+    		var option={
+        	   		title: "提示",
+        	   		btn: parseInt("0001",2),
+        	   		onOk: function(){//点击确认的执行方法
+        	   						
+        	  		}
+            }
+            window.wxc.xcConfirm(txt, "info", option);
+    	}
+    	else{
+    		$.ajax({
+      			type : "post",
+      			async : false,  //异步请求 先执行后续操作，再执行sucess
+      			url : "operatorAlter",
+      			dataType:"json",
+      			data : {
+    					"operatorId":operatorId,
+    					"alterOperatorEmail":$("#alterOperatorEmail").val(),
+    					"alterOperatorTelephone":$("#alterOperatorTelephone").val(),
+      			},
+      			success:function(data){  				
+      				   if(data==true)
+      					 {
+      					  var txt="修改成功";
+      					  var option={
+      			   					title: "提示",
+      			   					btn: parseInt("0001",2),
+      			   					onOk: function(){//点击确认的执行方法
+      			   						
+      			  			       }
+      			   				}
+      			   		  window.wxc.xcConfirm(txt, "info", option);
+      					   $(".sidebarDiv").html("");
+      					   reloadCurentpage();
+      					 }  
+      				   else{
+      					 var txt="修改失败";
+      					 var option={
+      			   					title: "提示",
+      			   					btn: parseInt("0001",2),
+      			   					onOk: function(){//点击确认的执行方法
+      			   						
+      			  			       }
+      			   				}
+      			   		  window.wxc.xcConfirm(txt, "info", option);
+      				   }
+      					  
+      			},
+      		});
+    	}
+    	
+    });
+</script>
+</body>
+</html>

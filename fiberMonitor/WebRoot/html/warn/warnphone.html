@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+
+	<style>
+		.warnPhoneMain {
+			height: 85%;
+			padding: 10px;
+		}
+		
+		.warnPhoneMain>p>label>span {
+			width: 80px;
+			text-align: center;
+		}
+		
+		.phoneContent {
+			display: inline;
+			width: 50%;
+			min-width: 100px;
+			min-height: 60px;
+			resize: none;
+		}
+		
+		.phoneButtonDiv {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			text-align: center;
+		}
+		
+		.phoneButtonDiv li {
+			display: inline-block;
+			width: 80px;
+			height: 50px;
+			line-height: 50px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar" style="height:350px;margin-top:5%">
+			<div class="sidebarTitle">
+				<span>短信处理</span>
+				<span class="sidebar_close">
+                    <img src="images/close.png" alt="close" width="28" height="28"></span>
+			</div>
+			<div class="warnPhoneMain">
+				<p>
+					<label for="selectUser"><span>值班人员：</span></label>
+					<select id="selectUser">  
+                    </select>
+				</p>
+				<br/>
+				<p>
+					<label for="userPhone"><span>电话号码：</span></label>
+					<input id="userPhone" class="userPhone" type="text" readonly>
+				</p>
+				<br/>
+				<p>
+					<label for="phoneContent"><span>发送内容：</span></label>
+					<textarea id="phoneContent" class="phoneContent" cols="30" rows="5"></textarea>
+				</p>
+			</div>
+			<div class="phoneButtonDiv">
+				<ul class="phoneButton">
+					<li class="handlerSend" id="handlerSend">发送</li>
+					<li class="handlerCancel" id="handlerCancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        $(document).ready(function(){
+            $.ajax({
+                type : "post",
+                async : false,
+                url : "getAllOperatorsSms",
+                dataType: "json",
+                data : null,
+                success: function(data){                     				
+                    var dataInput = [];
+                    var operatorName = data[0];
+                    var operatorEmail = data[1];
+                    for(i=0;i<data[0].length;i++) {
+                        $("#selectUser").append("<option value='" + data[1][i] + "'>" + data[0][i] + "</option>");
+                    }
+                    document.getElementById("userPhone").value = data[1][0];
+                },
+                error:function(XMLHttpRequest,Error,F,data) {
+                   
+                }
+            });
+        });
+
+        $("#selectUser").change(function() {
+        	document.getElementById("userPhone").value = $("#selectUser option:selected").val();
+        });
+
+        $(".sidebar_close").click(function() {
+	        $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+        });
+
+        $(".handlerCancel").click(function() {
+            $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+        });
+
+        $(".handlerSend").click(function() {
+        	var trs = document.querySelectorAll("#warningQueryTableDetail tbody tr");
+        	var alarmId=0;
+            for (var i=0;i<trs.length;i++){
+	       	     if($(trs[i]).hasClass("currtr")){
+	       	    	 alarmId= trs[i].children[1].innerHTML;
+	       	    	 i=trs.length;
+	       	      }
+       	     }
+            $.ajax({
+                type: "post",
+                async: false,
+                url: "alarm/handleAlarm/textMessage",
+                dataType: "json",
+                data: {
+                	"alarmId":alarmId,
+                    "phone": $("#userPhone").val(),
+                    "info": $("#phoneContent").val()
+                },
+                success: function(json) {
+                	$(".sidebarDiv").html("");
+                	var txt="";
+			    	if(json[0].status){
+			    		txt+="处理成功，短信已成功发送至工作人员<br/>"
+			    	}
+			    	else{
+			    		txt+="处理失败，请重试："+json[0].err;
+			    	}
+				     var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									getWarnByRouteId(json[0].routeId);//通过RTU id刷新表格  该方法在warnQuery.js中
+								}
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+			      },
+			    error:function(XMLHttpRequest,Error)
+			      {
+			    	    $(".sidebarDiv").html("");
+			    	    var txt="处理告警失败<br/>";
+			    	    txt+="失败原因：";
+			    	    if(XMLHttpRequest.status==401){
+			    	        txt+="您不具有当前操作的权限<br/>";
+			    	     }
+			    	     else{
+			    	        	txt+="网络错误<br/>";
+			    	        	txt+="状态码："+XMLHttpRequest.status;
+			    	        }
+			    	      var option={
+			    	   					title: "提示",
+			    	   					btn: parseInt("0001",2),
+			    	   					onOk: function(){//点击确认的执行方法
+			    	   						
+			    	  			       }
+			    	   				}
+			    	   	window.wxc.xcConfirm(txt, "info", option);
+			  }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

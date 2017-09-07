@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+     <bean id="logService" class="fiberMonitor.log.LogServiceImpl">
+     	<property name="findService" ref="findService"/> 
+     	<property name="addService" ref="addService"/> 
+     	<property name="deleteService" ref="deleteService"/> 
+     </bean>
+
+     <bean id="Message" class="fiberMonitor.bean.MessageUtil">
+     	<!-- <property name="findService" ref="findService"/>  -->
+     	<property name="addService" ref="addService"/> 
+     	<!-- <property name="deleteService" ref="deleteService"/>  -->
+     </bean>
+	  <bean id="xmlDom" class="fiberMonitor.bean.XmlDom">
+     	<property name="findService" ref="findService"/> 
+     	<property name="addService" ref="addService"/> 
+     	<property name="alterService" ref="alterService"/> 
+     </bean>  
+       <bean id="analysisData" class="fiberMonitor.bean.AnalysisData">
+     	<property name="findService" ref="findService"/> 
+     	<property name="addService" ref="addService"/> 
+     	<property name="alterService" ref="alterService"/> 
+     </bean>
+    <aop:config>
+        <!-- 切入点 -->
+        <!-- 将增加资源这个类中的方法作为切入点 -->
+        <aop:pointcut
+            expression="execution(* serviceImpl.AddServiceImpl.*(..))     
+            			and !execution(* serviceImpl.AddServiceImpl.addLog(..))
+            			and !execution(* serviceImpl.AddServiceImpl.addTopology(..))"
+            id="myPointcut" />
+        <!-- 将删除资源这个类中的方法作为切入点 -->
+        <aop:pointcut
+            expression="execution(* serviceImpl.DeleteServiceImpl.*(..))"
+            id="PointcutDelete" />
+         <!-- 将更改资源中的更改配对组这个方法作为切入点  --> 
+         <aop:pointcut
+            expression="execution(* serviceImpl.AlterServiceImpl.*(..))"
+            id="switch" />
+
+
+
+        <!-- 切面： 将哪个对象中的哪个方法，织入到哪个切入点 -->
+        <!-- 给增加资源添加日志 -->
+        <aop:aspect id="dd" ref="logService">
+            <aop:after-returning method="addResLog" returning="returnObj" pointcut-ref="myPointcut"/>
+        </aop:aspect>
+        <!-- 给删除资源添加日志 -->
+        <aop:aspect id="delete" ref="logService">
+            <aop:before method="deleteResLog" pointcut-ref="PointcutDelete"/>
+        </aop:aspect>
+        <!-- 给切换光路添加日志 -->
+        <aop:aspect id="switchRoute" ref="logService">
+            <aop:before method="switchLog" pointcut-ref="switch"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

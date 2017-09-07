@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/alterPort.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+    <div class="portSidebar">
+        <div class="sidebarTitle">
+            <span>修改端口</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+         <div class="funcName">
+                <p>端口标识</p>
+                <p>端口名称</p>
+                <p>端口描述</p>
+            </div>
+            <div class="funcCoff">
+                <input id="portId" type="text" disabled/>
+          		<input id="portName" type="text" required/>
+                <textarea id="description" cols="24" rows="7"></textarea>
+           </div>
+            
+            <div class="funcConfirm">
+                <ul class="callTestingFunc">
+                    <li class="confirm">确定</li>          
+                    <li class="cancel">取消</li>
+                </ul>
+            </div>
+    </div>
+</div>
+</body>
+</html>

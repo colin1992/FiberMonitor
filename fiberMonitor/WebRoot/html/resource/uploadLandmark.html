@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+.fileLoad
+{
+	position: relative;
+	margin: 0 auto;
+	margin-top:100px;
+	width: 300px;
+	height: 400px;
+	background-color:white;
+	overflow: hidden;
+	z-index: 15;
+}
+#fileFun{
+  position: relative;
+  margin-top:50px;
+  text-align: center;
+}
+#fileForm{
+ position: relative;
+ margin-top:30px;
+ margin-left:30px;
+}
+
+ ._box 
+ { 
+ 	position: relative; 
+ 	float:left;
+ 	margin-left:10px;
+ 	width:90px; 
+ 	height: 37px; 
+ 	border-radius: 5px;
+	background-color: #0067ce; 
+	line-height: 37px; 
+ 	text-align: center; 
+ 	color: white; 
+	cursor: pointer; 
+ 	overflow: hidden; 
+ 	z-index: 1; 
+ } 
+._box input
+{
+    position: absolute;
+	width: 119px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 23px;
+	opacity: 0;
+	filter: "alpha(opacity=0)";
+	filter: alpha(opacity=0);
+	-moz-opacity: 0;
+	left: -5px;
+	top: -2px; 
+	cursor: pointer;
+} 
+._box:hover {
+	color: white;
+	background-color: rgb(34, 85, 153);
+}
+</style>
+</head>
+<body>
+<div class="bgDiv"></div>
+<div class="fileLoad">
+	<form enctype="multipart/form-data" id="fileForm">
+		<div>
+		   <div class="_box">
+				<input name="file" id="file" type="file" accept=".xls" /><span style="cursor:pointer">选择文件</span>
+			</div>
+			 <div id="name" style="margin-left:15px;font-size:18px">
+			 <span id="filename" style="padding-left:15px;padding-top:8px;"></span>
+			 </div>
+			
+		</div>
+	</form> 
+	<br/>
+	<div id="fileFun">
+		  <div class="_box" style="width:60px;margin-left:40px">
+		        <input  id="upload" type="button"/><span style="cursor:pointer">提交</span>
+		  </div>
+		<div class="_box" style="width:60px;margin-left:40px">	
+				<input  id="cancel" type="button"/><span style="cursor:pointer">取消</span>
+		</div>
+	</div>
+</div>
+
+ <script>
+ var vlidate=true;
+ var err="";
+$('#file').change(function(){
+    var file = this.files[0];
+    var name = file.name;
+    var size = file.size;
+    var type = file.type;
+    $("#filename").text(name);
+    if(size>=4194304){//文件大小限制为4MB
+    	err="文件大小超出限制，请选择小于4M的文件。"
+    	vlidate=false;
+    }
+    /**文件不是excel 97-2003**/
+    else if(type!="application/vnd.ms-excel"&&name.split(".")[1]!="xls"){
+    	err="文件格式错误，请选择Excel 97-2003工作薄(后缀名为.xls)。";
+    	vlidate=false;
+    }
+  
+    
+});
+$("#cancel").click(function(){
+	$(".sidebarDiv").html("");
+})
+/**利用FormData上传文件**/
+$('#upload').click(function(){
+	 /**上传文件**/
+	if(vlidate){
+		var formData = new FormData($('form')[0]);
+	    formData.append("cableId",landmarkCableId);//下发光缆ID
+	    $.ajax({
+	        url: 'uploadLandmark',  //server script to process data
+	        type: 'POST',
+	        dataType:'json', //接受数据格式
+	        // Form数据
+	        data:formData,
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+	        //Ajax事件
+	         beforeSend: $.beforeSendHandler,
+	        success: function (json){
+	        	var txt="";
+	        	if(json[0].status){
+	        		$(".sidebarDiv").html("");
+		        	 txt ="上传成功，已成功为当前光缆导入文件中的地标信息。";
+		        	 refreashTable(landmarkCableId);//刷新表格
+	        	}
+	        	else{
+	        		txt="导入失败，失败原因："+json[0].err;
+	        	}
+	        	var option = {
+	        		title: "提示",
+	        		btn: parseInt("0001", 2),
+	        		onOk: function () {//点击确认的执行方法
+	        		}
+	        	}
+	        	window.wxc.xcConfirm(txt, "info", option);	
+	        },
+	        error: function (XMLHttpRequest, Error) {
+				var txt = "导入光缆地标失败，";
+				txt += "失败原因：";
+				if (XMLHttpRequest.status == 401) {
+					txt += "您不具有当前操作的权限";
+				}
+				else {
+					txt += "网络错误,";
+					txt += "状态码：" + XMLHttpRequest.status;
+				}
+				var option = {
+					title: "提示",
+					btn: parseInt("0001", 2),
+					onOk: function () {//点击确认的执行方法
+					}
+				}
+				window.wxc.xcConfirm(txt, "info", option);
+			},
+	    });
+}
+else{
+	var txt ="上传失败，错误原因："+err;
+	var option = {
+		title: "提示",
+		btn: parseInt("0001", 2),
+		onOk: function () {//点击确认的执行方法
+		}
+	}
+	window.wxc.xcConfirm(txt, "info", option);	
+}
+	
+});
+</script>
+
+
+</body>
+</html> 

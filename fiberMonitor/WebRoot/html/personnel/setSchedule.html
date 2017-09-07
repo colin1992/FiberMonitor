@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <link rel="stylesheet" href="css/pickList.css" type="text/css">
+    <script src="js/pickListSchedule.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div  class="sidebarPickList"  style="width:1000px;">
+        <div class="sidebarTitle">
+            <span>值班表设定</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>     
+         <div>
+         	<span>值班日期:</span>
+         	<span id="dateInSetSchedule"></span>
+         </div>               
+         <div id="pickList"></div>               
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+
+$("#dateInSetSchedule").text(week[selectDate]);
+    
+//载入页面的时候自动将值班人员的信息放到左右两个框中    
+    var routeList = [];
+    $.ajax({
+        type : "post",
+        async : false,  //异步请求 先执行后续操作，再执行sucess
+        url : "getAllOperators",
+        dataType:"json",
+        data : {"week":selectDate},
+        success:function(json){
+           if(json.status){
+        	   pick=$("#pickList").pickList({data:json.unDuty,rightData:json.duty}); 
+           }
+           else{
+        	    $(".contentDiv").html("");
+		        $(".sidebarDiv").html("");
+        	    var txt = "当前不存在值班人员，请先在\"值班人员管理\"模块新增值班员。";
+				var option = {
+					title: "提示",
+					btn: parseInt("0001", 2),
+					onOk: function () {//点击确认的执行方法
+						   
+					}
+				}
+				window.wxc.xcConfirm(txt, "info", option);
+           }
+        },
+     
+
+    });
+   
+    
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $(".cancel").click(function(){
+    	$(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    
+     $(".confirm").click(function(){
+    	 var p = pick.getValues();
+    	 var idArray = [];
+    	 for(var i=0;i<p.length;i++){
+    		 idArray.push(p[i].id);
+    	}
+    	 console.log(JSON.stringify(idArray));
+    	 $.ajax({
+    	        type : "post",
+    	        async : false,  //异步请求 先执行后续操作，再执行sucess
+    	        url : "setDutySchedule",
+    	        dataType:"json",
+    	        data : {
+    	        	    "week":selectDate,
+    	        		"idArray" :	JSON.stringify(idArray)
+    	        },
+    	        success:function(json){
+    	        	var txt="";
+    	        	if(json.status){
+    	        		$(".sidebarDiv").html("");
+    	        		getDudyOperator(selectDate);
+    	        		txt="设置成功。";
+    	        	}else{
+    	        		txt="设置失败,请重试。";
+    	        	}
+    	            var option={
+    		   					title: "提示",
+    		   					btn: parseInt("0001",2),
+    		   					onOk: function(){//点击确认的执行方法
+    		   						
+    		  			       }
+    		   				}
+    		   		  window.wxc.xcConfirm(txt, "info", option);
+    	        },
+    	        error:function(XMLHttpRequest,Error,F,data)
+    	   	    {
+    	        	var txt="设置失败，";
+    	        	txt+="失败原因：";
+    	        	if(XMLHttpRequest.status==401){
+    	        		txt+="您不具有当前操作的权限<br/>";
+    	       	    }
+    	        	else{
+    	        		txt+="网络错误，";
+    	        		txt+="状态码："+XMLHttpRequest.status;
+    	        		
+    	        	}
+    	        	var option = {
+    	   					title: "提示",
+    	   					btn: parseInt("0001",2),
+    	   					onOk: function(){//点击确认的执行方法
+    	   						$(".sidebarDiv").html("");
+    	  			        	$(".containerDiv").load("html/personnel/role.html");
+    	   				   }
+    	   				}
+    	   		  window.wxc.xcConfirm(txt, "info", option);
+    	       }
+
+    	    });
+    }); 
+</script>
+</body>
+</html>

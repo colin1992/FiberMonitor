@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<script src="js/inputLimit.js" type="text/javascript"></script>
+   <style>
+		 .sidebar{
+		     margin-top:80px;
+		     height:260px;
+		   }
+   </style>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>新增值班人员</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName">
+            <p>姓名</p>
+            <p>邮箱</p>
+            <p>电话号码</p>
+        </div>
+        <div class="funcCoff">
+            <input type="text" id="addOperatorName"/>
+            <input type="text" id="addOperatorEmail"/>
+            <input type="text" id="addOperatorTelephone"/>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $(".cancel").click(function(){
+    	$(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    /***检查邮箱格式**/
+    function checkEmail(mail){
+    	var reg=/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g;
+    	return reg.test(mail)
+    }
+    /***检查手机号格式**/
+    function checkPhone(phone){
+    	var reg=/^1\d{10}$/;
+    	return reg.test(phone)
+    }
+    $(".confirm").click(function(){
+    	var name=$("#addOperatorName").val();
+		var mail=$("#addOperatorEmail").val();
+    	var phone= $("#addOperatorTelephone").val();
+    	var txt="";
+    	if(name==""){
+    		txt="请输入值班人员姓名。";
+    	}
+    	else if(phone==""){
+    		txt="请输入值班员手机号";
+    	}
+    	else if(mail==""){
+    		txt="请输入值班员邮箱地址";
+    	}
+    	else if(!checkEmail(mail)){
+    		txt="您输入的邮箱地址无效，请输入合法的邮箱地址。";
+    	}
+    	else if(!checkPhone(phone)){
+    		txt="您输入的手机号无效，请输入合法的手机号。";
+    	}
+    	if(txt!=""){
+    		var option={
+        	   		title: "提示",
+        	   		btn: parseInt("0001",2),
+        	   		onOk: function(){//点击确认的执行方法
+        	   						
+        	  		}
+            }
+            window.wxc.xcConfirm(txt, "info", option);
+    	}
+    	else{
+    		$.ajax({
+      			type : "post",
+      			async : false,  //异步请求 先执行后续操作，再执行sucess
+      			url : "operatorAdd",
+      			dataType:"json",
+      			data : {
+    					"operatorName":name,
+    					"operatorEmail":mail,
+    					"operatorPhone":phone
+      			},
+      			success:function(json){  				
+      				  if(json.status){
+      					  $(".sidebarDiv").html("");
+      					  $(".sidebarDiv").html("");
+      					  txt="增加成功。"
+      				} 
+      				else{
+      					txt="增加失败，请重试。";
+      				}
+      				 var option={
+    		        	   		title: "提示",
+    		        	   		btn: parseInt("0001",2),
+    		        	   		onOk: function(){//点击确认的执行方法
+    		        	   						
+    		        	  		}
+    		            }
+    		            window.wxc.xcConfirm(txt, "info", option); 
+      			},
+      			error:function(XMLHttpRequest,Error){
+		  		    var txt="增加失败，";
+		  			txt+="失败原因：";
+		  			if(XMLHttpRequest.status==401){
+		  			    txt+="您不具有当前操作的权限。";
+		  			}
+		  			else{
+		  			    	txt+="网络错误，";
+		  			    	txt+="状态码："+XMLHttpRequest.status;
+		  			   }
+		  			 var option={
+		  			    	   		title: "提示",
+		  			    	   		btn: parseInt("0001",2),
+		  			    	   		onOk: function(){//点击确认的执行方法
+		  			    	   						
+		  			    	  		}
+		  			  }
+		  			  window.wxc.xcConfirm(txt, "info", option);
+		  	}
+      		
+          	});
+        	$(".containerDiv").load("html/personnel/dutyOperatorManage.html"); 
+    	}
+    	
+    });
+</script>
+</body>
+</html>

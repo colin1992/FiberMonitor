@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle">
+				<span>修改机柜</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="funcName">
+				<p>机柜标识</p>
+				<p>机柜名称</p>
+				<p>机柜描述</p>
+			</div>
+			<div class="funcCoff">
+				<input id="alterCabinetId" type="text" disabled/>
+				<input id="alterCabinetName" type="text" required/>
+				<textarea name="" id="alterCabinetDescription" cols="24" rows="5"></textarea>
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="spanbutton" id="confirm">确定</li>
+					<li class="spanbutton" id="cancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $("#cancel").click(function(){
+    	 $(".contentDiv").html("");
+         $(".sidebarDiv").html("");
+    });
+/***************************/    
+    $("#confirm").click(function(){
+    	 var alterCabinetId=document.getElementById("alterCabinetId").value;
+    	 var alterCabinetName=document.getElementById("alterCabinetName").value;
+    	var alterCabinetDescription=document.getElementById("alterCabinetDescription").value;
+    	 $.ajax({
+  			type : "post",
+  			async : false,  //异步请求 先执行后续操作，再执行sucess
+  			url : "cabinet/modifyCabinet",
+  			dataType:"json",
+  			data : {
+  				    "alterCabinetId":alterCabinetId,
+  				    "alterCabinetName":alterCabinetName,
+  				    "alterCabinetDescription":alterCabinetDescription
+                  },
+                  success: function(json){
+                  	$(".sidebarDiv").html("");
+             	        var txt="";
+      		    	if(json[0].status){
+      		    		txt+="修改成功<br/>"
+      		    	}
+      		    	else{
+      		    		txt+="修改失败，请重试";
+      		    	}
+      			     var option = {
+      							title: "提示",
+      							btn: parseInt("0001",2),
+      							onOk: function(){//点击确认的执行方法
+      								selectCabinetByStation(cabinetStationId);
+      							}
+      						}
+      				  window.wxc.xcConfirm(txt, "info", option);
+      		      },
+      		    error:function(XMLHttpRequest,Error)
+      		      {
+      		    	    $(".sidebarDiv").html("");
+      		    	    var txt="修改失败<br/>";
+      		    	    txt+="失败原因：";
+      		    	    if(XMLHttpRequest.status==401){
+      		    	        txt+="您不具有当前操作的权限<br/>";
+      		    	     }
+      		    	     else{
+      		    	        	txt+="网络错误<br/>";
+      		    	        	txt+="状态码："+XMLHttpRequest.status;
+      		    	        }
+      		    	      var option={
+      		    	   					title: "提示",
+      		    	   					btn: parseInt("0001",2),
+      		    	   					onOk: function(){//点击确认的执行方法      		    	   						
+      		    	  			       }
+      		    	   				}
+      		    	   	window.wxc.xcConfirm(txt, "info", option);
+      		  }
+      	});  
+    });
+</script>
+	<script>
+/**************将原来的值作为修改框中的默认值***************/
+var trs = document.querySelectorAll("#cabinetTableDetail tbody tr");
+ 	    var dataBefore=[];
+ 	    for (var i=0;i<trs.length;i++){
+ 	        if($(trs[i]).hasClass("currtr")){
+ 	        	dataBefore = [trs[i].children[1].innerHTML,  //机柜标识
+ 	        	              trs[i].children[2].innerHTML,  //机柜名称名称
+ 	        	              trs[i].children[3].innerHTML  //机柜描述
+                              ]   
+ 	             	            
+ 	        }
+ 	        
+ 	    }
+
+document.getElementById("alterCabinetId").value=dataBefore[0];
+document.getElementById("alterCabinetName").value=dataBefore[1];
+document.getElementById("alterCabinetDescription").value=dataBefore[2];
+
+</script>
+</body>
+
+</html>

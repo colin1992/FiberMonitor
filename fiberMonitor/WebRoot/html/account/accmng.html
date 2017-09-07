@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		.error {
+			color: red;
+		}
+	</style>
+
+</head>
+<script src="js/jquery.validate.js"></script>
+<body>
+	<div class="closeinfo">×</div>
+	<div id="accmngdiv" class="accmngdiv">
+		<div class="currentnamediv">
+			<p class="currentname">当前用户：<span id="currentAccount"></span></p>
+		</div>
+		<fieldset style="border: 2px groove threedface; padding: 5px">
+			<legend style="display: block; width: 90px; font-size: 18px">账户管理</legend>
+			<form id="editemail" class="editform" method="post">
+				<fieldset style="border: 2px groove threedface; padding: 5px">
+					<legend style="display: block; width: 100px; font-size: 16px">修改邮箱地址</legend>
+					<p class="currentemail"></p>
+					<p>
+						<label for="newemail"><span>请输入新的电子邮箱地址：</span></label>
+						<input id="newemail" name="newemail" class="edit" type="email" autocomplete="off">
+					</p>
+					<p>
+						<label><span>请再次输入新的邮箱地址：</span></label>
+						<input id="checkemail" name="checkemail" class="edit" type="email" onpaste="return false" autocomplete="off">
+					</p>
+					<p>
+						<label><span>请输入账户密码：</span></label>
+						<input id="epassword" name="epassword" class="edit" type="password"  onpaste="return false" autocomplete="off">
+					</p>
+					<p>
+						<input class="submit" type="submit" id="submitEmail" value="修改邮箱地址">
+					</p>
+				</fieldset>
+			</form>
+			<br/>
+			<form id="editphone" class="editform" method="post">
+				<fieldset style="border: 2px groove threedface; padding: 5px">
+					<legend style="display: block; width: 100px;  font-size: 16px">修改手机号码</legend>
+					<p class="currentphone"></p>
+					<p>
+						<label for="newphone"><span>请输入新的手机号码：</span></label>
+						<input id="newphone" name="newphone" class="edit" type="text" autocomplete="off">
+					</p>
+					<p>
+						<label><span>请再次输入新的手机号码：</span></label>
+						<input id="checkphone" name="checkphone" class="edit" type="text" onpaste="return false" autocomplete="off">
+					</p>
+					<p>
+						<label><span>请输入账户密码：</span></label>
+						<input id="ppassword" name="ppassword" class="edit" type="password" onpaste="return false" autocomplete="off">
+					</p>
+					<p>
+						<input class="submit" type="submit"  id="submitPhone" value="修改手机号码">
+					</p>
+				</fieldset>
+			</form>
+		</fieldset>
+	</div>
+	
+	<script>
+	/**修改手机号**/
+	$("#submitPhone").click(function(){
+		$.ajax({
+			type:'post',
+			dataType:'json',
+			async: false,
+			url:'account/modifyInfo/modifyPhone',
+			data:{
+				'phone':$("#checkphone").val(),
+				'pword':$("#ppassword").val(),	
+			},
+			success: function(json){
+				 if(json[0].status){
+					var txt="修改成功";
+					var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   					 //重新获取用户信息
+	    	   					    $("#checkphone").val("");
+	    	   					    $("#newphone").val("");
+	    	   					    $("#ppassword").val("");
+	    	   					    reSetAccountInfo();
+	    	  			        },
+	    	  		}
+	    	   	   window.wxc.xcConfirm(txt, "info", option);
+					 
+			     }
+				 else{
+					    var txt="修改失败:"+json[0].err;
+						var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+				 }
+			},
+			error:function(XMLHttpRequest,Error)
+		      {
+		    	   
+		    	    var txt="修改失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限，请联系管理员取得权限<br/>";
+		    	     }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	   window.wxc.xcConfirm(txt, "info", option);
+		  }
+		})
+	})
+	/**修改邮箱**/
+	$("#submitEmail").click(function(){
+	  $.ajax({
+			type:'post', //数据发送方式
+	        dataType:'json', //接受数据格式
+	        async: false,
+		    url:'account/modifyInfo/modifyEmail',
+			data:{
+				'email':$("#checkemail").val(),
+				'pword':$("#epassword").val(),	
+			},
+			success: function(json){
+				 if(json[0].status){
+					var txt="修改成功";
+					var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   					    //重新获取用户信息 
+	    	   					    $("#newemail").val("");
+	    	   					    $("#checkemail").val("");
+	    	   					    $("#epassword").val("");
+	    	   					    reSetAccountInfo();
+	    	  			        },
+	    	  		}
+	    	   	   window.wxc.xcConfirm(txt, "info", option);
+					 
+			     }
+				 else{
+					    var txt="修改失败:"+json[0].err;
+						var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+				 }
+			},
+			error:function(XMLHttpRequest,Error)
+		      {
+		    	   
+		    	    var txt="修改失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限，请联系管理员取得权限<br/>";
+		    	     }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	   window.wxc.xcConfirm(txt, "info", option);
+		  }
+	})
+	})
+	/**刷新显示用户信息**/
+	function reSetAccountInfo(){
+			$.ajax({
+				type:'post', //数据发送方式
+	            dataType:'json', //接受数据格式
+	            async: false,
+	            url:'getAccountInfo',
+	            data:'',
+				success: function(json){
+					if(json[0].status){
+						$(".currentphone").text("当前手机号："+json[0].phone);
+						$(".currentemail").text("当前邮箱地址："+json[0].email);
+						$(".userAccount").text(json[0].account);
+						$(".username").text(json[0].account);
+						$(".email").text(json[0].email);
+						$(".phone").text(json[0].phone);
+					}
+				}
+			})
+	}
+	$(document).ready(function(){
+		$.ajax({
+			type:'post', //数据发送方式
+            dataType:'json', //接受数据格式
+            async: false,
+            url:'getAccountInfo',
+            data:'',
+			success: function(json){
+				if(json[0].status){
+					$(".currentphone").text("当前手机号："+json[0].phone);
+					$(".currentemail").text("当前邮箱地址："+json[0].email);
+					$("#currentAccount").text(json[0].account);
+				}
+			}
+		})
+			
+	 $(".closeinfo").click(function() {
+    		$("#load").css({"display":"none"});
+		});	
+
+		$.validator.setDefaults({
+			submitHandler: function(form) {
+				return false;
+			}
+		});
+
+		$("#editemail").validate({
+			rules: {
+				newemail: {
+					required: true,
+					email: true
+				},
+				checkemail: {
+					required: true,
+					email: true,
+					equalTo: "#newemail"
+				},
+				epassword: {
+					required: true
+				}
+			},
+			messages: {
+				newemail: {
+					required: "请输入新的电子邮箱地址",
+					email: "请输入有效的电子邮箱地址"
+				},
+				checkemail: {
+					required: "请再次输入新的邮箱地址",
+					email: "请输入有效的电子邮箱地址",
+					equalTo: "请输入与上面相同的邮箱地址"
+				},
+				epassword: {
+					required: "请输入账户密码"
+				}
+			}
+		});
+
+	$("#editphone").validate({
+		rules: {
+			newphone: {
+				required: true,
+				digits: true,
+				rangelength: [11,11]
+			},
+			checkphone: {
+				required: true,
+				digits: true,
+				rangelength: [11,11],
+				equalTo: "#newphone"
+			},
+			ppassword: {
+				required: true
+			}
+		},
+		messages: {
+			newphone: {
+				required: "请输入新的手机号码",
+				digits: "请输入有效的手机号码",
+				rangelength: "请输入有效的手机号码"
+			},
+			checkphone: {
+				required: "请再次输入新的手机号码",
+				digits: "请输入有效的手机号码",
+				rangelength: "请输入有效的手机号码",
+				equalTo: "请输入与上面相同的手机号码"
+			},
+			ppassword: {
+				required: "请输入账户密码"
+			}
+		}
+	});
+});
+	</script>
+</body>
+
+</html>

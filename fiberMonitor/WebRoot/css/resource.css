@@ -1,0 +1,135 @@
+/*主控设置*/
+.controlConfigContent{
+    overflow: auto;
+}
+
+.equipmentResource{
+    float: left;
+    width: 450px;
+    height: 300px;
+    margin:0 25px 0 20%;
+}
+
+.lineResource{
+    float: left;
+    width:450px;
+    height: 300px;
+    margin:0 25px 0 20px;
+}
+
+.mapResource{
+    width: 450px;
+    height: 128px;
+    margin: 0 0 0 35%;
+    padding-top: 300px;
+}
+
+.mapContent {
+    width: 450px;
+}
+
+/*光缆管理     float: left;*/
+
+/*右侧 上三 表格设置*/
+.right_up{
+    float: left;
+    width:25%;
+    margin:25px 20px 0 20px;
+    text-align: center;
+}
+
+.right_up span{
+    margin:0 30px;
+}
+
+.right_up_title{
+    background-color: #343434;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    color:white;
+    font-family: "Microsoft YaHei";
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+.right_up_content{
+    position:relative;
+    font-size: 14px;
+    padding-top: 10px;
+    height: 120px;
+    border:solid 1px #000000;
+    line-height: 30px;
+}
+.right_up_bottom{
+    width: 100%;
+    position:absolute;
+    bottom:5px;
+    left:50%;
+    margin-left: -50%;
+}
+
+
+.saveStateSetting{
+    width: 39%;
+}
+
+.saveStateSetting .right_up_content{
+    height: 435px;
+}
+
+.RTUinfo{
+    width: 38%;
+}
+
+.RTUinfo .right_up_content{
+    height: 435px;
+}
+
+.RTUinfo table{
+    position: absolute;
+    width: 100%;
+    left:50%;
+    margin-left: -50%;
+    height: 400px;
+}
+
+.RTUinfo th{
+    background-color: lightgray;
+}
+
+.RTUinfo td{
+    border: solid 1px #000000;
+}
+
+.pathFunction span{
+    margin-right: 20px;
+}
+
+.OTDRFunction span{
+    margin-right: 20px;
+     
+}
+
+.areaFunction span{
+    margin-right: 20px;
+}
+
+.stationFunction{
+    margin-right: 20px;
+}
+/*光路管理——光路路由图*/
+.pathRouteCon{
+    display: none;
+    height: 660px;;
+    float: right;
+    margin-right: 5%;
+    width:75%;
+}
+/*光路管理——设置面板图*/
+.RTUPanelCon{
+    display: none;
+    height: 660px;;
+    float: right;
+    margin-right: 5%;
+    width:75%;
+}

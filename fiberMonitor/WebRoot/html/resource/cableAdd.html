@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="js/addCable.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		.error {
+			color: red;
+			text-align: right;
+			margin-right: 10px;
+		}
+		
+		.cableBar {
+			float: left;
+			width: 300px;
+			top: -2%;
+			left: 5px;
+		}
+       .sidebar span {
+			width: 100px;
+			padding: 5px;
+			text-align: right;
+		}
+		
+		.sidebar select {
+			width: 160px;
+		}
+		.sidebar input {
+			width: 160px;
+		}
+		.sidebar {
+			height: 700px;
+		}
+		
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+        <div class="bgDiv"></div>
+        <div class="sidebar">
+            <div class="sidebarTitle">
+                <span>新增光缆</span>
+                <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+            </div>
+           <div class="cableBar">
+            <form class="cableForm">
+              <p>
+                    <label for="cableName"><span>光缆名称 </span></label>
+	          		<input id="cableName" name="cableName" type="text"/>
+	          </p>	
+	          <p>   
+	          		<label for="cableLength"><span>光缆长度</span></label>
+	                <input id="cableLength" name="cableLength" type="number" min="0"/>km
+	          </p>
+	          <p>    
+	          		<label for="AAreaName"><span>A端区域</span></label>
+	                <select id="AAreaName" name="AAreaName">
+	                   <option value="index">请选择</option>
+	                </select>
+              </p>
+              <p>
+                   <label for="AAreaName"><span>A端局站</span></label>
+                   <select id="AStationName" name="AStationName">
+                       <option value="index">请选择</option>
+                   </select>
+               </p> 
+               <p>   
+                    <label for="ARemainLen"><span>A端盘留长度</span></label>
+                	<input id="ARemainLen" name="ARemainLen" type="number" min="0"/>m
+                </p>
+                <p>
+                    <label for="ZAreaName"><span>Z端区域</span></label>
+	                <select id="ZAreaName" name="ZAreaName">
+	                	<option value="index">请选择</option>
+	                </select>
+                </p>
+                <p> 
+                    <label for="ZStationName"><span>Z端局站</span></label>
+	                <select id="ZStationName" name="ZStationName" >
+	                	<option value="index">请选择</option>
+	                </select>
+                </p>
+                <p>
+                    <label for="ZRemainLen"><span>Z端盘留长度</span></label>
+                	<input id="ZRemainLen" name="ZRemainLen" type="number" min="0"/>m
+                </p>
+                <p>
+                    <label for="newworkLevel"><span>网络层次</span></label>
+	                <select id="newworkLevel" name="newworkLevel">
+	                    <option value="省际一级干线">省际一级干线</option>
+	                    <option value="省内二级干线">省内二级干线</option>
+	                    <option value="市内">市内</option>
+	                    <option value="接入网">接入网</option>
+	                </select>
+	            </p> 
+	            <p>  
+	                <label for="laidWay"><span>铺设方式</span></label> 
+	                <select  id="laidWay" name="laidWay">
+	                    <option value="架空">架空</option>
+	                    <option value="直埋">直埋</option>
+	                    <option value="管道">管道</option>
+	                    <option value="隧道">隧道</option>
+	                    <option value="水底">水底</option>
+	                </select>
+	            </p>   
+	            <p>
+	                 <label for="cableCoreCount"><span>纤芯数量</span></label> 
+               		 <input id="cableCoreCount" name="cableCoreCount" type="number" min="1"/>
+                </p> 
+                <p>   
+                     <label for="cableCore"><span>纤芯结构</span></label> 
+	                 <select  id="cableCore" name="cableCore">
+	                    <option value="index">请选择</option>
+	                    <option value="中心管式">中心管式</option>
+	                    <option value="层绞式">层绞式</option>
+	                    <option value="骨架式">骨架式</option>
+	                </select>
+               </p>
+               <p>
+                    <label for="reIndex"><span>纤芯折射率</span></label> 
+                 	<input id="refractiveIndex" name="reIndex" type="number" min="1" max="2"/>
+               </p> 
+          
+               <p>  
+                    <label for="description"><span>光缆描述</span></label>     
+                    <textarea id="description" name="description" cols="20" rows="5"></textarea>
+               </p>
+             </form>     
+           </div>
+            
+            <div class="funcConfirm">
+                <ul class="callTestingFunc">
+                    <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                    <li class="cancel">取消</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

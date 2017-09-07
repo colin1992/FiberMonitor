@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script src="js/laypage.js" type="text/javascript"></script>   
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+   <style type="text/css">
+      .inputInfo{
+      		margin-bottom: 10px;
+      		color: gray;
+      		font-size:10px;
+      }
+      .tipNameIcon{
+      		 height: 14px;
+             width: 14px;
+      }
+    </style>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>修改用户</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName">
+           <p style="margin-bottom: 12px;">用户账号</p>
+           <p style="margin-bottom: 32px;">用户角色</p>
+           <p style="margin-bottom: 32px;">手机号</p>
+           <p style="margin-bottom: 32px;">邮箱</p>
+           <p style="margin-bottom: 32px;">用户描述</p>
+        </div>
+        <div class="funcCoff">
+            <input type="text" id="account" style="margin-bottom:12px;" readonly="readonly"/>
+            <select id="roleSelect" style="margin-bottom: 3px;"></select>
+            <div  class="inputInfo" id="roleInfo" >
+                <img src="images/warn_yellow.png" class="roleIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="roleTip">请选择用户所属角色</span>
+            </div>
+            <input type="tel" id="phone" style="margin-bottom: 3px;"/>
+            <div  class="inputInfo" id="phoneInfo" >
+            	<img src="" class="phoneIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="phoneTip">请输入用户手机号</span>
+            </div>
+            <input type="email" id="email" style="margin-bottom: 3px;"/>
+            <div  class="inputInfo" id="emailInfo" >
+            	<img src="" class="emailIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="emailTip">请输入用户邮箱地址</span>
+            </div>
+            
+           <textarea id="description" cols="24" rows="7"></textarea>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+	var userAccount="";
+	var trs = document.querySelectorAll("#userTableDetail tbody tr");
+    for (var i=0;i<trs.length;i++){
+        if($(trs[i]).hasClass("currtr")){
+        	userAccount=trs[i].children[2].innerHTML;
+        	i=trs.length;
+        }
+    }
+    if(userAccount!=""){
+    	getUserByAccount(userAccount);
+    }
+})
+function getUserByAccount(account){
+	$.ajax({
+	    type : "post",
+	    async : false,  //异步请求 先执行后续操作，再执行sucess
+	    url : "user/getByAccount",
+	    dataType:"json",
+	    data :{'account':account},
+	    timeout:2000,
+	    success:function(json){
+	    	if(json[0].status){
+	    		$("#account").val(account);
+	    		$("#roleSelect").val(json[0].role);
+	    		$("#phone").val(json[0].phone);
+	    		$("#email").val(json[0].email);
+	    		$("#description").val(json[0].description);
+	    	}
+	    },
+	})
+}
+$("#roleSelect").change(function(){
+	if($(this).find("option:selected").text()=="superAdmin"){
+		$("#roleInfo").css("color","red");
+		$(".roleIcon").show();
+		$("#roleTip").text("超级管理员具有全部权限，请谨慎选择")
+	}
+	else{
+		$(".roleIcon").hide();
+		$("#roleTip").text("");
+	}
+})
+
+//加载这个页面的时候会自动获取
+$.ajax({
+    type : "post",
+    async : false,  //异步请求 先执行后续操作，再执行sucess
+    url : "getRole",
+    dataType:"json",
+    data : null,
+    timeout:2000,
+    success:function(data){
+    	for(i=0;i<data.length;i++)
+    		$("#roleSelect").append("<option value=" + data[i].id +">" + data[i].name + "</option>");  
+    		
+    },
+   
+})
+
+$(".sidebar_close").click(function(){
+    $(".contentDiv").html("");
+    $(".sidebarDiv").html("");
+});
+$(".cancel").click(function(){
+    $(".contentDiv").html("");
+    $(".sidebarDiv").html("");
+});
+$(".confirm").click(function(){
+	    $.ajax({
+		    url:'user/modifyUser',
+		    type:'post', //数据发送方式
+		    dataType:'json', //接受数据格式
+		    data : {
+		    		 "account":$("#account").val(),
+		    		 "roleId":$("#roleSelect").val(),
+		    		 "phone":$("#phone").val(),
+			    	 "email":$("#email").val(),
+			    	 "description":$("#description").val(),
+		    		},
+		    async: false,
+		    success: function(json){
+		    	var txt="";
+		    	if(json[0].status){
+		    		txt+="修改用户成功<br/>"
+		    	}
+		    	else{
+		    		txt+="修改失败，请重试";
+		    	}
+			     var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+								 selectUsersByRole($("#roleSelect").val());
+					        	 $(".sidebarDiv").html("");
+						  }
+						}
+				  window.wxc.xcConfirm(txt, "info", option);
+		      },
+		    error:function(XMLHttpRequest,Error,F,data)
+		      {
+		    	    var txt="修改用户失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限<br/>";
+		    	     }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						$(".sidebarDiv").html("");
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+		  }
+		}); 
+	
+	
+})
+      
+</script>
+</body>
+</html>

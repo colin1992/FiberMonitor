@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<script src="js/alterJumper.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle">
+				<span>修改跳纤</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="funcName">
+				<p>跳纤标识</p>
+				<p>跳纤类型</p>
+				<p>跳纤名称</p>
+				<p>跳纤长度(m)</p>
+				<p>跳纤描述</p>
+			</div>
+			<div class="funcCoff">
+				<input type="text" id="jumperId" disabled/>
+				<input type="text" id="type" disabled/>
+				<input type="text" id="jumperName" required/>
+				<input type="number" id="jumperLength" min="0" required/>
+				<textarea id="description" cols="24" rows="7"></textarea>
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="confirm">确定</li>
+					<li class="cancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+       $("#jumperLength").focus(function(){
+	   $(this).keypress(function (event) {
+           var eventObj = event || e;
+           var keyCode = eventObj.keyCode || eventObj.which;
+           if ((keyCode >= 48 && keyCode <= 57))
+               return true;
+           else
+               return false;
+	  	})
+   })
+   </script>
+
+</body>
+
+</html>

@@ -1,0 +1,771 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	width: 100%;
+	overflow: auto;
+}
+
+*, *::before, *::after {
+	box-sizing: content-box !important;
+}
+
+img {
+	border: 0;
+}
+
+/*每个小模块功能背景透明*/
+.modulebg {
+	opacity: 1;
+	width: 180;
+	height: 180;
+}
+
+.currtr {
+	background-color: rgba(133, 146, 160, 0.51);
+}
+
+.currtrPeriod {
+	background-color: rgba(133, 146, 160, 0.51);
+}
+
+/*header 用户认证栏*/
+.userLog {
+	width: 100%;
+	height: 40px;
+	background-color: #000000;
+	font-size: 12px;
+	font-family: "Microsoft YaHei";
+	line-height: 40px;
+}
+
+.userLog a {
+	color: white;
+}
+
+.userLog div {
+	float: right;
+	margin-right: 30px;
+}
+
+#notification {
+    float: left;
+	width: 110px;
+    background: url(../images/notification.png) left center no-repeat;
+    background-size: 30px 30px;
+	text-align: center;
+}
+
+.admin {
+	float: left;
+	width: 110px;
+	background: url(../images/admin.png) left center no-repeat;
+	background-size: 30px 30px;
+	text-align: center;
+}
+
+.manager {
+	float: left;
+	width: 120px;
+	background: url(../images/manager.png) left center no-repeat;
+	background-size: 30px 30px;
+	text-align: center;
+}
+
+.header {
+	min-width: 1000px;
+}
+
+.headerLogo {
+	width: 100%;
+	margin: 20px auto;
+	font-size: 48px;
+	font-family: "Microsoft Yahei";
+	text-align: center;
+	line-height: 48px;
+	font-weight: bold;
+}
+
+.headerLogo * {
+	vertical-align: middle;
+}
+/*container navigation*/
+.container-fluid {
+	width: 100%;
+	position: relative;
+	min-width: 1340px
+}
+
+.containerDiv {
+	width: 100%;
+	position: absolute;
+}
+
+.sidebarDiv {
+	width: 100%;
+	position: absolute;
+}
+
+.navigation {
+	width: 100%;
+	background-color: #323232;
+}
+
+.navBtns {
+	width: 100%;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 14px;
+	font-family: "Microsoft YaHei";
+}
+
+.navBtns * {
+	vertical-align: middle;
+}
+
+.navBtns ul {
+	margin-bottom: 0;
+}
+
+.navBtns ul>li {
+	height: 45px;
+	width: 130px;
+	font-size: 16px;
+	display: inline-block;
+	position: relative;
+	color: white;
+	cursor: pointer;
+}
+
+ul.navigations>li>ul {
+	display: none;
+	position: absolute;
+	z-index: 4;
+	top: 45px;
+	left: 0;
+  /*  opacity: .95;*/
+}
+
+.navBtns ul>li>ul>li {
+	font-size: 16px;
+	font-weight: bold;
+	font-family: "Microsoft YaHei";
+	height: 30px;
+	width: 150px;
+	line-height: 30px;
+	border-top: 1px solid #eee;
+	color: #000000;
+	background-color: rgba(13, 13, 13, 0.22);
+	border-radius: 3px;
+}
+
+.curr {
+	background-color: #0054a3;
+	height: 60px;
+}
+/*container content*/
+
+.navContentDiv {
+	vertical-align: middle;
+	display: none;
+}
+
+.navContent {
+	width: 100%;
+	text-align: center;
+}
+
+.navContent ul>li>a {
+	text-decoration: none;
+	color: white;
+}
+
+.navContent li {
+	display: inline-block;
+	width: 180px;
+	height: 180px;
+	font-size: 20px;
+	font-family: "Microsoft YaHei";
+	margin: 40px 50px 40px 50px;
+	color: #ffffff;
+	line-height: 40px;
+	border-radius: 30px;
+}
+
+.navContent img {
+	margin-top: 40px;
+}
+
+/*资源管理&系统管理公用css*/
+.resourceManage {
+	min-width: 1250px;
+	min-height: 500px;
+	text-align: left;
+}
+
+.SystemManage {
+	min-width: 1150px;
+	min-height: 350px;
+	text-align: left;
+}
+
+.resourceManage ul,
+.SystemManage ul {
+	background-color: white;
+	text-align: center;
+	border-radius: 20px;
+	border: solid 1px #000000;
+}
+
+.resourceManage li,
+.SystemManage li {
+	display: inline-block;
+	height: 100px;
+	width: 100px;
+	font-size: 16px;
+	font-family: "Microsoft YaHei";
+	margin: 10px 15px 10px 15px;
+	line-height: 25px;
+	border-radius: 30px;
+	color: #000000;
+	background-color: lightgray;
+}
+
+.resourceManage img,
+.SystemManage img {
+	margin-top: 10px;
+}
+
+.resourceManage span,
+.SystemManage span {
+	font-size: 24px;
+	font-family: "Microsoft YaHei";
+}
+
+/*navContent curveManager*/
+.curveManager {
+	margin-top: 120px;
+}
+
+.curveManager>li,
+ .degradationAnalyze>li,
+ .warnManage>li,
+ .businessSwitch>li,
+ .personnelManage>li {
+	cursor: pointer;
+}
+
+.equipmentContent>li,
+ .lineContent>li,
+ .mapContent>li,
+ .logContent>li,
+ .configContent>li {
+	cursor: pointer;
+}
+
+.equipmentResource>span,
+ .lineResource>span,
+ .mapResource>span,
+ .logManage>span,
+ .configManage>span {
+	cursor: default;
+}
+
+.curveQuery {
+	background-color: #688E6D;
+}
+
+.curveAnalyze {
+	background-color: #658090;
+}
+
+.curveWarn {
+	background-color: #838ab7;
+}
+
+.strideTesting {
+	background-color: rgba(75, 54, 74, 0.79);
+}
+
+.callTesting {
+	background-color: #c7be9a;
+}
+
+.periodTesting {
+	background-color: rgba(173, 77, 77, 0.81);
+}
+/*navContent degradationAnalyze*/
+.degradationAnalyze {
+	margin-top: 120px;
+}
+
+/*navContent warnManage*/
+.warnManage {
+	margin-top: 120px;
+}
+
+.warnQuery {
+	background-color: #af9bad;
+}
+
+.warnBank {
+	background-color: #b7ada4;
+}
+
+.warnSetting {
+	background-color: rgba(126, 138, 177, 0.80);
+}
+
+/*navContent businessSwitch*/
+.businessSwitch {
+	margin-top: 120px;
+}
+
+.fiberSwitch {
+	background-color: #974444;
+}
+
+.switchSetting {
+	background-color: rgba(190, 188, 115, 0.62);
+}
+
+/*navContent personnelManage*/
+.personnelManage {
+	margin-top: 120px;
+}
+
+.dutyManage {
+	background-color: rgba(64, 171, 138, 0.79);
+}
+
+.roleManage {
+	background-color: #a5ccd8;
+}
+
+.userManage {
+	background-color: #4c91a4;
+}
+
+/*navContent SystemManage*/
+.logManage {
+	float: left;
+	width: 400px;
+	margin: 0 25px 0 20%;
+}
+
+.configManage {
+	float: left;
+	width: 320px;
+	margin: 0 25px 0 150px;
+}
+/*每个子功能实现*/
+
+/*Content*/
+.curveContent {
+	overflow: auto;
+	background-color: #f7f7f7;
+	width: 100%;
+	height: 720px;
+	display: none;
+}
+
+.degradeContent {
+	overflow: auto;
+	position: relative;
+	background-color: #f7f7f7;
+	width: 100%;
+	height: 720px;
+	display: none;
+}
+
+.resour
+ceContent {
+	overflow: auto;
+	position: relative;
+	background-color: #f7f7f7;
+	width: 100%;
+	height: 720px;
+	display: none;
+}
+
+.SystemContent {
+	overflow: auto;
+	position: relative;
+	background-color: #f7f7f7;
+	width: 100%;
+	height: 720px;
+	display: none;
+}
+/*。。。。。。。。。只列出前三个模块 后面模块待加入。。。。。。。。。*/
+
+/*左侧树结构以及右侧表格设置*/
+.leftTreeCont {
+	float: left;
+	margin-left: 20px;
+	margin-top: 20px;
+	width: 15%;
+	height: 680px;
+}
+
+.search {
+	margin-bottom: 10px;
+	min-width: 237px;
+}
+
+.search span {
+	font-size: 12px;
+	margin-left: 20px;
+}
+
+.leftTree {
+	height: 630px;
+	width: 87%;
+	background-color: white;
+	padding-top: 10px;
+	padding-left: 10px;
+	border: solid 1px #a7a7a7;
+	border-radius: 5px;
+	overflow-y: scroll;
+}
+
+.leftTree::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+.leftTree::-webkit-scrollbar {
+	width: 8px;
+	background-color: #F5F5F5;
+}
+
+.leftTree::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #999999;
+}
+
+.rightTable {
+	float: right;
+	margin-right: 1.5%;
+	width: 82%;
+	height: 680px;
+	font-family: "Microsoft YaHei";
+	font-size: 14px;
+	text-align: center;
+}
+
+.pageLoad {
+	display: none;
+	float: right;
+	margin-right: 5%;
+	width: 75%;
+	height: 680px;
+}
+
+.tableSet {
+	margin-top: 20px;
+	float: left;
+	width: 100%;
+}
+
+.tableSet table {
+	table-layout: fixed;
+}
+
+.tableSet table>tbody>tr>td {
+	text-align: center;
+	border: solid 1px white;
+	height: 25px;
+	background-color: rgba(155, 143, 108, 0.27);
+/* 	text-overflow: ellipsis; */
+	noWrap:noWrap;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.tableSet table>tbody>tr>td:hover {
+	overflow: visible;
+}
+
+.tableSet table>thead>tr>th {
+	text-align: center;
+	vertical-align: middle;
+	color: white;
+	height: 30px;
+/* 	noWrap:noWrap; */
+/* 	white-space: nowrap; */
+	background-color: #343434;
+/* 	text-overflow: ellipsis; */
+}
+
+.tableSet table {
+	width: 100%;
+	margin-top: 10px;
+	height: 590px;
+}
+
+.tableSearch span {
+	cursor: default;
+	margin-left: 25px;
+	padding: 2px;
+}
+
+span.spanbutton {
+	background-color: #ddd;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+span.spanbutton:hover {
+	color: white;
+	background-color: rgb(34, 85, 153);
+}
+
+.pageSwitch {
+	width: 100%;
+	float: left;
+}
+
+.pageLeft {
+	float: left;
+}
+
+.pageRight {
+	float: right;
+}
+
+.pageRight span {
+	margin-right: 20px;
+}
+
+.pageRight input {
+	width: 24px;
+}
+
+.tableFunction {
+	float: right;
+	margin-right: 35%;
+	margin-top: 15px;
+	font-family: 'Microsoft YaHei';
+	text-align: center;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+
+.tableFunction span {
+	margin: 0 20px;
+}
+
+.tableFunction li {
+	height: 30px;
+	width: 130px;
+	line-height: 30px;
+	font-size: 14px;
+	display: inline-block;
+	padding-left: 5px;
+}
+
+span#backToGis {
+	color: black;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+span#backToGis:hover {
+	color: red;
+}
+
+
+.disClose:hover {
+	text-decoration: none;
+} 
+ /** 动态浮层DIV区域 **/
+.dynamicSupernatant {
+	display: none;
+ /* Hidden by default */
+	position: fixed;
+ /* Stay in place */
+	z-index: 100;
+ /* Sit on top */
+	padding-top: 100px;
+ /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%;
+ /* Full width */
+	height: 90%;
+ /* Full height */
+	overflow: auto;
+ /* Enable scroll if needed */
+	background-color: rgba(0,0,0,0.3);
+	margin: 0 auto;
+}
+
+#dynamicClose {
+	height: 30px;
+	width: 100%;
+	z-index: 102;
+	cursor: default;
+	background-color: rgba(0,0,0,0.5);
+	text-align: right;
+}
+
+#dynClose {
+	margin-right: 10px;
+	font-size: 24px;
+	color: #f6f6f6;
+	cursor: pointer;
+}
+
+#dynClose:hover {
+	color: #ff8040;
+}
+
+#load {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255,255,255,0);
+	display: none;
+	position: absolute;
+	z-index: 3
+}
+
+#loaddiv {
+	background-color: white;
+	position: absolute;
+	width: 520px;
+	margin: 10% 0 0 35%;
+	z-index: 4
+}
+
+.accmngdiv,
+.pswddiv {
+	background-color: #E6E6FA;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	padding: 10px
+}
+
+.currentname {
+	text-align: center
+}
+
+.currentnamediv {
+	width: 500px
+}
+
+.edit {
+	width: 50%
+}
+
+.submit {
+	float: right;
+	width: 25%;
+	margin-right: 40px
+}
+
+label {
+	display: block
+}
+
+label>span {
+	position: relative;
+	float: left;
+	width: 200px;
+	height: 1em;
+	text-align: justify
+}
+
+#notificationDiv {
+    display: none;
+	background-color: white;
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgb(136, 136, 136);
+	width:300px;
+    min-width: 250px;
+    max-height:400px;
+    overflow-y:auto;
+	margin-top: 2px;
+	right: 80px;
+	position: absolute;
+	z-index: 2
+}
+
+.accinfo {
+	display: none;
+	background-color: white;
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgb(136, 136, 136);
+	min-width: 230px;
+	margin-top: 2px;
+	right: 40px;
+	position: absolute;
+	z-index: 2
+}
+
+.accmng,
+.pswd,
+.logout {
+	color: black
+}
+
+.accmng:hover,
+.pswd:hover,
+.logout:hover {
+	cursor: pointer
+}
+
+.head-icon,
+.email-icon,
+.phone-icon {
+	width: 14px;
+	height: 14px
+}
+
+.button {
+	border-top: 1px solid black;
+	background-color: rgb(234, 234, 234)
+}
+
+.closeinfo {
+	position: absolute;
+	top: -15px;
+	right: 5px;
+	color: black;
+	font-size: 40px;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.closeinfo:hover,
+.closeinfo:focus {
+	color: red;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+#notification:hover,
+#notification:focus,
+.admin:hover,
+.admin:focus,
+.manager:hover,
+.manager:focus {
+	color: rgb(234, 234, 234)
+}
+/**遮盖层**/
+.overlay {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: none;
+	filter: alpha(opacity=60);
+	background-color: #777;
+	opacity: 0.5;
+	-moz-opacity: 0.5;
+}

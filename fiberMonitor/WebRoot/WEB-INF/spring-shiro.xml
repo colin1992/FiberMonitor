@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+    <beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">  
+      
+       <!--   
+           Web应用中，Shiro可控制的Web请求必须经过Shiro主过滤器的拦截，Shiro对基于Spring的Web应用提供了完美的支持   
+        -->  
+        <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+            <!-- Shiro的核心安全接口，这个属性是必须的 -->  
+            <property name="securityManager" ref="securityManager"></property>  
+            <!-- 要求登录时的链接(登录页面地址)，非必须的属性，默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->  
+            <property name="loginUrl" value="/Login.html"></property>  
+            <!-- 登录成功后要跳转的连接 -->  
+            <property name="successUrl" value="index.html" ></property>   
+            <!-- 用户访问未对其授权的资源时，所显示的连接 -->  
+            <property name="unauthorizedUrl" value=""></property>  
+            <!--  拦截器定义-->
+            <property name="filterChainDefinitions">  
+			         <value>  
+			         <!--权限配置 拦截器采用从上到下的匹配查找
+			                          一旦发现匹配的设置项便不再继续向下查找
+			                         从而应充分注意配置的顺序
+			                         尤其是通用匹配符*
+			         -->
+			        
+			         <!-- 登录验证 -->
+			         <!-- 给静态资源添加例外 -->
+			         
+			          /**/*.png=anon
+			          /**/*.css=anon
+			          /**/*.js=anon
+			          /**/*.gif=anon
+			          /**/*.cur=anon 
+			          /**/*.jpg=anon
+			          /**/*.xml=anon
+			          <!-- 认证相关直接授权 -->
+			          /valid/**=anon
+			          /valid.html=anon
+			          valid.html=anon
+			           <!-- 系统认证校验
+			                     所有操作都需要登录，从而只要对登录页面进行认证验证即可
+			            -->
+			          /**/Login.html=validate
+			          Login.html=validate
+			          /**/index.html=user,authc
+			          /**/TomCat=anon  <!-- RTU推送数据的地址 -->
+					  /**/dologin=anon<!-- 登录操作 -->
+			          /**/checkSession=anon<!-- 验证session -->
+			          /Login.html=anon  <!-- 登录页面直接授权访问 -->
+			          /**/login/**=anon
+			          /**/isAccountExit=anon
+			          /**/account/reSetPword=anon
+			          /**/account/getVerifyCode=anon
+			          /**/account/checkVerifyCode=anon
+			          /**/account/reSetPword=anon
+			         
+			         <!-- 权限验证 -->
+			         /test/forTest=authc,perms[forTest]
+			         /role/addRole=authc,perms[addRole]
+			         /role/modifyRole=authc,perms[modifyRole]
+			         /role/delRole=authc,perms[delRole]
+			        /user/addUser=authc,perms[addUser]
+			        /user/delUser=authc,perms[delUser]
+			<!--         账户 -->
+			        /account/modifyPword=authc,perms[modifyPword]
+			        /account/modifyInfo*=authc,perms[modifyInfo]
+			<!--         资源管理 -->
+			<!--            区域 -->
+			         /area/delArea=authc,perms[delArea]
+			         /area/addArea=authc,perms[addArea]
+			         /area/modifyArea=authc,perms[modifyArea]
+			         /area/**=authc,perms[area]
+			<!--          局站 -->
+			         /station/addStation=authc,perms[addStation]
+			         /station/delStation=authc,perms[delStation]
+			         /station/modifyStation=authc,perms[modifyStation]
+			         /station/**=authc,perms[station]
+			<!--           RTU -->
+			         /rtu/addRtu=authc,perms[addRtu]
+			         /rtu/delRtu=authc,perms[delRtu]
+			         /rtu/modifyRtu=authc,perms[modifyRtu]
+			         /rtu/**=authc,perms[rtu]
+			<!--           光缆 -->
+			         /cable/addCable=authc,perms[addCable]
+			         /cable/delCable=authc,perms[delCable]
+			         /cable/modifyCable=authc,perms[modifyCable]
+			         /cable/**=authc,perms[cable]
+			<!--          光缆地标 -->
+			         
+			         /landmark/addLandmark=authc,perms[addLandmark]
+			         /landmark/delLandmark=authc,perms[delLandmark]
+			         /landmark/modifyLandmark=authc,perms[modifyLandmark]
+			         /landmark/**=authc,perms[landmark]
+			<!--          机柜 -->
+			         
+			         /cabinet/addCabinet=authc,perms[addCabinet]
+			         /cabinet/delCabinet=authc,perms[delCabinet]
+			         /cabinet/modifyCabinet=authc,perms[modifyCabinet]
+			         /cabinet/**=authc,perms[cabinet]
+			<!--          配线架 -->
+			         
+			         /frame/addFrame=authc,perms[addFrame]
+			         /frame/delFrame=authc,perms[delFrame]
+			         /frame/modifyFrame=authc,perms[modifyFrame]
+			         /frame/**=authc,perms[frame]
+			<!--           纤芯 -->
+			         
+			         /fiber/modifyFiber=authc,perms[modifyFiber]
+			         /fiber/=authc,perms[fiber]
+			<!--          跳纤 -->
+			         
+			         /jumper/addJumper=authc,perms[addJumper]
+			         /jumper/delJumperRoute=authc,perms[delJumper]
+			         /jumper/delJumperFrame=authc,perms[delJumper]
+			         /jumper/modifyJumper=authc,perms[modifyJumper]
+			         /jumper/**=authc,perms[jumper]
+			<!--          光路 -->
+			         /route/setThreshold=authc,perms[setThreshold]
+			         /route/optiRoute=authc,perms[optiRoute]
+			         /route/modifyRoute=authc,perms[modifyRoute]
+			         /route/delRoute=authc,perms[delRoute]
+			         /route/**=authc,perms[route]
+			<!--          曲线管理 -->
+			         /curve/delCurve=authc,perms[delCurve]  
+			         /curve/checkCurve=authc,perms[checkCurve]  
+			         /curve/checkCurve/setRefrence=authc,perms[setRefrence]  
+			         /curve/checkCurve/addEvent=authc,perms[addEvent]  
+			         /curve/callTest=authc,perms[callTest]
+			         /curve/periodTest=authc,perms[periodTest]
+					 /curve/periodTest/setPeriodTest=authc,perms[setPeriodTest]
+					 /curve/periodTest/cancelPeriodTest=authc,perms[cancelPeriodTest]
+					 /curve/periodTest/refreshCycPara=authc,perms[refreshCycPara]
+			         /curve/obstacleTest=authc,perms[obstacleTest]
+			         /curve/obstacleTest/obstacleGroup=authc,perms[obstacleGroup]
+			         /curve/obstacleTest/setGroupObstacle=authc,perms[setObstacle]
+			         /curve/obstacleTest/setObstacle=authc,perms[setObstacle]
+			         /curve/obstacleTest/cancelObstacle=authc,perms[cancelObstacle]
+			         /curve/**=authc,perms[curve]
+			<!--           劣化分析 -->
+			         /degradation/checkPowerValue=authc,perms[checkPowerValue]
+			         /degradation/checkHisPowerValue=authc,perms[checkHisPowerValue]
+			         /degradation/degradationPowerValue=authc,perms[degradationPowerValue]
+			         /degradation/degradationParaSet=authc,perms[degradationParaSet]
+			<!-- -       告警管理   --> 
+			         /alarm/handleAlarm/textMessage=authc,perms[handleAlarm]  
+			         /alarm/handleAlarm/email=authc,perms[handleAlarm]   
+			         /alarm/handleAlarm/ignore=authc,perms[handleAlarm] 
+			         /alarm/delAlarm=authc,perms[delAlarm]   
+			         /alarm/addAlarmBank=authc,perms[addAlarmBank]   
+			         /alarm/delAlarmBank=authc,perms[delAlarmBank]   
+			         /alarm/modifyAlarmBank=authc,perms[modifyAlarmBank]     
+			<!--          业务切换 -->
+			         /switch/fiberSwitch=authc,perms[fiberSwitch]
+			         /switch/setSwitchGroup=authc,perms[setSwitchGroup]
+			         /switch/delSwitchGroup=authc,perms[delSwitchGroup]
+			         /switch/setGroupPara=authc,perms[setGroupPara]
+			<!--          主控设置 -->     
+			 		 /masterCon/getRtuTime=authc,perms[getRtuTime]
+			         /masterCon/setRtuTime=authc,perms[setRtuTime]
+			         /masterCon/getRtuIp=authc,perms[getRtuIp]    
+			         /masterCon/setRtuIp=authc,perms[setRtuIp] 
+					 /masterCon/restart=authc,perms[restartRtu]  
+					 /masterCon/setEmail=authc,perms[setEmail] 
+					 <!--除登录页面和静态资源外所有操作都需要先登录  -->
+					  /**/**=authc,user 
+			       </value> 
+			</property>  
+			<!--  引入自定义的validateFilter-->
+			<property name="filters">
+			<map>
+				<entry key="validate">
+					<bean class="fiberMonitor.shiro.realm.VlidateTokenAuthentication">
+					</bean>
+				</entry>
+			</map>
+		</property> 
+        </bean>  
+        <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+        <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"></bean>  
+ 
+        <!-- 缓存管理 -->  
+        <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+              <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+        </bean> 
+        <!-- 配置 Shiro 的 credentialsMatcher -->
+         <bean id="credentialsMatcher" class="fiberMonitor.shiro.realm.CustomCredentialsMatcher">
+	         <constructor-arg ref="cacheManager" />
+	         <property name="hashAlgorithmName" value="MD5" />  <!-- 密码的加密算法采用MD5 -->
+	         <property name="hashIterations" value="1"/>  <!-- Hash次数为1 -->
+        	 <property name="storedCredentialsHexEncoded" value="true" />
+        </bean>
+        
+        <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+            <!-- 注入 Realm -->
+ 			  <property name="realm" ref="fiberShiroRealm"/> 
+ 			  <property name="cacheManager" ref="cacheManager"></property>  
+        </bean> 
+         <!-- 配置 Realm. 实际进行认证和授权的对象  继承实现的realm -->
+        <bean id="fiberShiroRealm" class="fiberMonitor.shiro.realm.ShiroDaoRealm"> 
+             <!--注入 findService 用来实现用户名密码的查询 --> 
+			 <property name="findService" ref="findService"/> 
+			 <property name="credentialsMatcher" ref="credentialsMatcher"></property>
+       </bean> 
+       
+       
+       
+       <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+			<property name="sessionDAO" ref="sessionDAO" />
+			 <!-- 定时清理失效会话, 相隔多久检查一次session的有效性 -->
+	         <property name="sessionValidationInterval" value="1800000"/>
+			  <!-- 会话超时时间，单位：毫秒  4h -->
+	        <property name="globalSessionTimeout" value="28800000"/>
+	       
+	        <property name="sessionValidationSchedulerEnabled" value="true"/>
+	        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+	        <property name="sessionIdCookieEnabled" value="true"/>
+	   </bean>
+			<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        		<constructor-arg name="name" value="jeesite.session.id"/>
+   			 </bean>
+			<bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.MemorySessionDAO" >
+			</bean>
+         <bean id="shiroSecurityHelper" class="fiberMonitor.shiro.realm.ShiroSecurityHelper">  
+		    <property name="sessionDAO" ref="sessionDAO"/> 
+<!-- 		     <property name="cacheManager" ref="cacheManager"></property>   -->
+	     </bean>
+      <!--   
+           开启Shiro的注解(如@RequiresRoles，@RequiresPermissions)，需借助SpringAOP扫描使用Shiro注解的类，  
+           并在必要时进行安全逻辑验证  
+        -->  
+       <bean  
+            class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"></bean>  
+        <bean  
+            class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+            <property name="securityManager" ref="securityManager"></property>  
+        </bean>     
+    </beans>  

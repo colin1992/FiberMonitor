@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>用户登录</title>
+	<script src="login/js/aes2.js"></script>
+    <script src="login/js/mode-ecb.js"></script>
+	<script src="login/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+	<script src="login/js/login.js"></script>
+	<script src="login/js/jquery.validate.js"></script>
+	<script src="login/js/jquery.idcode.js"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="login/css/jquery.idcode.css" />
+	<link rel="stylesheet" href="login/css/login.css" type="text/css" />
+
+</head>
+<body>
+	<script>	
+ //   $(document).ready(function() {
+ //       $.idcode.setCode();
+//         $("#loginForm").validate({
+// 			rules: {
+// 				userName: {
+// 					required: true
+// 				},
+// 				password: {
+// 					required: true
+// 				},
+// 				valid: {
+// 					required: true
+// 				},
+// 			},
+// 			messages: {
+// 				userName: {
+// 					required: ""
+// 				},
+// 				password: {
+// 					required: ""
+// 				},
+// 				valid:{
+// 					required: ""
+// 				}
+// 			}
+// 		});
+
+ 	
+</script>
+    <div>
+    <!-- -找回密码- -->
+		<div id="loadPassword">
+			<div id="loadPasswordDiv"></div>
+		</div>
+		<div class="login">
+			<h2 class="label">用户登录</h2>
+				<div>
+					<span class="label">用户名：</span>
+					<input type="text" id="user" name="userName" onpaste="return false" autocomplete="off">
+				</div>
+				<div>
+					<span class="label">密&#12288;码：</span>
+					<input type="password" id="password" name="password" onpaste="return false" autocomplete="off">
+				</div>
+				<div>
+					<span class="label">验证码：</span>
+					<input id="valid" name="valid" type="text" onpaste="return false" autocomplete="off">
+					<!--验证码输入框-->
+					<span id="idcode"></span>
+					<!--验证码显示区域-->
+				</div>
+				<div>
+					<span><input id="submitLogin" type="button"  value="登录"></span>
+					<input type="button" id="getPassword" value="忘记密码" />
+				</div>
+				<div class="loginlist" style="margin:5px 20px 6px 70px;">
+					<font class="msg" color="red"> </font>
+				</div>
+		</div>
+	</div>
+</body>
+</html>

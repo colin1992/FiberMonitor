@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <script src="js/laypage.js" type="text/javascript"></script>    
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+    <style type="text/css">
+      .inputInfo{
+      		margin-bottom: 10px;
+      		color: gray;
+      		font-size:10px;
+      		margin-left:105px;
+      }
+      .tipNameIcon{
+      		 height: 14px;
+             width: 14px;
+      }
+      .error {
+			color: red;
+			text-align: center;
+			margin-right: 10px;
+		}
+		 .sidebar span {
+			width: 100px;
+			padding: 5px;
+			text-align: right;
+		}
+		
+		.sidebar select {
+			width: 160px;
+		}
+		.sidebar input {
+			width: 160px;
+		}
+		.sidebar {
+			height:550px; 
+		} 
+		
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+		.info{
+/* 		   margin-left:105px; */
+		}
+    </style>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>新增用户</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="userIn">
+        <p>
+           <label for="userNameAdd"> <span>用户名</span>
+            <input type="text" id="userNameAdd" name="userNameAdd"/>
+           </label> 
+        </p>   
+            <div class="inputInfo" id="nameInfo">
+            	<img src="" style="display:none;height:14px;width:14px" class="nameIcon"/>
+            	<span id="nameTip" class="info">请输入用户名</span>
+            </div>
+        <p>    
+            <label for="password"> <span>密码</span>
+              <input type="password" name="password" id="password"/>
+            </label>
+        </p>    
+            <div  class="inputInfo" id="pwordInfo" style="margin-bottom:5px">
+            	<img src="" class="pwordIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="pwordTip" class="info">请输入6-16位的密码</span>
+            </div>
+            <div  class="inputInfo" id="pwordContInfo" >
+            	<img src="" class="pwordContIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="pwordContTip" class="info">请输入数字和字母的组合</span>
+            </div>
+            <label for="password"> <span>确认密码</span>
+              <input type="password" id="pwordConfirm" style="margin-bottom: 3px;"/>
+            </label>
+            <div  class="inputInfo" id="pwordConInfo" >
+            	<img src="" class="pwordConIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="pwordConTip" class="info">请再次输入密码</span>
+            </div>
+            <label for=""> <span>用户角色</span>
+              <select id="roleSelect" style="margin-bottom: 3px;"></select>
+            </label>
+            <div  class="inputInfo" id="roleInfo" >
+                <img src="images/warn_yellow.png" class="roleIcon" style="display:none;height:14px;width:14px"/>
+            	<span id="roleTip" class="info">请选择用户所属角色</span>
+            </div>
+           <form class="phoneAndEmail">
+            <label for="phone"> <span>手机号</span>
+	            <input type="tel" id="phone" name="phone" style="margin-bottom: 3px;"/>
+	        </label>
+	             <div  class="inputInfo" id="phoneInfo" >
+<!-- 	            	<img src="" class="phoneIcon" style="display:none;height:14px;width:14px"/> -->
+<!-- 	            	<span id="phoneTip">请输入用户手机号</span> -->
+	            </div>
+	        <label for="email"> <span>邮箱</span>   
+	            <input type="email" id="email" name="email" style="margin-bottom: 3px;"/>
+	        </label>    
+	            <div  class="inputInfo" id="emailInfo" >
+<!-- 	            	<img src="" class="emailIcon" style="display:none;height:14px;width:14px"/> -->
+<!-- 	            	<span id="emailTip">请输入用户邮箱地址</span> -->
+	            </div>
+            </form>
+            <label for=""> <span>用户描述</span> 
+               <textarea  id="description" cols="18" rows="5"></textarea>
+            </label>
+            
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+/**
+ * 当用户名输入框聚焦再失焦后判断用户名是否唯一
+ */
+$("#userNameAdd").focus(function(){
+ }).blur(function(){
+   if($(this).val()!=""){
+	   isAccountExit($(this).val());
+   }
+});
+/**
+ *判断密码长度 
+ */
+$("#password").focus(function(){
+}).blur(function(){
+  $(".pwordIcon").show();
+  $(".pwordContIcon").show();
+   if(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/.test($(this).val()))
+	  {
+	   	  $("#pwordInfo").css("color","green");
+		  $(".pwordIcon").attr('src',"images/right_green.png"); 
+		  $("#pwordTip").text("密码长度通过"); 
+		  
+		  $("#pwordContInfo").css("color","green");
+		  $(".pwordContIcon").attr('src',"images/right_green.png");
+		  $("#pwordContTip").text("符合数字和字母的组合"); 
+	  }
+   else if((!(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]*$/.test($(this).val())))&&($(this).val().length<6||$(this).val().length>16)||$(this).val()==""){
+	      $("#pwordInfo").css("color","red");
+		  $(".pwordIcon").attr('src',"images/warn_yellow.png"); 
+		  $("#pwordTip").text("密码长度必须为6-16个字符");
+		  
+		  $("#pwordContInfo").css("color","red");
+		  $(".pwordContIcon").attr('src',"images/warn_yellow.png"); 
+		  $("#pwordContTip").text("必须是数字和字母的组合"); 
+   }
+
+  else if($(this).val().length<6||$(this).val().length>16){
+	  $("#pwordInfo").css("color","red");
+	  $(".pwordIcon").attr('src',"images/warn_yellow.png"); 
+	  $("#pwordTip").text("密码长度必须为6-16个字符");
+	  
+	  $("#pwordContInfo").css("color","green");
+	  $(".pwordContIcon").attr('src',"images/right_green.png");
+	  $("#pwordContTip").text("符合数字和字母的组合");
+  }
+  else{
+	  $("#pwordInfo").css("color","green");
+	  $(".pwordIcon").attr('src',"images/right_green.png"); 
+	  $("#pwordTip").text("密码长度通过"); 
+	  
+	  $("#pwordContInfo").css("color","red");
+	  $(".pwordContIcon").attr('src',"images/warn_yellow.png"); 
+	  $("#pwordContTip").text("必须是数字和字母的组合");
+  }
+});
+/**
+ *判断两次密码是否一致 
+ */
+$("#pwordConfirm").focus(function(){
+}).blur(function(){
+  $(".pwordConIcon").show();
+  if($(this).val()!=$("#password").val()){
+	  $("#pwordConInfo").css("color","red");
+	  $(".pwordConIcon").attr('src',"images/warn_yellow.png"); 
+	  $("#pwordConTip").text("两次密码不一致")
+  }
+  else{
+	  $("#pwordConInfo").css("color","green");
+	  $(".pwordConIcon").attr('src',"images/right_green.png"); 
+	  $("#pwordConTip").text("")
+  }
+});
+
+/**
+ *检查用户名是否唯一 
+ **/
+ function isAccountExit(account){
+	 $.ajax({
+		    type : "post",
+		    async : false,  //异步请求 先执行后续操作，再执行sucess
+		    url : "isAccountExit",
+		    dataType:"json",
+		    data:{"account":account},
+		    timeout:2000,
+		    success:function(json){
+		    	$(".nameIcon").show(); 
+		    	if(json[0].status){//账号不可用
+		    		$("#nameInfo").css("color","red");
+		    	    $(".nameIcon").attr('src',"images/warn_yellow.png"); 
+		    		$("#nameTip").text("该账号已被使用");
+		    	}
+		    	else{//账号可用
+		    		$("#nameInfo").css("color","green");
+		    		$(".nameIcon").attr('src',"images/right_green.png"); 
+		    		$("#nameTip").text("账号可以使用");
+		    	}
+		    }
+	 })
+}
+//加载这个页面的时候会自动获取
+$.ajax({
+    type : "post",
+    async : false,  //异步请求 先执行后续操作，再执行sucess
+    url : "getRole",
+    dataType:"json",
+    data : null,
+    timeout:2000,
+    success:function(data){
+    	for(i=0;i<data.length;i++)
+    		if(i==1){
+    			$("#roleSelect").append("<option value=" + data[i].id + " selected='selected'>" + data[i].name + "</option>");  	
+    		}
+    		else{
+    			$("#roleSelect").append("<option value=" + data[i].id +">" + data[i].name + "</option>");  
+    		}
+    },
+   
+})
+
+ /**-------------验证表单-------------------**/
+	  function validateForm() {
+		    return $(".phoneAndEmail").validate({
+		        rules: {
+		        	    phone: {
+		        	    	required: true,
+		    				digits: true,
+		    				rangelength: [11,11],
+		               },
+		               email: {
+		            	   required: true,
+							email: true,
+	                  },
+	                 
+		        },
+		        messages: {
+		        	phone: {
+		                required: "请输入手机号",
+		                digits:"请输入合法的手机号",
+		                rangelength: "请输入合法的手机号"
+		            },
+		            email: {
+		                required: "请输入邮箱",
+		                email: "请输入合法的邮箱"
+		            },
+		        }
+		    }).form();
+		}
+$(".sidebar_close").click(function(){
+    $(".contentDiv").html("");
+    $(".sidebarDiv").html("");
+});
+$(".cancel").click(function(){
+    $(".contentDiv").html("");
+    $(".sidebarDiv").html("");
+});
+$(".confirm").click(function(){
+	var ico="right_green.png";
+	//验证表单
+	if(validateForm()&&($(".nameIcon")[0].src.split("images/")[1]==ico)&&($(".pwordIcon")[0].src.split("images/")[1]==ico)&&($(".pwordContIcon")[0].src.split("images/")[1]==ico)&&($(".pwordConIcon")[0].src.split("images/")[1]==ico)){
+		 $.ajax({
+		    url:'user/addUser',
+		    type:'post', //数据发送方式
+		    dataType:'json', //接受数据格式
+		    data : {
+		    		"name":$("#userNameAdd").val(),
+		    		"password":$("#password").val(),
+		    		"roleId":$("#roleSelect").val(),
+		    		"phone":$("#phone").val(),
+		    		"email":$("#email").val(),
+		    		"description":$("#description").val(),
+		    		},
+		    async: false,
+		    success: function(json){
+		    	var txt="";
+		    	if(json[0].status){
+		    		txt+="新增用户成功<br/>"
+		    	}
+		    	else{
+		    		txt+="增加失败，请重试";
+		    	}
+			     var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+								 selectUsersByRole($("#roleSelect").val());
+					        	 $(".sidebarDiv").html("");
+						  }
+						}
+				  window.wxc.xcConfirm(txt, "info", option);
+		      },
+		    error:function(XMLHttpRequest,Error,F,data)
+		      {
+		    	    var txt="新建用户失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限<br/>";
+		    	     }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						$(".sidebarDiv").html("");
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+		  }
+		}); 
+	}
+	
+})
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+@CHARSET "UTF-8";
+.routeParaSidebar{
+ 	position: relative; 
+    background-color: white;
+    margin-left:0px;
+    width:320px;
+    height: 510px;
+    border: solid 1px gray;
+    border-radius: 6px;
+    font-size: 14px;
+
+}
+.routeParaBar{
+ 	position: absolute; 
+    background-color: white;
+    left:0px;
+/*     z-index: 100012;  */
+    width:320px;
+    height: 510px;
+    border: solid 1px gray;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.sidebarTitle{
+    text-align: center;
+    height: 30px;
+    width:100%;
+    line-height: 30px;
+    color:white;
+    background-color: #343434;
+    font-size: 18px;
+    font-family: "Microsoft YaHei";
+    margin-bottom: 10px;
+}
+.sidebarTitle img{
+    float: right;
+    margin-top: 1px;
+    margin-right: 1px;
+}
+.funcName{
+    float: left;
+    width:25%;
+    text-align: right;
+    line-height: 150%;
+}
+.funcCoff{
+    float: right;
+    width:70%;
+    line-height: 130%;
+}
+.funcCoffinput{
+	width:182px;
+    height: 18px;
+    margin-bottom: 9px;
+    margin-left: 10px;
+}
+.funcCoffselect{
+	width:182px;
+    height: 20px;
+    margin-bottom: 9px;
+    margin-left: 10px;
+}
+.funcCoff input{
+    width:180px;
+    height: 17px;
+    margin-bottom: 10px;
+}
+.funcCoff select{
+    width:180px;
+    height: 20px;
+    margin-bottom: 10px;
+}
+.funcConfirm{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    text-align: center;
+}
+
+.funcConfirm li{
+    display: inline-block;
+    width:80px;
+    height: 50px;
+    line-height: 50px;
+    cursor:pointer;
+}

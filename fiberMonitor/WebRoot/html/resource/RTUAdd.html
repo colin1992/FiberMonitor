@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<script src="js/jquery.validate.js"></script>
+	<script src="js/additional-methods.js"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		.error {
+			color: red;
+			text-align: right;
+			margin-right: 10px;
+		}
+		
+		.topForm {
+			float: left;
+			width: 300px;
+			top: -2%;
+			left: 5px;
+		}
+
+        .bottomForm {
+            float: left;
+			width: 300px;
+			top: 40%;
+			left: 5px;
+        }
+		
+		.validFormDiv {
+			float: left;
+			width: 300px;
+			top: 40%;
+			left: 5px;
+		}
+		
+		.sidebar span {
+			width: 100px;
+			padding: 5px;
+			text-align: right;
+		}
+		
+		.sidebar select {
+			width: 155px;
+		}
+		.sidebar input {
+			width: 155px;
+		}
+		
+		.sidebar {
+			height: 650px;
+		}
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+		#portNumDiv,#divideWay{
+		   display:none;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle">
+				<span>新增RTU</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="topForm">
+				<p>
+					<label for=""><span>RTU类型： </span></label>
+					<select name="type" id="rtuTypeSelect">
+                        <option value="普通rtu">普通RTU</option>
+                        <option value="备纤光源rtu">备纤光源RTU</option>
+                    </select>
+				</p>
+				<p>
+					<label for=""><span>机柜： </span></label>
+					<select name="type" id="cabinetSelect">
+                        <option value="index">请选择</option>
+                    </select>
+				</p>
+				<p>
+					<label for=""><span>机架： </span></label>
+					<select name="type" id="rackSelect">
+                        <option value="index">请选择</option>
+                    </select>
+				</p>
+				<p>
+					<label for=""><span>RTU名称： </span></label>
+					<input id="rtuNameInPut" type="text" required/>
+				</p>
+				
+			</div>
+			<div class="validFormDiv">
+				<form id="addRTUForm">
+					<p>
+						<label for=""><span>设备注册码： </span></label>
+						<input id="rtuKeyInput" name="rtuKeyInput" type="text" />
+					</p>
+					<p>
+						<label for=""><span>RTU地址： </span></label>
+						<input id="rtuUrlInput" name="rtuUrlInput" type="text" />
+					</p>
+				</form>
+			</div> 
+			<div id="divideWay">
+			   <p>
+			        <label for=""><span>分光方式：</span></label>
+					<select name="" id="divideNum">
+                         <option value="1">不分光</option>
+                         <option value="2">一分二</option>
+                         <option value="4">一分四</option>
+                         <option value="8">一分八</option>
+                         <option value="16">一分十六</option>
+                         <option value="32">一分三十二</option>
+                         <option value="64">一分六十四</option>
+                         <option value="128">一分一百二十八</option>
+                    </select>
+				</p>
+			</div>
+			<div id="portNumDiv">
+			    <p>
+			        <label for=""><span>端口数：</span></label>
+					<select name="" id="portNum">
+                         <option value="1">1</option>
+                         <option value="2">2</option>
+                         <option value="4">4</option>
+                         <option value="8">8</option>
+                         <option value="16">16</option>
+                         <option value="32">32</option>
+                         <option value="64">64</option>
+                         <option value="128">128</option>
+                    </select>
+				</p>
+				
+			</div>
+			<div class="bottomForm">
+				<p>
+					<label for="" id="module1Name"><span>模块1： </span></label>
+					<select name="type" id="module1">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤模OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                        
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module2Name"><span>模块2： </span></label>
+					<select name="type" id="module2">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module3Name"><span>模块3： </span></label>
+					<select name="type" id="module3">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module4Name"><span>模块4： </span></label>
+					<select name="type" id="module4">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                       
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module5Name"><span>模块5： </span></label>
+					<select name="type" id="module5">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module6Name"><span>模块6： </span></label>
+					<select name="type" id="module6">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module7Name"><span>模块7： </span></label>
+					<select name="type" id="module7">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module8Name"><span>模块8： </span></label>
+					<select name="type" id="module8">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value="2">备纤模块</option>
+                        <option value ="4">在纤OPM</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+			</div>
+			<div>
+			   <p>
+				<label for=""><span>RTU描述： </span></label>
+				<textarea name="" id="descriptionInput" cols="20" rows="4"></textarea>
+			</p>
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="confirm">确定</li>
+					<li id="cancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+/*获取机柜列表 */
+$.ajax({
+    type: "post",
+    async: false,
+    //异步请求 先执行后续操作，再执行sucess
+    url: "ResourceAddFrameUnderStationListCabinetes",
+    dataType: "json",
+    data: {
+        "stationId": addUnderStationId
+    },
+    success: function(data) {
+        for (var count = 0; count < data[0].cabinetId.length; count++) {
+            $("#cabinetSelect").append("<option value='" + data[0].cabinetId[count] + "'>" + data[0].cabinetName[count] + "</option>");
+        }
+    },
+    error: function(XMLHttpRequest, Error, F, data) {
+       
+    }
+});
+
+/*获取机架列表 rackSelect*/
+$("#cabinetSelect").change(function() {
+    $("#cabinetSelect option[value='index']").remove();
+    var cabinetId = $("#cabinetSelect option:selected").val();
+    $.ajax({
+        type: "post",
+        async: false,
+        //异步请求 先执行后续操作，再执行sucess
+        url: "ResourceAddFrameUnderStationListracks",
+        dataType: "json",
+        data: {
+            "cabineteId": cabinetId
+        },
+        success: function(data) {
+            $("#rackSelect option[value='index']").remove();
+            $("#rackSelect").html("");
+            for (var count = 0; count < data[0].racksId.length; count++) {
+                $("#rackSelect").append("<option value='" + data[0].racksId[count] + "'>" + data[0].racksOrder[count] + "</option>");
+            }
+        },
+        error: function(XMLHttpRequest, Error, F, data) {
+           
+        }
+    })
+});
+
+$("#rtuTypeSelect").change(function(){
+   if($("#rtuTypeSelect").val()=="普通rtu"){
+		   $(".bottomForm").css('display','block');
+		   $("#divideWay").css('display','none');
+		   $("#portNumDiv").css('display','none');
+		   $(".sidebar").css("height","700px");
+	}
+	else{
+		 $(".bottomForm").css('display','none');
+		// $("#desc").css('display','block')
+		 $("#divideWay").css('display','block');
+		 $("#portNumDiv").css('display','block');
+		 $(".sidebar").css("height","450px");
+	}
+})
+$(".sidebar_close").click(function() {
+    $(".contentDiv").html("");
+    $(".sidebarDiv").html("");
+});
+
+$("#cancel").click(function() {
+	   $(".contentDiv").html("");
+	    $(".sidebarDiv").html("");
+});
+
+function validateForm() {
+    return $("#addRTUForm").validate({
+        rules: {
+            rtuKeyInput: {
+                required: true,
+                alphanumeric: true
+            },
+            rtuUrlInput: {
+                required: true,
+                ipv4: true
+            }
+        },
+        messages: {
+            rtuKeyInput: {
+                required: "请输入RTU激活码",
+                alphanumeric: "请输入数字和字母的组合"
+            },
+            rtuUrlInput: {
+                required: "请输入RTU地址",
+                ipv4: "请输入正确的IPv4地址"
+            }
+        }
+    }).form();
+}
+
+$(".confirm").click(function() {
+    if (validateForm()) {
+    	var type = $("#rtuTypeSelect").val();
+        var rackId = $("#rackSelect option:selected").val(); //获取下拉框中的值
+        var rtuNameAdd = document.getElementById("rtuNameInPut").value;
+        var stationIdAdd = addUnderStationId;
+        var rtuKeyAdd = document.getElementById("rtuKeyInput").value;
+        var rtuUrlAdd = document.getElementById("rtuUrlInput").value;
+        var descriptionAdd = document.getElementById("descriptionInput").value;
+        //下面获取rtu的安装状态
+        var module1 = $("#module1 option:selected").val();
+        var module2 = $("#module2 option:selected").val();
+        var module3 = $("#module3 option:selected").val();
+        var module4 = $("#module4 option:selected").val();
+        var module5 = $("#module5 option:selected").val();
+        var module6 = $("#module6 option:selected").val();
+        var module7 = $("#module7 option:selected").val();
+        var module8 = $("#module8 option:selected").val();
+        var installInfo =module1+module2+module3+module4+module5+module6+module7+module8;
+        var portNum=0;
+        var dividNum=0;
+        if(type!="普通rtu"){
+        	dividNum=$("#divideNum").val();
+        }
+        if(type=="备纤光源rtu"){
+        	portNum=$("#portNum").val();
+        }
+        $.ajax({
+            type: "post",
+            async: false,
+            //异步请求 先执行后续操作，再执行sucess
+            url: "rtu/addRtu",
+            dataType: "json",
+            data: {
+            	"type":type,
+                "rackId": rackId,
+                "rtuNameAdd": rtuNameAdd,
+                "stationIdAdd": stationIdAdd,
+                "rtuKeyAdd": rtuKeyAdd,
+                "rtuUrlAdd": rtuUrlAdd,
+                "descriptionAdd": descriptionAdd,
+                "installInfo":installInfo,
+                "portNum":portNum,
+                "dividNum":dividNum,
+            },
+            success: function(json) {
+                var txt = "";
+                if (json[0].status) {
+                	$(".sidebarDiv").html("");
+                    txt += "增加成功<br/>"
+                } else {
+                    txt += "增加失败，请重试<br/>";
+                    txt+="故障原因："+json[0].err;
+                }
+                var option = {
+                    title: "提示",
+                    btn: parseInt("0001", 2),
+                    onOk: function() { //点击确认的执行方法
+                    }
+                }
+                window.wxc.xcConfirm(txt, "info", option);
+            },
+            error: function(XMLHttpRequest, Error) {
+                var txt = "增加失败<br/>";
+                txt += "失败原因：";
+                if (XMLHttpRequest.status == 401) {
+                    txt += "您不具有当前操作的权限<br/>";
+                } 
+                else {
+                    txt += "网络错误<br/>";
+                    txt += "状态码：" + XMLHttpRequest.status;
+                }
+                var option = {
+                    title: "提示",
+                    btn: parseInt("0001", 2),
+                    onOk: function() { //点击确认的执行方法
+                    }
+                }
+                window.wxc.xcConfirm(txt, "info", option);
+            }
+        });
+        //这个方法位于RTU.html中，每次查询之后都会根据这个新增的rtu所属局站的id再进行一次叶节点的搜索更新
+        selectRtuByStation(addUnderStationId, addUnderStationName);
+    }
+});
+</script>
+
+</body>
+
+</html>

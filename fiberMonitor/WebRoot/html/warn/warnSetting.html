@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <script src="warnSetting.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+    <script>
+        $(".warn_set_close").click(function(){
+            $(".containerDiv").html("");
+            $(".navContentDiv:eq("+3+")").show();
+        });
+    </script>
+</head>
+
+<body>
+    <div class="warnSettingContent">
+        <div class="warn_set_title">
+            <span>光功率门限设置</span>
+            <span class="warn_set_close">
+                        <img src="images/close.png" alt="close"/>
+                    </span>
+        </div>
+        <div class="warn_set_left">
+            <p>一级门限(dB)</p>
+            <p>二级门限(dB)</p>
+            <p>三级门限(dB)</p>
+            <p>四级门限(dB)</p>
+            <p>确认等待时间</p>
+            <p>重发间隔时间</p>
+        </div>
+        <div class="warn_set_right">
+            <input type="text" style="width: 200px; height: 20px;" />
+            <input type="text" style="width: 200px; height: 20px;" />
+            <input type="text" style="width: 200px; height: 20px;" />
+            <input type="text" style="width: 200px; height: 20px;" />
+            <input type="text" style="width: 200px; height: 20px;" />
+            <input type="text" style="width: 200px; height: 20px;" />
+        </div>
+        <div class="warn_set_bottom">
+            <span class="sure">确定</span>
+            <span>取消</span>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/pickList.css" type="text/css">
+    <link rel="stylesheet" href="css/xcConfirm.css" type="text/css" />
+    <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/pickList.js" type="text/javascript"></script> 
+   <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+ <div class="contentDiv" id="contentDiv">
+    <div  class="sidebarPickList" style="width:1000px">
+        <div class="sidebarTitle">
+            <span>删除保护组</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+         <div id="pickList"></div>
+               
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">删除</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>          <!--添加确定对应事件-->
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+
+    
+//载入页面的时候自动将配对信息载入到左侧的框框中    
+   var matchList = [];
+    $.ajax({
+        type : "post",
+        async : false,  //异步请求 先执行后续操作，再执行sucess
+        url : "getRouteMatchByRtuIdFillPick",
+        dataType:"json",
+        data : {
+        	       "id":currentRtuId,
+        	    },
+        success:function(data){ 
+        	if(data[0].status==true){
+        		matchList=data[1];
+        	}
+        },
+
+    });
+    pick = $("#pickList").pickList({data:matchList});
+       
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $(".cancel").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+     $(".confirm").click(function(){
+    	var p = pick.getValues();
+    	var matchId = [];
+    	for(var i=0;i<p.length;i++)
+    		{
+    		matchId.push(p[i].id);
+    		}
+    	$.ajax({
+            type : "post",
+            async : false,  //异步请求 先执行后续操作，再执行sucess
+            url : "switch/delSwitchGroup",
+            dataType:"json",
+            data : {
+            	"selectMatchId":JSON.stringify(matchId),
+     	        "rtuId":currentRtuId
+            },
+            success:function(data){            	
+                if(data[0].status){
+                	$(".sidebarDiv").html("");
+                    getRouteMatchByRtuId(currentRtuId);
+                      var txt= "您已成功删除当前保护组。";
+					  var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									
+							 }
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+				  }
+				  else{
+					   var txt= "删除保护组失败。";
+					   txt+="失败原因："+data[0].err;    
+				       var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									
+								}
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+				  }
+			  },
+			  error:function(XMLHttpRequest,textStatus){
+				    $(".sidebarDiv").html("");
+				    var txt="删除保护组失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限<br/>";
+		    	     }
+		    	    else if(XMLHttpRequest.status==0){
+		    	    	txt+="连接超时";
+		    	    }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	     window.wxc.xcConfirm(txt, "info", option);
+				},
+      })
+
+        
+    }); 
+</script>
+</body>
+</html>

@@ -1,0 +1,306 @@
+@CHARSET "UTF-8";
+.contentArea{
+	position:relative;
+	width:100%;
+	height:100%;
+}
+.preRouteArea{
+	position: absolute;
+	height:80%;
+	width:405px;
+	left:50%;
+	top:20%;
+	
+}
+.preRouteListArea{
+	 position: relative;
+	 height:100%;
+	 width:100%;
+     overflow: hidden;
+     pointer-events: none;
+}
+
+#left-panel {
+    position: absolute;
+    height:80%;
+    left: 80px;
+    top: 50px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+#searchbox {
+    border-radius: 2px;
+    width: 405px;
+    position: relative;
+    z-index: 5
+}
+
+#searchbox #searchbox-container {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+    width: 338px;
+    float: left;
+    box-sizing: border-box;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15)
+}
+
+#searchbox #set-button {
+    background:#3385ff;
+    color: #ffffff;
+    border: 0 none;
+    border-radius: 0 2px 2px 0;
+    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    float: left;
+    height: 45px;
+    padding: 0;
+    pointer-events: auto;
+    width: 57px;
+}
+input, button, select, textarea {
+    font-family: inherit;
+    outline: 0 none;
+}
+*::-moz-placeholder {
+    color: #aaa;
+    font-size: 14px;
+}
+
+#searchbox #set-button:hover {
+    background-color: #2e77e5;
+}
+
+.searchbox-content {
+    width: 338px;
+    border-radius: 2px 0 0 2px;
+    background: #fff
+}
+
+.searchbox-content:after {
+    font-size: 0;
+    zoom:1;content: " ";
+    clear: both;
+    display: block;
+    height: 0;
+    visibility: hidden
+}
+
+.searchbox-content .input-clear {
+    cursor: pointer;
+    position: absolute;
+    width: 27px;
+    height: 38px;
+    top: 0;
+    background: url(../images/searchbox.png) no-repeat 0 -114px #fff;
+    display: none
+}
+
+.searchbox-content .searchbox-content-common {
+    box-sizing: border-box;
+    float: left;
+    width: 329px;
+    height: 38px
+}
+
+.searchbox-content .searchbox-content-button {
+    box-sizing: border-box;
+    float: left;
+    height: 38px;
+    width: 39px;
+    cursor: pointer;
+    position: relative
+}
+
+.searchbox-content .searchbox-content-button.left-button:before {
+    content: '';
+    position: absolute;
+    width: 38px;
+    left: 0;
+    top: 6px;
+    height: 26px;
+    border-right: 1px solid #eee
+}
+
+.searchbox-content .searchbox-content-button.right-button:before {
+    content: '';
+    position: absolute;
+    width: 38px;
+    left: 0;
+    top: 6px;
+    height: 26px;
+    border-left: 1px solid #eee
+}
+
+#sole-searchbox-content {
+    position: relative
+}
+
+#sole-searchbox-content #sole-input {
+    box-sizing: border-box;
+    border: 0;
+    padding: 9px 0;
+    border-left: 10px solid transparent;
+    border-right: 27px solid transparent;
+    line-height: 20px;
+    font-size: 16px;
+    height: 38px;
+    color: #333;
+    position: relative;
+    border-radius: 2px 0 0 2px
+}
+
+#sole-searchbox-content .input-clear {
+    right: 39px
+}
+
+#sole-searchbox-content.is-complete #sole-input {
+    border-right: 10px solid transparent
+}
+
+.route-searchbox-content {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-bottom-right-radius: 2px
+}
+
+.route-searchbox-content.drive .routebox .routebox-content .route-through {
+    display: block
+}
+
+.route-searchbox-content.drive .routebox .routebox-content .route-through .input-clear {
+    right: 22px
+}
+
+.route-searchbox-content.drive .routebox .routebox-content .input-clear {
+    right: 22px
+}
+
+.route-searchbox-content.drive .routebox .routebox-content .route-input-add-icon {
+    display: block
+}
+
+.route-searchbox-content.drive .routebox .routebox-content .route-input-add-icon.hide {
+    display: none
+}
+
+.route-searchbox-content.drive .routebox .routebox-content .route-start-input,.route-searchbox-content.drive .routebox .routebox-content .route-end-input,.route-searchbox-content.drive .routebox .routebox-content .route-through-input {
+    border-right: 49px solid transparent
+}
+
+.route-header {
+    overflow: hidden
+}
+
+.routebox {
+    -webkit-transition: max-height 1s ease-in;
+    transition: max-height 1s ease-in;
+    overflow: hidden
+}
+
+.routebox .routebox-content {
+    height: auto!important;
+    position: relative
+}
+
+.routebox .routebox-content .routebox-inputs {
+    margin-left: 39px;
+}
+
+.routebox .routebox-content .routebox-input {
+    height: 40px;
+    width: 289px;
+    border-bottom: 1px solid #eaebed;
+    position: relative
+}
+.routebox .routebox-content .routebox-input:first-child {
+    margin-top:5px;
+}
+.routebox .routebox-content .routebox-input:last-child {
+	border-bottom:0;
+    margin-bottom:5px;
+}
+
+.routebox .routebox-content .routebox-input.route-through {
+    display: none
+}
+
+.routebox .routebox-content .routebox-input .input-clear {
+    left: auto;
+    right: 0;
+    top: 1px
+}
+
+.routebox .routebox-input .route-input-icon {
+    width: 11px;
+    height: 10px;
+    background: url(../images/start.png) no-repeat 0 0;
+    position: absolute;
+    top: 15px;
+    left: 3px
+}
+
+.routebox  .routebox-input .route-input-add-icon {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    background: url(../images/button.png) no-repeat -1px -223px;
+    top: 12px;
+    right: 5px;
+    display: none;
+    cursor: pointer
+}
+
+.routebox  .routebox-input .route-input-remove-icon {
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    background: url(../images/button.png) no-repeat -19px -223px;
+    top: 12px;
+    right: 5px;
+    cursor: pointer
+}
+
+.routebox .routebox-content .routebox-input.route-end .route-input-icon {
+    background: url(../images/end.png) no-repeat 0 0
+}
+
+.routebox .routebox-content .routebox-input input {
+    box-sizing: border-box;
+    border: 0;
+    height: 100%;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 14px;
+    border-left: 20px solid transparent;
+    border-right: 27px solid transparent;
+    line-height: 20px
+}
+
+.routebox .routebox-content .routebox-input input.route-through-input {
+    border-right: 49px solid transparent
+}
+
+.routebox .routebox-content .routebox-revert {
+    width: 39px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    cursor: pointer
+}
+
+.routebox .routebox-content .routebox-revert .routebox-revert-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 14px;
+    margin-left: -9px;
+    margin-top: -7px;
+    background: url(../images/revert.png) no-repeat 0 0
+}
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/checkPort.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="cableSidebar">
+        <div class="sidebarTitle">
+            <span>查看端口</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+         <div class="cableFuncName">
+                <p id="spanPortId">端口标识</p>
+                <p id="spanPortName">端口名称</p>
+                <p id="spanPortOrder">端口序号</p>
+                <p id="spanPortStatus">端口状态</p>
+                <p id="spanEquiType">设备类型</p>
+                <p id="spanEquiId">设备标识</p>
+                <p id="spanEquiName">设备名称</p>
+                <p id="spanConnectType">连接设备类型</p>
+                <p id="spanConnectId">连接设备标识</p>
+                <p id="spanConnectName">连接设备名称</p>
+                <p>修改时间</p>
+                <p>修改用户</p>
+                <p>端口描述</p>
+            </div>
+            <div class="cableFuncCoff">
+                <input id="portId" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="portName" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="portOrder" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="portStatus" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="equiType" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="equiId" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="equiName" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="connectType" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="connectId" type="text" readonly="readonly" disabled="disabled"/>
+          		<input id="connectName" type="text" readonly="readonly" disabled="disabled"/>
+          		<input id="alterTime" type="text" readonly="readonly" disabled="disabled"/>
+          		<input id="alterUser" type="text" readonly="readonly" disabled="disabled"/>
+          		<textarea id="description" cols="24" rows="6" readonly="readonly" disabled="disabled"></textarea>
+            </div>
+            
+            <div class="funcConfirm">
+                <ul class="callTestingFunc">
+                    <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                </ul>
+            </div>
+    </div>
+</div>
+</body>
+</html>

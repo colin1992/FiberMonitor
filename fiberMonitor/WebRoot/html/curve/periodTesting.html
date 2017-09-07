@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Pragma" content="no-cache">
+	<!-- http 1.0 -->
+	<meta http-equiv="Cache-Control" content="no-cache">
+	<!-- http 1.1 -->
+	<script src="js/periodTesting.js" type="text/javascript"></script>
+	<script src="js/jquery.printArea.js" type="text/javascript"></script>
+	<script src="js/xlsx.core.min.js" type="text/javascript"></script>
+	<script src="js/Blob.js" type="text/javascript"></script>
+	<script src="js/FileSaver.js" type="text/javascript"></script>
+	<script src="js/tableexport.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		#mapArea,
+		#tab,
+		#mapfrm {
+			width: 100%;
+			height: 100%;  
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+		
+		#menu {
+			height: 100%;
+			overflow-y: auto
+		}
+		
+		td {
+			font-size: 14px
+		}
+		
+		h4 {
+			margin: 0;
+		}
+		
+		.btn-toolbar.top {
+			padding: 1px;
+		}
+		
+		.btn.btn-default {
+			width: 100px;
+			padding: 1px;
+		}
+		
+		.btn.btn-default.xlsx {
+			margin-left: 600px;
+		}
+		
+		#printBtn,
+		#exportBtn {
+			cursor: pointer;
+		}
+		
+		.mapDiv {
+			width: 83%;
+			float: right;
+		}
+		
+		#controlMapArea {
+			margin-top: 0px;
+			width: 100%;
+			height: 100%;
+			float: right;
+			overflow: hidden;
+			font-family: "微软雅黑";
+		}
+	</style>
+</head>
+
+<body>
+	<div class="leftTreeCont">
+		<div class="leftTree" id="leftTree">
+		</div>
+	</div>
+	<div class="mapDiv" style="height:680px;margin-top:20px;">
+		<div id="controlMapArea">
+			<iframe width="98.5%" height="100%" src="html/system/systemMap.html"></iframe>
+		</div>
+	</div>
+	<div class="rightTable" style="display:none">
+		<div class="cableTable tableSet">
+			<div class="tableSearch">
+				<span id="backToGis">回到GIS</span>
+				<span onclick="selectPath()" id="selectPath" class="spanbutton">选择光路</span>
+				<span class="spanbutton periodParameter">时间表设置</span>
+				<span class="spanbutton periodStart">执行周期测试</span>
+				<span class="spanbutton periodCancel">取消周期测试</span>
+				<span  id="printBtn" class="spanbutton">打印</span>
+				<span id="exportBtn" class="spanbutton">导出</span>
+			</div>
+			<div class="printArea">
+				<table class="table table-bordered periodTestingTableDetail tableDetail" style="cursor:default" id="periodTestingTableDetail">
+					<thead>
+						<tr>
+							<th width="4%" noWrap="noWrap">序号</th>
+							<th width="6%" noWrap="noWrap">光路标识</th>
+							<th width="15%" noWrap="noWrap">光路名称</th>
+							<th width="9%" noWrap="noWrap">RTU名称</th>
+							<th width="5%" noWrap="noWrap">光端口</th>
+							<th width="6%" noWrap="noWrap">光路状态</th>
+							<th width="8%" noWrap="noWrap">光路长度[km]</th>
+							<th width="6%" noWrap="noWrap">链路方向</th>
+							<th width="6%" noWrap="noWrap">纤芯状态</th>
+							<th width="6%" noWrap="noWrap">RTU标识</th>
+							<th width="6%" noWrap="noWrap">局站标识</th>
+							<th width="6%" noWrap="noWrap">局站名称</th>
+							<th width="6%" noWrap="noWrap">周期测试</th>
+							<th width="12%" noWrap="noWrap">创建时间</th>
+							<th width="6%" noWrap="noWrap">创建用户</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="pageon"></div>
+		</div>
+	</div>
+	<span class="periodListCurves" id="periodListCurves"></span>
+	<span class="periodCurveShow" id="periodCurveShow"></span>
+	<script>
+    /**验证session是否有效**/
+    $.ajax({
+        url:'checkSession',
+        type:'post', //数据发送方式
+        dataType:'json', //接受数据格式
+        async: false,
+        success: function(json){
+        	if(!json[0].status){
+        		var txt="由于长时间未使用，当前登录信息已过期，请重新登录";
+	    	    	 var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   						localStorage.clear();
+	    	   						window.location.href="Login.html";
+	    	   					},
+	    	  			       onClose:function(){
+	    	  			    	    localStorage.clear();
+	    	  					    window.location.href="Login.html";
+	    	  					    
+	    	  			       },
+	    	   				}
+	    	   	  window.wxc.xcConfirm(txt, "info", option);
+        	}
+        },
+        error:function(XMLHttpRequest,Error)
+   	      {
+   	    	  
+   	     }
+      });
+       $(document).ready(function() {
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+</script>
+
+
+	<script type="text/javascript">
+     /**表格范围内禁止系统右键，使用自定义右键**/
+     $("#periodTestingTableDetail").hover(function(){
+     	 $(document).bind("contextmenu",function(e){   
+   		   return false;   
+   		 });
+     },
+     function(){
+    	$(document).unbind("contextmenu","")
+     });	
+    
+    
+/****************************添加右键菜单功能***********************************/
+            $(".periodTestingTableDetail tbody tr").click(function(){
+            	$(this).addClass("currtrPeriod").siblings().removeClass("currtrPeriod");
+            	$(this).siblings().removeClass("isPeriod");
+            	$(this).siblings().removeClass("notPeriodOne");
+            	$(this).siblings().removeClass("notPeriodMulti");
+            	var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;
+            	var selectId=0;
+            	if(!isNaN(parseInt(this.children[1].innerHTML))){
+            		 //记录选择光路的Id 
+            		 selectId=this.children[1].innerHTML;
+            		 //读取在进行周期测试与否
+            		 var state=(cells==15)?$(this)[0].children[12].innerHTML:$(this)[0].children[13].innerHTML;
+            		 if(state=="是"){
+            			 if(cells==15){
+            				 $(this).addClass("isPeriod");
+            			 }
+            		 }
+            		 /**未进行周期测试**/
+            		 else{
+            			 if(cells==15){
+            				 $(this).addClass("notPeriodOne");
+            			 }
+            			 else{
+            				 $(this).addClass("notPeriodMulti");
+            			 }
+            		 }
+            	}
+            	//单条未进行周期测试的菜单
+                var notPeriodMenu=new BootstrapMenu('.notPeriodOne', {
+                         actions: [{
+                             name: '设置优化参数',
+                             onClick: function() {
+                                 $(notPeriodMenu).remove();
+                                 $(".sidebarDiv").load("html/curve/periodParameterSet.html");
+                             }
+                          },
+                          {
+                             name: '设置时间表',
+                             onClick: function() {
+	                             $(notPeriodMenu).remove();
+	                             $(".sidebarDiv").load("html/curve/timeTable.html");
+                          	}
+                         },
+                         {
+                             name: '执行周期测试',
+                             onClick: function() {
+	                             $(notPeriodMenu).remove();
+	                             $(".sidebarDiv").load("html/curve/oneRoutePeriodStart.html");
+                          	}
+                         }] 
+                });  
+               //多选未进行周期测试的菜单
+                 var notPeriodMultiMenu= new BootstrapMenu('.notPeriodMulti', {
+	                     actions: [{
+	                         name: '设置优化参数',
+	                         onClick: function() {
+	                        	 $(this).remove();
+	                         	 $(".sidebarDiv").load("html/curve/periodParameterSet.html");
+	                         }
+	                     },
+	                     {
+	                         name: '设置时间表',
+	                         onClick: function() {
+	                        	 $(this).remove();
+	                         	 var selectPara=[];
+	                         	 var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+	                         	 for(var i=0; i<trs.length; i++){
+	              	                  if(trs[i].children[0].children[0].checked){
+	              	                	 var order=trs[i].children[5].innerHTML;
+	              	                	 var SNO=getPortOrder(order);
+	              	                	 selectPara.push([
+	              	                	                 SNO, 
+	              	                 	                 trs[i].children[3].innerHTML, 
+	              	                 	                 trs[i].children[10].innerHTML, 
+	              	                 	                 trs[i].children[11].innerHTML, 
+	              	                 	                 ]);
+	              	                   }
+								}
+	              	            localStorage.setItem('paraList',JSON.stringify(selectPara));//将选择光路的信息暂存
+	                         	$(".sidebarDiv").load("html/curve/timeTable.html");
+	                         }
+	                     }]
+                 });
+               //已经在进行周期测试的光路
+                 var isPeriodMenu=new BootstrapMenu('.isPeriod', {
+                         actions: [{
+                             name: '取消周期测试',
+                             onClick: function() {
+                            	 $(this).remove();
+                                $(".sidebarDiv").load("html/curve/periodCancel.html");
+                             }
+                         }, 
+                         {
+                             name: '修改时间表',
+                             onClick: function() {
+                            	  $(this).remove();
+                                  $(".sidebarDiv").load("html/curve/alterTimeTable.html");
+                             }
+                         },
+                         {
+                             name: '查看曲线',
+                             onClick: function() {
+                            	 $(this).remove();
+                                  localStorage.setItem('serchRouteId',selectId);
+                                  $(".rightTable").css('display','none');
+                                  $(".periodCurveShow").css('display','none');
+                                  $(".periodListCurves").css('display','block');
+                                  $(".periodListCurves").load("html/curve/periodListCurves.html");
+                               }
+                         }]
+                  });
+             })
+           
+    </script>
+
+
+
+	<script>
+      /**-------------------该部分全局变量--------------------------------*/
+      var value=0;
+      var ClickCount=0;//点击计数，判断是否为第一次勾选事件，用于记录第一次勾选combox的值
+      var choosedRouteFlag=false;//判断第一次勾选的光路的周期测试状态
+      
+      /******************************表格点击与复选框事件*****************************/ 
+       $(".periodTestingTableDetail").click(function(){
+    	   var cells=document.getElementById("periodTestingTableDetail").rows.item(0).cells.length; //当前表格的列数，用于判断是否开启了复选框
+           var trs=document.querySelectorAll("#periodTestingTableDetail tbody tr");
+    	   var routeId=[];
+           var routeL=[];
+           var count;
+           var CM;
+           if (cells==16){
+        	  var routeList=[];
+        	  localStorage.setItem("routeList",JSON.stringify(routeList));
+        	  for (var i=0;i<trs.length;i++){
+        		  /**当前点击的行**/
+                   if(trs[i].children[0].children[0].checked){
+                	   ClickCount+=1;//一次勾选事件诞生
+                       routeId=getPortOrder(trs[i].children[5].innerHTML);//读取光端口号
+                       CM=trs[i].children[10].innerHTML;//读取RTU id
+                       var isPeriod=trs[i].children[13].innerHTML;//读取标志位，判断当前选择光路是否在进行周期测试
+                       count=i+1;//记录当前的光路顺序
+                       var flag=0;
+                       if(isPeriod=="否")//当前光路未进行周期测试，选择它是为了周期测试
+                       {
+                    	    if(ClickCount==1){//第一次选择的光路的测试状态
+                    	        choosedRouteFlag=false;
+                    	    }
+                    	    if(choosedRouteFlag){//第一次选的为进行测试的
+                    	    	 var txt="错误，不能同时选择进行周期测试和未进行测试的两种光路";
+                        		 var option = {
+                        					title: "提示",
+                        					btn: parseInt("0001",2),
+                        					onOk: function(){//点击确认的执行方法
+                        						
+                        					}
+                        				}
+                        		 window.wxc.xcConfirm(txt, "info", option);
+                        		 trs[i].children[0].children[0].checked =false;//取消选中状态
+                        		 var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+                      	    }
+                    	    else//第一次选的为未进行测试的光路
+                    	      {
+                    	    	   var optiPara=JSON.parse(localStorage.getItem('optiPara'));//读取本地的参数表
+		                           for(var index=0;index<optiPara.length;index++)//遍历查询参数表中看该光路是否有参数在缓存
+			        		    	   {
+			        		    	       if(optiPara[index][0]==parseInt(routeId))
+			        		    	    	   {
+			        		    	    	     flag=1;//将标志位置位
+			        		    	    	     index=optiPara.length //如果存在直接跳出循环
+			        		    	    	   }
+			        		    	}
+			                        if(flag==0){//暂存中没有，查询数据库
+			                        	
+			                        	 $.ajax({
+			                                 url:"checkOptimize",
+			                                 type:"post", //数据发送方式
+			                                 dataType:"text", //接受数据格式
+			                                 data : {
+			                                	      "CM":CM,
+			                                          "SNo":routeId,	      
+			                                 },
+			                                 async: false,
+			                                 success: function(data){
+			                              	   if(data=="null")//数据库中也不存在优化测试参数
+			                              		   {   
+				                              		 var txt="请为第"+count+"条光路设置优化参数";
+				                            		 var option = {
+				                            					title: "提示",
+				                            					btn: parseInt("0001",2),
+				                            					onOk: function(){//点击确认的执行方法
+				                            						
+				                            					}
+				                            				}
+				                            		  window.wxc.xcConfirm(txt, "info", option);
+			                              		     trs[i].children[0].children[0].checked =false;
+			  	                                     if(ClickCount==1){  //如果第一次选择的就是未配置参数的光路，把计数和标识复位，重头开始
+			  	                                    	   choosedRouteFlag=false;
+			  	                                    	   ClickCount=0;
+			  	                                     }
+			                              		   }
+			                              	   
+			                                 }
+			                             });
+			                        }
+		                       
+		                       }
+                      }
+                       else{   //isPeriod为是，选择该光路是为了取消周期测试
+                    	   if(ClickCount==1){//第一次选择的光路的测试状态
+                   	            choosedRouteFlag=true;  //第一次选择的为在测试的，将标志位置位
+                   	       }
+                    	   if(!choosedRouteFlag){//第一次选的为未进行测试的
+                    		   var txt="错误，不能同时选择进行周期测试和未进行测试的两种光路";
+                      		   var option = {
+                      					title: "提示",
+                      					btn: parseInt("0001",2),
+                      					onOk: function(){//点击确认的执行方法
+                      						
+                      					}
+                      				}
+                      		  window.wxc.xcConfirm(txt, "info", option);
+                   	    	  trs[i].children[0].children[0].checked =false;//取消选中状态
+                   	    	  /**如果没有已经选择的，将状态复位**/
+                   	    	  var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+                   	      }
+                   	       else{//第一次选的为未进行测试的光路
+                   	      		routeL.push(routeId);//记录选择的ID
+                    	   		localStorage.setItem("routeList",JSON.stringify(routeL));
+                    	}
+                      }  
+                   }
+               }
+        	  //判断当前有没有光路被选择，如果没有已经选择的，回到初始状态
+        	  var hasSelect=false;
+        	  for(var i=0;i<trs.length;i++){
+        		  if(trs[i].children[0].children[0].checked){
+        			  hasSelect=true;
+        			  i=trs.length;
+        		  }
+        	  }
+        	//如果当前没有光路被选中，回到初始状态
+        	  if(!hasSelect){
+        		 choosedRouteFlag=false;
+        		 ClickCount=0;
+        		 var routeOptiPara=[];
+         		 localStorage.setItem("optiPara",JSON.stringify(routeOptiPara));
+        	  }   
+           }
+           
+       });
+       
+       
+    /**************************************开始周期测试按键事件********************************/
+       $(".periodStart").click(function(){
+     	   var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;
+      	   var periodFlag;
+       	   var selectedFlag=0;
+       	   var cellFlag=0;
+       	   if(cells==16){
+       		   cellFlag=1;
+       	   }
+       	  var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+       	  var selected;
+       	  for (var i=0;i<trs.length;i++){
+       	        if($(trs[i]).hasClass("currtrPeriod")){
+       	        	  periodFlag =trs[i].children[12+cellFlag].innerHTML;
+       	        	  selectedFlag=1;
+       	        }
+       	  }
+       	  
+       	 if(selectedFlag==0){//未选光路
+       		    var txt="您尚未选择光路，请选择您要进行周期测试的光路";
+	   		    var option = {
+	   					title: "提示",
+	   					btn: parseInt("0001",2),
+	   					onOk: function(){//点击确认的执行方法
+	   						
+	   					}
+	   				}
+	   		  window.wxc.xcConfirm(txt, "info", option);
+       	  }
+       	 else{//选择了光路
+	       		if(choosedRouteFlag||(periodFlag=="是")){//已经在进行周期测试
+	       	        var txt="错误,当前光路已经在进行周期测试,您不能再对其进行测试,如需取消，请点击\"取消周期测试\"按键";
+		   		    var option = {
+		   					title: "提示",
+		   					btn: parseInt("0001",2),
+		   					onOk: function(){//点击确认的执行方法
+		   						
+		   					}
+		   				}
+		   		     window.wxc.xcConfirm(txt, "info", option);
+	       	     }
+	       	     else{//未进行周期测试
+			       		if((cells==15)){//15行时的单条测试
+			       			$(".sidebarDiv").load("html/curve/oneRoutePeriodStart.html");
+						}
+		       	 		else{//复选
+				     	    var tableRow = 16;
+				     	    var cellsNow = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length; //当前表格的列数，用于判断是否开启了复选框
+				            var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+				            var dataOut = [];
+				            var count = 0;
+				            for(var i=0; i<trs.length; i++){
+				                    var checkbox = trs[i].children[0].children[0].checked;
+				                    if(checkbox == true){
+				                    	var SNO=getPortOrder(trs[i].children[5].innerHTML);
+				                 	   dataOut.push([
+				                 	                 SNO, 
+				                 	                 trs[i].children[3].innerHTML, 
+				                 	                 trs[i].children[10].innerHTML, 
+				                 	                 trs[i].children[11].innerHTML, 
+				                 	                ]);
+				                        count++;
+				                    }
+				                }
+				             if(count == 0){//未勾选
+				                	var txt="您尚未选择任何光路，请先选择您要进行周期测试的光路。";
+				           		    var option = {
+				           					title: "提示",
+				           					btn: parseInt("0001",2),
+				           					onOk: function(){//点击确认的执行方法
+				           						
+				           					}
+				           				}
+				           		  window.wxc.xcConfirm(txt, "info", option);
+				                }
+				                else{
+				                	   ClickCount=0;//click计数，判断是否为第一次勾选事件，用于记录第一次勾选combox的值
+				                       choosedRouteFlag=false;//判断第一次勾选的光路的周期测试状态
+				                       $(".sidebarDiv").load("html/curve/periodStart.html");
+				                }
+				
+				            }
+				            
+				            localStorage.setItem('paraList',JSON.stringify(dataOut));//将选择光路的信息暂存
+			       }
+	       	  }
+       		 
+       	 });
+
+       /**---------------------------取消周期测试按键事件------------------------*/
+       $(".periodCancel").click(function(){
+    	   var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length; //当前表格的列数，用于判断是否开启了复选框
+    	   if((!choosedRouteFlag)&&(cells==16)){//选择的光路原来的状态为非周期测试状态
+    	        var txt="错误，您当前选择的光路未进行周期测试！若要进行周期测试，请点击\"执行周期测试\"按键";
+      		    var option = {
+      					title: "提示",
+      					btn: parseInt("0001",2),
+      					onOk: function(){//点击确认的执行方法
+      						
+      					}
+      				}
+      		  window.wxc.xcConfirm(txt, "info", option);
+    	   }
+    	   else{
+		       	   var periodFlag;
+		       	   var selectedFlag=0;
+		       	   var cellFlag=0;
+		       	   if(cells==16){
+		       		   cellFlag=1;
+		       	   }
+		       	   /**判断是否有光路被选中**/
+		       	   var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+		       	   var selected;
+		       	   for (var i=0;i<trs.length;i++){
+		       	        if($(trs[i]).hasClass("currtrPeriod")){
+		       	        	   periodFlag =trs[i].children[12+cellFlag].innerHTML;
+		       	        	   selectedFlag=1;
+		       	        	   i=trs.length;
+		       	        }
+		       	  }
+		       	  if(selectedFlag==0){
+		       		var txt="您尚未选择光路，请选择您要取消测试的光路。";
+	      		    var option = {
+	      					title: "提示",
+	      					btn: parseInt("0001",2),
+	      					onOk: function(){//点击确认的执行方法
+	      						
+	      					}
+	      				}
+	      		  window.wxc.xcConfirm(txt, "info", option);
+		       	  }
+		       	  else {
+		       		       if(periodFlag=="否"){    //未进行周期测试，无法修改
+		       			        var txt="操作失败，当前光路未进行测试";
+		    	      		    var option = {
+		    	      					title: "提示",
+		    	      					btn: parseInt("0001",2),
+		    	      					onOk: function(){//点击确认的执行方法
+		    	      						
+		    	      					}
+		    	      				}
+		    	      		  window.wxc.xcConfirm(txt, "info", option);
+		       		          }
+		       		          else{
+		       		        	     ClickCount=0;//判断是否为第一次勾选事件，用于记录第一次勾选combox的值
+		       		                 choosedRouteFlag=false;//判断第一次勾选的光路的周期测试状态   
+		       		                 $(".sidebarDiv").load("html/curve/periodCancel.html");  
+		       	              }
+		       		    }
+    	     } 	
+		 });
+        
+       
+       
+      /**-选择光路/取消光路选择按键------------------------*/ 
+      
+      var selectPath = function(){
+	        var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+            var rows = document.getElementById("periodTestingTableDetail").rows;
+            if(value ==0){
+                var th = document.createElement("th");
+                th.innerHTML = "选择";
+                th.width=rows[0].cells[0].width;
+                rows[0].insertBefore(th,rows[0].cells[0]);
+                for(var i=1; i < rows.length; i++){
+                    var td = rows[i].insertCell(0);
+                    td.width=60;
+                    var ck = document.createElement("input");
+                    ck.type = "checkbox";
+                    td.appendChild(ck);
+                }
+                document.getElementById("selectPath").innerHTML = "取消光路选择";
+                value = 1;
+                ClickCount=0;//点击计数，清空
+               choosedRouteFlag=false;//判断第一次勾选的光路的周期测试状态   
+            }
+            else if((value == 1)||(cells==15)){
+                for(var i=0; i<rows.length;i++){
+                    rows[i].deleteCell(0);
+                }
+                document.getElementById("selectPath").innerHTML = "选择光路";
+                value = 0;
+                ClickCount=0;//用于记录第一次勾选combox的值
+                choosedRouteFlag=false;//判断第一次勾选的光路的周期测试状态   
+            }
+        } 
+
+      /*--------------------------时间表设置按钮----------------------------*/
+     $(".periodParameter").click(function(){
+        	
+        	var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;
+        	
+        	  var periodFlag;
+	       	   var selectedFlag=0;
+	       	   var cellFlag=0;
+	       	   if(cells==16)
+	       	   {
+	       		   cellFlag=1;
+	       	   }
+	       	  var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+	       	        	    var selected;
+	       	        	    for (var i=0;i<trs.length;i++){
+	       	        	        if($(trs[i]).hasClass("currtrPeriod")){
+	       	        	        	periodFlag =trs[i].children[12+cellFlag].innerHTML;
+	       	        	        	selectedFlag=1;
+	       	        	        	i=trs.length;
+	       	        	        }
+	       	  }
+	       	  if(selectedFlag==0){
+	       		    var txt="您尚未选择光路，请选择您要配置时间表的光路";
+	      		    var option = {
+	      					title: "提示",
+	      					btn: parseInt("0001",2),
+	      					onOk: function(){//点击确认的执行方法
+	      						
+	      					}
+	      				}
+	      		  window.wxc.xcConfirm(txt, "info", option);
+	       	  }
+	       	  else if(periodFlag=="是"){
+	       		    var txt="当前光路正在进行周期测试，您不能对其进行时间表配置,如需修改，请选中光路后右键选择\"修改时间表\"";
+	      		    var option = {
+	      					title: "提示",
+	      					btn: parseInt("0001",2),
+	      					onOk: function(){//点击确认的执行方法
+	      						
+	      					}
+	      				}
+	      		  window.wxc.xcConfirm(txt, "info", option);
+	       	  }
+	       	  else{
+		        	 if(cells==16){//如果复选框已经开启，在进行时间设置前应将复选内容传递
+		        		
+		        		  var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+		        	      var dataOut = [];
+		                  var countt = 0;
+		                   for(var i=0; i<trs.length; i++){
+		                          var checkbox = trs[i].children[0].children[0].checked;
+		                          if(checkbox){
+		                        //记录选择的光端口号
+		                           var SNO=getPortOrder(trs[i].children[5].innerHTML);
+		                       	   dataOut.push([
+		                       	                 SNO, 
+		                       	                 trs[i].children[3].innerHTML, 
+		                       	                 trs[i].children[10].innerHTML, 
+		                       	                 trs[i].children[11].innerHTML, 
+		                       	                 ]);
+		                              countt++;
+		                          }
+		                      }
+		                      if(countt == 0){
+		                          $(".sidebarDiv").load("html/curve/periodWarn.html");
+		                      }
+		                      
+						   localStorage.setItem('paraList',JSON.stringify(dataOut));//将选择光路的信息暂存
+						   $(".sidebarDiv").load("html/curve/mutiTimeTable.html");    /*  可能存在复选*/
+		        	   }
+		        	   else{//未开启复选框，单选
+		        		     $(".sidebarDiv").load("html/curve/timeTable.html");  
+		        	   }
+		       }
+        });
+
+        $(".periodDelete").click(function(){
+        	 $(".sidebarDiv").load("html/curve/periodDelete.html");
+        });   
+      
+      
+    </script>
+
+</body>
+
+</html>

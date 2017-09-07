@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script src="../../js/baidumap_offline_v2_load.js"></script>
+	<script src="../../js/baidumap_offline_v2_20160822_min.js"></script>
+	<script src="../../js/baidumap_offline_v2_20160822.js"></script>
+	<script src="../../js/jquery-1.8.3.min.js"></script>
+	<script src="../../js/distanceTool.js"></script>
+	<script src="../../js/json2.js"></script>
+	<script src="../../js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/dtree.js"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="../../css/xcConfirm.css" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="../../css/baidu_map_v2.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/routeBox.css" />
+
+	<style>
+		body,
+		html,
+		#mapArea,
+		#tab,
+		#mapfrm {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+		
+		#menu {
+			height: 100%;
+			overflow-y: auto
+		}
+		
+		td {
+			font-size: 14px
+		}
+		
+		h4 {
+			margin: 0;
+		}
+		
+		.detail-box {
+		    background: #fff none repeat scroll 0 0;
+		    box-shadow: 1px 2px 1px rgba(0, 0, 0, 0.15);
+		    display: block;
+		    float: left;
+		    position: absolute;
+		    left: 0px;
+		    top:170px;
+		    width:96px;
+		    z-index: 80000;
+		}
+		.boxinfo {
+		    list-style-type: none;
+		    padding-left:0px;
+		}
+		.detail-box span {
+			    background-image: url(../../images/mapTool.png);
+			    background-repeat: no-repeat;
+			    float: left;
+			    height: 34px;
+			    width: 29px;
+		}
+		.detail-box li {
+		    box-sizing: border-box;
+		    cursor: pointer;
+		    height: 34px;
+		    margin:0;
+ 		    line-height: 34px; 
+ 		    padding-left: 4px; 
+		    margin-left: 2px;
+		}
+		.detail-box i{
+			 display: inline-block;
+		     float: left;
+		     font-size: 12px;
+		     font-style: normal;
+		     height: 34px;
+		     line-height: 34px;
+		}
+		.detail-box i:hover{
+		    color: #579afc;
+		}
+	   .map-measure:hover .measure {
+		    background-position: -80px -49px;
+		}
+		
+		.map-mark:hover .mark {
+		    background-position: -40px -168px;
+		}
+		
+		.boxinfo li .measure {
+			background-position:-80px -117px;
+		 }
+		
+		.boxinfo li .mark {
+		    background-position: -80px -168px;
+		}
+		.boxinfo li .mark:hover {
+		    background-position: -40px -168px;
+		}
+		div#tip{
+			  display:none;
+			  z-index:80000;
+			  background-color:#f6f6f6;
+			  position:absolute;
+			  height:auto; 
+			  font-size: 13px;
+			  border:1px solid #7f7f7f;
+			 }
+	</style>
+
+</head>
+
+<body>
+	<div class="contentArea">
+	    <div id="tip"></div>
+		<div id="mapArea"></div>
+		<div class="detail-box">
+			<ul id="boxul" class="boxinfo">
+				<li class="map-measure" onclick="disTool.open();">
+					<span class="last measure"> </span>
+					<i class="">测距</i>
+				</li>
+				<li class="map-mark" onclick="getMapPoint();">
+					<span class="last mark"> </span>
+					<i id="point">获取坐标</i>
+				</li>
+			</ul>
+	   </div>
+	</div>
+
+	<script>
+	$.ajax({
+	     url:'../../checkSession',
+	     type:'post', //数据发送方式
+	     dataType:'json', //接受数据格式
+	     async: false,
+	     success: function(json){
+	     	if(!json[0].status){
+	     		var txt="由于长时间未使用，当前登录信息已过期，请重新登录";
+		    	    	 var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						localStorage.clear();
+		    	   						parent.window.location.href="../../Login.html";
+		    	   					},
+		    	  			       onClose:function(){
+		    	  			    	    localStorage.clear();
+		    	  					    parent.window.location.href="../../Login.html";
+		    	  					    
+		    	  			       },
+		    	   				}
+		    	   	  window.wxc.xcConfirm(txt, "info", option);
+	     	}
+	     },
+	     error:function(XMLHttpRequest,Error)
+		      {
+		    	  
+		     }
+	   });
+//百度地图API功能
+var maArea = document.getElementById("mapArea");
+var map = new BMap.Map(maArea, { minZoom:6, maxZoom: 14 });    // 创建Map实例，设定缩放大小限制
+map.centerAndZoom(new BMap.Point(104.071216, 30.576279), 9);           // 初始化地图，设置中心点坐标和地图缩放级别
+map.enableScrollWheelZoom(true);                               //开启鼠标滚轮缩放
+map.addControl(new BMap.NavigationControl());         //添加缩放按钮
+//左上角比例尺控件
+var scaleControl = new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT });
+map.addControl(scaleControl);
+//测距工具
+var disTool=new BMapLib.DistanceTool(map);
+//获取坐标
+var move=true;
+var firstEnter=true;
+function getMapPoint(){
+	if($("#point").text()=="获取坐标"){
+		$("#point").text("关闭坐标");
+		$('#tip').css('display','block');
+		var top=0;
+		var left=0;
+		move=true;
+		if(firstEnter){
+			$("#mapArea").mousemove(function(e){
+				if($("#point").text()=="关闭坐标"&&move){
+					    top = e.pageY+5;
+					    left = e.pageX+5;
+					    $('#tip').css({
+						'top' : top + 'px',
+					    'left': left+ 'px'
+					   });
+				}else{
+					return true;
+				}
+			 });
+			$("#mapArea").click(function(e){
+				move=(!move);
+			 });
+			 map.addEventListener("mousemove",function(e){
+				 if(move){
+					 $('#tip').text(e.point.lng + "," + e.point.lat); 
+				 }
+			});
+		}
+		
+	}else{
+		$("#point").text("获取坐标");
+		 $('#tip').css('display','none');
+	}
+	firstEnter=false;	
+}
+
+//右下角缩略图控件
+var overView = new BMap.OverviewMapControl();
+var overViewOpen = new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT });
+map.addControl(overView);
+map.addControl(overViewOpen);
+
+//复杂的自定义覆盖物
+function ComplexCustomOverlay(point, text, mouseoverText) {
+	this._point = point;
+	this._text = text;
+	this._overText = mouseoverText;
+	this._id = 0;
+}
+// *实例继承自Overlay类 
+ComplexCustomOverlay.prototype = new BMap.Overlay();
+
+//增加设置ID的方法
+ComplexCustomOverlay.prototype.setId = function (id) {
+	this._id = id;
+}
+//增加获取ID的方法
+
+ComplexCustomOverlay.prototype.getId = function () {
+	return this._id;
+}
+// 初始化该类
+
+ComplexCustomOverlay.prototype.initialize = function (map) {
+	this._map = map;
+	var div = this._div = document.createElement("div");
+	div.style.position = "absolute";
+	div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+	div.style.backgroundColor = "#EE5D5B";
+	div.style.border = "1px solid #BC3B3A";
+	div.style.color = "white";
+	div.style.height = "18px";
+	div.style.padding = "2px";
+	div.style.lineHeight = "18px";
+	div.style.whiteSpace = "nowrap";
+	div.style.MozUserSelect = "none";
+	div.style.fontSize = "13px"
+	var span = this._span = document.createElement("span");
+	div.appendChild(span);
+	span.appendChild(document.createTextNode(this._text));
+	var that = this;//此处的that为该覆盖物对象
+	var arrow = this._arrow = document.createElement("div");
+	arrow.style.background = "url(../../images/label.png) no-repeat";
+	arrow.style.position = "absolute";
+	arrow.style.width = "11px";
+	arrow.style.height = "10px";
+	arrow.style.top = "22px";
+	arrow.style.left = "10px";
+	arrow.style.overflow = "hidden";
+	div.appendChild(arrow);
+	//鼠标移动到label
+
+	div.onmouseover = function () {
+		this.style.backgroundColor = "#6BADCA";
+		this.style.borderColor = "#0000ff";
+		this.getElementsByTagName("span")[0].innerHTML = that._overText;
+		arrow.style.backgroundPosition = "0px -20px";
+	}
+	//鼠标移除label
+
+	div.onmouseout = function () {
+		this.style.backgroundColor = "#EE5D5B";
+		this.style.borderColor = "#BC3B3A";
+		this.getElementsByTagName("span")[0].innerHTML = that._text;
+		arrow.style.backgroundPosition = "0px 0px";
+	}
+	//点击label
+
+	div.onclick = function () {
+		// alert(that.getId())
+	}
+	map.getPanes().labelPane.appendChild(div);
+	return div;
+}
+ComplexCustomOverlay.prototype.draw = function () {
+	var mp = this._map;
+	var pixel = mp.pointToOverlayPixel(this._point);
+	this._div.style.left = pixel.x - parseInt(this._arrow.style.left) + "px";
+	this._div.style.top = pixel.y - 30 + "px";
+}
+//自定义marker类
+//主要是为了添加id属性  
+
+function diyMarker(point) {
+	//构造函数调用Marker类的构造函数
+	BMap.Marker.call(this, point);
+	this._id = 0;
+}
+//该类继承自Marker
+
+diyMarker.prototype = new BMap.Marker();
+//增加设置Id的方法
+
+diyMarker.prototype.setId = function (id) {
+	this._id = id;
+}
+//增加获取Id的方法
+
+diyMarker.prototype.getId = function () {
+	return this._id;
+}
+//获取局站坐标信息
+
+$.ajax({
+	url: '../../getMapPoints',
+	type: 'post', //数据发送方式
+	dataType: 'json', //接受数据格式
+	async: false,
+	success: function (json) {
+		if (json[0].status) {
+			var cablePoint = json[0].points;
+			plotMarker(cablePoint);
+			getCableLines();
+		}
+	},
+	error:function(XMLHttpRequest,Error)
+    {
+  	}
+});
+//获取光缆坐标信息 
+
+function getCableLines() {
+	$.ajax({
+		url: '../../getCableLines',
+		type: 'post', //数据发送方式
+		dataType: 'json', //接受数据格式
+		async: false,
+		success: function (json) {
+			if (json[0].status) {
+				var cableLines = json[0].cables;
+				plotLine(cableLines);
+			}
+		},
+		error:function(XMLHttpRequest,Error)
+	      {
+	      }
+	});
+}
+
+//绘制局站 
+
+function plotMarker(cablePoint) {
+	if(cablePoint.length>0){
+		map.centerAndZoom(new BMap.Point(cablePoint[0].lng, cablePoint[0].lat), 9);           // 如果存在局站，设置中心点坐标为第一个局站的位置
+	}
+	for (var i = 0; i < cablePoint.length; i++) {
+		var lng = cablePoint[i].lng;
+		var lat = cablePoint[i].lat;
+		var pointName = cablePoint[i].name;
+		var pointId = cablePoint[i].id;
+		var position = new BMap.Point(lng, lat);
+		var marker = new diyMarker(position);//新建自定义marker; 
+		marker.setId(pointId);//设置makerId    
+		map.addOverlay(marker);//绘制标记点
+		var pointLabel = new BMap.Label(pointName, { offset: new BMap.Size(20, -10) });
+		pointLabel.setStyle({background:"#3385ff",color :"#ffffff",fontSize : "14px",borderColor:"blue",}) 
+		marker.setLabel(pointLabel);//绘制标签
+		marker.addEventListener("click", function () {
+			parent.openSpeficTree(this.getId());
+		});
+	}
+}
+//点击局站
+
+// 绘制光缆
+//起始点相同的光缆用平行方式错开
+//param cableLine 光缆的起始点坐标
+//cableLine 为JSON数组
+
+function plotLine(cableLine) {
+
+	for (var i = 0; i < cableLine.length; i++) {
+		var alng = cableLine[i].pointA[0];
+		var alat = cableLine[i].pointA[1];
+		var blng = cableLine[i].pointB[0];
+		var blat = cableLine[i].pointB[1];
+		var aPosition = new BMap.Point(alng, alat);
+		var bPosition = new BMap.Point(blng, blat);
+		var points = [aPosition, bPosition];
+		var lineCount = cableLine[i].count;
+		var lineNames = cableLine[i].name;
+		var lineIds = cableLine[i].id;
+		var marks=cableLine[i].landmarks;//光缆地标
+		for (var j = 0; j < lineCount; j++) {
+			var tempPoints = [aPosition];//全部的点
+			for(var markIndex=0;markIndex<marks[j].length;markIndex++){//取每条光缆的
+				var position=new BMap.Point(marks[j][markIndex].lng,marks[j][markIndex].lat);
+				tempPoints.push(position);//加入地标点
+				var pointName=marks[j][markIndex].name;
+				var myIcon = new BMap.Icon("../../images/landmark.png", new BMap.Size(23,25), {    
+					  offset: new BMap.Size(10, 15),    
+					  imageOffset: new BMap.Size(0, -10)   // 设置图片偏移    
+					 });      
+					// 创建标注对象并添加到地图   
+				var marker = new BMap.Marker(position, {icon: myIcon}); 
+				map.addOverlay(marker);//绘制标地标点
+				var pointLabel = new BMap.Label(pointName, { offset: new BMap.Size(20, -10) });
+				marker.setLabel(pointLabel);//绘制标签
+			}
+			
+			var cutPoint =[];//标记光缆名字的位置
+			if(marks[j].length==0){//如果没有地标，则添加中点作为偏移量
+				var centerlng = (aPosition.lng + bPosition.lng) / 2 + Math.abs(aPosition.lng - bPosition.lng) * Math.pow(-1, j) * 0.05 * j;
+				var centerlat = (aPosition.lat + bPosition.lat) / 2;
+				tempPoints.push(new BMap.Point(centerlng,centerlat));//如果没有地标，则添加偏移量
+				forCut = [[aPosition.lng, aPosition.lat], [centerlng, centerlat]];
+				cutPoint = lineDiv(forCut, j);
+			}
+			else{
+				var cIndex=parseInt(tempPoints.length/2);//光缆途经点的中点index
+				forCut=[[tempPoints[cIndex-1].lng, tempPoints[cIndex-1].lat], [tempPoints[cIndex].lng, tempPoints[cIndex].lat]];
+				cutPoint=lineDiv(forCut,1);
+			}
+			tempPoints.push(bPosition);//加入终点
+			var newPolyline = new BMap.Polyline(tempPoints, { strokeColor: "blue", strokeWeight: 2, strokeOpacity: 0.8 });
+			map.addOverlay(newPolyline);
+			var labelPosition = new BMap.Point(cutPoint[0], cutPoint[1]);
+			var myCompOverlay = new ComplexCustomOverlay(labelPosition, lineNames[j], lineNames[j]);
+			myCompOverlay.setId(lineIds[j]);
+			map.addOverlay(myCompOverlay);
+		}
+	}
+
+};
+
+function lineDiv(point, cutCount) {
+	if (cutCount == 0)
+		return point[1];
+	else {
+		var cutLng = (point[0][0] + point[1][0]) / 2;
+		var cutLat = (point[0][1] + point[1][1]) / 2;
+		var cutPoint = [cutLng, cutLat];
+		return lineDiv([point[0], cutPoint], cutCount - 1)
+	}
+}
+        </script>
+</body>
+
+</html>

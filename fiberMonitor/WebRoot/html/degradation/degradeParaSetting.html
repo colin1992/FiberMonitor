@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar" style="height:250px;">
+        <div class="sidebarTitle">
+            <span>劣化分析参数设置</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName" style="width:35%;">
+            <p>样本起始时间</p>
+            <p>样本截止时间</p>
+            <p>劣化截止时间</p>
+            <p>劣化时间间隔</p>
+        </div>
+        <div class="funcCoff" style="width:60%;">
+            <input placeholder="样本起始时间"  id = "sampleStart" class="laydate-icon" style="width:160px;cursor:default">
+			<input placeholder="样本截止时间"  id = "sampleEnd" class="laydate-icon" style="width:160px;cursor:default">
+			<input placeholder="劣化截止时间"  id = "futureEnd" class="laydate-icon" style="width:160px;cursor:default">
+			<input placeholder="" id="futureInterval" style="width:120px;">
+			<select id="timeIntervalUnit" style="width:40px;">
+            	<option value="天"> 天 </option>
+            	<option value="时"> 时 </option>
+            </select>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="degradeCurveAnalyse" id="degradeCurveAnalyse">确定</li>          <!--添加确定对应事件-->
+                <li class="clear">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+/**=======全局变量=====**/
+ /**全局变量 光功率门限**/
+ var pTh=[];
+//劣化分析参数设置中日历的定义与设置
+var sampleStart = {
+		elem: '#sampleStart',
+		format: 'YYYY-MM-DD hh:mm:ss',
+		max: laydate.now(), //最大日期
+		istime: true,
+		festival:true,
+		choose: function(datas){
+			sampleEnd.min = datas; //开始日选好后，重置结束日的最小日期
+			sampleEnd.start = datas //将结束日的初始值设定为开始日
+		}
+};
+	laydate(sampleStart);
+	var sampleEnd = {
+		elem: '#sampleEnd',
+		format: 'YYYY-MM-DD hh:mm:ss',
+		max: laydate.now(),
+		istime: true,
+		festival:true,
+		choose: function(datas){
+		start.max = datas; //结束日选好后，重置开始日的最大日期
+		}
+	};
+	laydate(sampleEnd);
+	var futureEnd = {
+		elem: '#futureEnd',
+		
+		format: 'YYYY-MM-DD hh:mm:ss',
+		istime: true,
+		festival:true,
+		choose: function(datas){
+		}
+	};
+	laydate(futureEnd);
+	
+	  /**根据光路Id获取光功率门限值**/
+	  function  getPowerThre(routeID){
+		   $.ajax({
+	           type : "post",
+	           async : false,  //异步请求 先执行后续操作，再执行sucess
+	           url : "degradation/getPth",
+	           dataType:"json",
+	           data : {
+	             	"routeId":routeID
+	           },
+	           success:function(json){
+		           	if(json[0].status){
+		           		pTh=json[0].pTh;//门限值
+		           	}
+		           	else{
+		           	  pTh=[-70,-40,-30,-20];
+		           	  var txt= "当前光路未配置光功率门限，将使用默认门限，您可以点击\"门限参数设置\"按键配置门限参数。";
+					  var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+							 }
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+		           	}
+	           },
+		   })  
+	   }
+	
+	/**=======劣化分析按键========**/
+	$("#degradeCurveAnalyse").click(function(){
+		var sampleStartTime = $("#sampleStart").val();
+		var sampleEndTime = $("#sampleEnd").val();
+		var futureEndTime = $("#futureEnd").val();
+		var futureIntervalTime = $("#futureInterval").val();
+		var timeIntervalUnit = $("#timeIntervalUnit").val();
+		getPowerThre(routeID);//获取光功率门限
+		$.ajax({
+			type : "post",
+			async : false,  //异步请求 先执行后续操作，再执行sucess
+			url : "opticalLinearFit",
+			dataType:"json",
+			data : {
+				"sampleStartTime":sampleStartTime,
+				"sampleEndTime":sampleEndTime,
+				"futureEndTime":futureEndTime,
+				"futureIntervalTime":futureIntervalTime,
+				"timeIntervalUnit":timeIntervalUnit,
+				"routeId":routeID
+			},
+			success:function(value){
+				var myChart = echarts.init(document.getElementById("container"));  
+				var data = [];
+				var thresholdData1 = [];
+				var thresholdData2 = [];
+				var thresholdData3 = [];
+				var thresholdData4 = [];
+				for(var i = 0;i<value[0].timeList.length;i++){
+					data.push(randomData(value[0].timeList[i],value[0].dataList[i]));
+					thresholdData1.push(randomData(value[0].timeList[i],pTh[0]));
+					thresholdData2.push(randomData(value[0].timeList[i],pTh[1]));
+					thresholdData3.push(randomData(value[0].timeList[i],pTh[2]));
+					thresholdData4.push(randomData(value[0].timeList[i],pTh[3]));
+				}
+				option = {
+				title: {
+				text: '光功率劣化分析'
+				},
+				toolbox: {
+				show : true,
+				feature : {
+				dataView : {show: true, 
+							readOnly: true,
+							optionToContent: function(opt) {
+			                    var axisData = data;//opt.xAxis[0].data;
+			                    var series = opt.series;
+			                    var table = '<table style="width:100%;text-align:center"><tbody><tr>'
+			                                 + '<td>时间</td>'
+			                                 + '<td>' + series[0].name + '</td>'
+			                                 + '<td>' + "一级门限" + '</td>'
+			                                 + '<td>' + "二级门限" + '</td>'
+			                                 + '<td>' + "三级门限" + '</td>'
+			                                 + '<td>' + "四级门限" + '</td>'
+			                                 + '</tr>';
+			                    for (var i = 0, l = axisData.length; i < l; i++) {
+			                        table += '<tr>'
+			                                 + '<td>' + axisData[i].name + '</td>'
+			                                 + '<td>' + series[0].data[i].value[1] + '</td>'
+			                                 + '<td>' + series[1].data[i].value[1] + '</td>'
+			                                 + '<td>' + series[2].data[i].value[1] + '</td>'
+			                                 + '<td>' + series[3].data[i].value[1] + '</td>'
+			                                 + '<td>' + series[4].data[i].value[1] + '</td>'
+			                                 + '</tr>';
+			                    	}
+			                    table += '</tbody></table>';
+			                    return table;
+			                	}			
+				},
+				saveAsImage : {show: true},
+				dataZoom: {
+				yAxisIndex: 'none'
+					},
+				restore: {},      
+				}
+				},
+				tooltip: {
+				trigger: 'axis',
+				formatter: function (params) {
+				params = params[0];
+				var date = new Date(params.name);
+					return date.getFullYear()+'/'+date.getMonth()+'/'+date.getDay()+' ' + date.getHours() + ':' + date.getMinutes()+ ' _ ' + params.value[1];
+				},
+				axisPointer: {
+					animation: true
+				}
+				},
+				legend: {
+				data:['劣化曲线','阈值一','阈值二','阈值三','阈值四'],
+				selected: {
+			        '阈值一': false, '阈值二': false, '阈值三': false, '阈值四': false
+			        }
+				},
+				xAxis: {
+				type: 'time',
+				name: '时间',
+				splitLine: {
+				show: true
+				}
+				},
+				yAxis: {
+				type: 'value',
+				name: '光功率值(db)',
+				boundaryGap: [0, '100%'],
+				splitLine: {
+				show: true
+				}
+				},
+				series: [{
+				name: '劣化曲线',
+				type: 'line',
+				showSymbol: true,
+				hoverAnimation: true,
+				data: data
+				},
+				{
+				name: '阈值一',
+				type: 'line',
+				showSymbol: false,
+				hoverAnimation: false,
+				data: thresholdData1
+				},
+				{
+				 name: '阈值二',
+				 type: 'line',
+				 showSymbol: false,
+				 hoverAnimation: false,
+				 data: thresholdData2
+				},
+				{
+				name: '阈值三',
+				type: 'line',
+				showSymbol: false,
+				hoverAnimation: false,
+				data: thresholdData3
+				},
+				{
+				name: '阈值四',
+				type: 'line',
+				showSymbol: false,
+				hoverAnimation: false,
+				data: thresholdData4
+				}
+				]
+				};
+				myChart.setOption(option);
+				},
+	});
+	$(".sidebarDiv").html("");
+	})
+//取消和关闭按钮的点击事件	
+	$(".sidebar_close").click(function (){
+		$(".sidebarDiv").html("");
+	})
+	$(".clear").click(function(){
+		$(".sidebarDiv").html("");
+	})
+</script>
+</body>
+</html>

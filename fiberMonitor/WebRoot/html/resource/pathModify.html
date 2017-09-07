@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/alterRoute.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>修改光路</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName">
+            <p>光路标识</p>
+            <p>光路名称</p>
+            <p>光路状态</p>
+            <p>链路方向</p>
+            <p>光路描述</p>
+        </div>
+        <div class="funcCoff">
+            <input type="text" id="alterRouteId" disabled="disabled"/>
+            <input type="text" id="alterRouteName" />
+            <select name="" id="alterRouteStatus" >
+	            <option  value="true">在线纤</option>
+	            <option  value="false">备纤</option>
+            </select>
+            <select name="" id="alterRouteLink" >
+	            <option  value="true">上行链路</option>
+	            <option  value="false">下行链路</option>
+            </select>
+            <textarea name="" id="alterRouteDescription" cols="24" rows="5"></textarea>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li id="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

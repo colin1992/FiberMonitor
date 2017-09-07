@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<script src="js/laypage.js" type="text/javascript"></script>
+	<script src="js/jquery.printArea.js" type="text/javascript"></script>
+	<script src="js/xlsx.core.min.js" type="text/javascript"></script>
+	<script src="js/Blob.js" type="text/javascript"></script>
+	<script src="js/FileSaver.js" type="text/javascript"></script>
+	<script src="js/tableexport.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+			#mapArea,
+		#tab,
+		#mapfrm {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+		
+		#menu {
+			height: 100%;
+			overflow-y: auto
+		}
+		
+		td {
+			font-size: 14px
+		}
+		
+		h4 {
+			margin: 0;
+		}
+		
+		.btn-toolbar.top {
+			padding: 1px;
+		}
+		
+		.btn-toolbar.top {
+			padding: 1px;
+		}
+		
+		.btn.btn-default {
+			width: 100px;
+			padding: 1px;
+		}
+		
+		.btn.btn-default.xlsx {
+			margin-left: 600px;
+		}
+		
+		#printBtn,
+		#exportBtn {
+			cursor: pointer;
+		}
+		
+		.mapDiv {
+			width: 83%;
+			float: right;
+		}
+		
+		#controlMapArea {
+			margin-top: 0px;
+			width: 100%;
+			height: 100%;
+			float: right;
+			overflow: hidden;
+			font-family: "微软雅黑";
+		}
+	</style>
+</head>
+
+<body>
+	<div class="leftTreeCont">
+		<div class="leftTree" id="leftTree">
+		</div>
+	</div>
+	<div class="mapDiv" style="height:680px;margin-top:20px;">
+		<div id="controlMapArea">
+			<iframe width="98.5%" height="100%" src="html/system/systemMap.html"></iframe>
+		</div>
+	</div>
+	<div class="rightTable" style="display:none">
+		<div class="pathTable tableSet">
+			<div class="tableSearch">
+				<span id="backToGis">回到GIS</span>
+				<span id="switchRoute" class="spanbutton">切换光路</span>
+				<span  id="printBtn" class="spanbutton">打印</span>
+				<span id="exportBtn" class="spanbutton">导出</span>
+			</div>
+			<div class="printArea">
+				<table class="table table-bordered routeSwitchTableDetail tableDetail" style="cursor:default" id="routeSwitchTableDetail">
+					<thead>
+						<tr>
+							<th width="4%">序号</th>
+							<th width="4%">标识</th>
+							<th width="11%">上行在线</th>
+							<th width="11%">上行备纤</th>
+							<th width="11%">下行在线</th>
+							<th width="11%">下行备纤</th>
+							<th width="6%">A端局站</th>
+							<th width="10%">A端RTU</th>
+							<th width="6%">Z端局站</th>
+							<th width="10%">Z端RTU</th>
+							<th width="6%">创建用户</th>
+							<th width="10%">创建时间</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script>
+$(document).ready(function() {
+    $("#printBtn").click(function() {
+        $(".printArea").printArea();
+    });
+    $("#exportBtn").click(function() {
+        if($(".btn-toolbar.top")) {
+            $(".btn-toolbar.top").remove();
+        }                
+        $("table").tableExport({
+            headings: true,                     
+            // (Boolean), display table headings (th/td elements) in the <thead>
+            footers: true,                      
+            // (Boolean), display table footers (th/td elements) in the <tfoot>
+            formats: ["xlsx", "xls"],     
+            // (String[]), filetype(s) for the export
+            fileName: "id",                     
+            // (id, String), filename for the downloaded file
+            bootstrap: true,                    
+            // (Boolean), style buttons using bootstrap
+            position: "top",                 
+            // (top, bottom), position of the caption element relative to table
+        });
+        $(".btn.btn-default.xlsx").bind("click",function() {
+            $(".btn-toolbar.top").remove();           
+        });
+        $(".btn.btn-default.xls").bind("click",function() {
+            $(".btn-toolbar.top").remove();
+        });
+    });
+});
+
+/*------------------生成左侧树----------------------*/
+  $(document).ready(function(){
+	  var hrefReload="javascript:Reload()";
+	  leftTree = new dTree('leftTree');//创建一个对象.
+	  leftTree.config.folderLinks=true;
+	  leftTree.config.useCookies=false;
+	  leftTree.config.check=true;
+	  $.ajax({
+	      url:'create_tree',
+	      type:'post', //数据发送方式
+	      dataType:'json', //接受数据格式
+	      async: false,
+	      success: function(json){
+	          for(var JsonCount=0;JsonCount<json.length;JsonCount++){
+              	var equiId="";//定义字符串来承接
+                var NodeId=json[JsonCount].id;//读取节点id
+              	var nodeName=json[JsonCount].name;
+                  var parentId=json[JsonCount].pid;//读取节点pid
+                  if(parseInt(NodeId[0])<4){  //显示到RTU
+                      if(NodeId=="0"||NodeId==0){
+                        	leftTree.add(NodeId,parentId,"光纤切换",hrefReload,"","","","",true);
+                         }
+                      else if(parseInt(NodeId[0])==3){//为RTU
+                          	 for(var index=2;index<NodeId.length;index++){ //
+                          		equiId+=NodeId[index];//拼接字符串
+                          	 }
+                          	hrefStaAddress="javascript:getRouteMatchByRtuId("+parseInt(equiId)+")";//
+                        	leftTree.add(NodeId,parentId,nodeName,hrefStaAddress,"","","","",false);
+                       }                  
+                      else
+                      {
+                      		leftTree.add(NodeId,parentId,nodeName,"","","","","",false);
+                      }
+                  }             
+              }
+              document.getElementById("leftTree").innerHTML = leftTree;  
+           },
+              error:function(XMLHttpRequest,Error)
+	       	  {
+	       	 
+	       	   }
+          });
+  });
+//载入这个页面的时候，首先呈现的是GIS界面
+  $(".rightTable").css("display","none");
+  $(".mapDiv").css("display","block");
+
+  $("#backToGis").click(function(){
+  	$(".rightTable").css("display","none");
+  	$(".mapDiv").css("display","block");
+  })
+
+   /**表格范围内禁止系统右键，使用自定义右键**/
+   $("#routeSwitchTableDetail").hover(function(){
+   	 $(document).bind("contextmenu",function(e){   
+   		   return false;   
+   		 });
+   },
+   function(){
+   	$(document).unbind("contextmenu","")
+   });	
+  /**--------------------点击光路管理节点，重载当前页面---------------------------*/
+    function Reload(){
+    	$(".containerDiv").load("html/business/routeSwitch.html");
+    }
+  /**-------------------点击RTU节点，获取当前RTU的配对信息------------------------*/
+	var currentRtuId=0;
+	var routeList = [];
+    function getRouteMatchByRtuId(rtuId){
+    	$(".rightTable").css("display","block");
+    	$(".mapDiv").css("display","none");
+    	currentRtuId=rtuId;
+    	var trs = document.querySelectorAll("#routeSwitchTableDetail tbody tr td");
+ 	    for (var i=0;i<trs.length;i++){
+ 		    trs[i].innerHTML = "";
+ 		}//先清空
+ 	    $.ajax({
+ 		    	 url:"getAllRouteMatchByRtuId",
+ 		    	 dataType:'json', //接受数据格式
+ 	             async: false,
+ 	             data:{
+ 	            	     "rtuId":rtuId
+ 	                  },
+ 				 success: function(json){ 					 
+ 					 if(json[0].status){
+ 
+ 						 var tds = document.querySelectorAll("#routeSwitchTableDetail tbody tr td");
+ 					 	    for (var i=0;i<tds.length;i++){
+ 					 	        tds[i].innerHTML = "";
+ 					 	    }
+ 					 	for(var jsonCount=1;jsonCount<json.length;jsonCount++){
+ 							   
+ 							   var equiPara=[jsonCount];
+ 							   for(var key in json[jsonCount]){//遍历json对象的每个key/value对,p为key
+ 								   equiPara.push(json[jsonCount][key]);
+                               }
+ 							  setTable(equiPara);
+ 						}
+ 				     }
+ 				 },
+ 	     });
+    }
+    function setTable(tableData) {      
+     	   var trs = document.querySelectorAll("#routeSwitchTableDetail tbody tr");
+     	    for(var i=0; i<trs.length; i++){
+     	        var Ele = trs[i].children;
+     	        if(!Ele[0].innerHTML){
+     	        	Ele[0]=i;
+     	            for (var j=0;j<tableData.length; j++){
+     	                Ele[j].innerHTML =tableData[j];
+     	                i = trs.length;
+     	            }
+     	        }
+     	    }
+     	}             
+    /****************************添加右键菜单功能(进行单条删除)***********************************/
+    $(".routeSwitchTableDetail tbody tr").click(function(){
+        $(this).addClass("currtr").siblings().removeClass("currtr");
+        var selectId =this.children[1].innerHTML;
+         if(selectId!=""){
+        	 $(this).addClass("switch").siblings().removeClass("switch");
+         }
+ 	     var menu = new BootstrapMenu('.switch', {
+	                actions: [{
+	                    name: '切换光路',
+	                    onClick: function() {
+	                        $(this).parent().remove();
+	                    	switchRoute(selectId);
+						}
+	                }]
+	            });
+ 	})
+    
+    /* 切换光路*/
+    $("#switchRoute").click(function(){
+    	var trs = document.querySelectorAll("#routeSwitchTableDetail tbody tr");
+	    var selectGroupId="";
+	    var currentStatus="";
+	    for (var i=0;i<trs.length;i++){
+	        if($(trs[i]).hasClass("currtr")){
+	           selectGroupId=trs[i].children[1].innerHTML;
+	           currentStatus=trs[i].children[7].innerHTML;
+	           i=trs.length;
+	        }	        
+	    }
+	    if(selectGroupId==""){
+	    	var txt="您尚未选择配对组，请先选择您要进行切换的配对组";
+	    	var option = {
+						title: "提示",
+						btn: parseInt("0001",2),
+						onOk: function(){//点击确认的执行方法
+						}
+					}
+		   window.wxc.xcConfirm(txt, "info", option);
+	    }
+	    else{
+	    	switchRoute(selectGroupId);
+	    }
+    })
+function switchRoute(groupId) {
+    	$.ajax({
+		    url:'switch/fiberSwitch',
+	        type:'post', //数据发送方式
+	        dataType:'json', //接受数据格式
+	        async: false,
+	        data:{
+	        	  "groupId":groupId,
+	        	  "rtuId":currentRtuId
+	        	},
+	        success: function(json){
+	        	 var txt="";
+			    	if(json[0].status){
+			    		txt+="切换成功<br/>"
+			    	}
+			    	else{
+			    		txt+="切换失败，请重试<br/>";
+			    		txt+="错误原因："+json[0].err;
+			    	}
+				     var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									getRouteMatchByRtuId(currentRtuId);
+								}
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+		        },
+		        error:function(XMLHttpRequest,Error){
+		    	var txt="切换失败<br/>";
+	    	    txt+="失败原因：";
+	    	    if(XMLHttpRequest.status==401){
+	    	        txt+="您不具有当前操作的权限<br/>";
+	    	     }
+	    	     else{
+	    	        	txt+="网络错误<br/>";
+	    	        	txt+="状态码："+XMLHttpRequest.status;
+	    	        }
+	    	      var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法	    	   						
+	    	  			       }
+	    	   				}
+	    	   		  window.wxc.xcConfirm(txt, "info", option);
+		        },  		 
+		 	});
+}                    
+
+function openSpeficTree(stationId){
+	$(".rightTable").css("display","block");
+	$(".mapDiv").css("display","none");
+	leftTree.config.folderLinks=false;
+	leftTree.closeAll();
+	var stationid="2_"+stationId;
+	leftTree.openTo(stationid,false);
+}                
+</script>
+</body>
+
+</html>

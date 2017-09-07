@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar" style="margin-top:5%;height:350px;">
+        <div class="sidebarTitle">
+            <span>光路门限设置</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div class="funcName">
+            <p>光路标识</p>
+            <p>切换门限</p>
+            <p>一级门限</p>
+            <p>二级门限</p>
+            <p>三级门限</p>
+            <p>四级门限</p>
+        </div>
+        <div class="funcCoff">
+            <input type="text" id="setRouteId" disabled="disabled" />
+            <input type="number" id="threSwitch"/>dBm
+			<input type="number" id="thre1" />dBm
+			<input type="number" id="thre2" />dBm
+			<input type="number" id="thre3" />dBm
+			<input type="number" id="thre4" />dBm
+			
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+//载入页面时给光路ID赋值
+$(document).ready(function(){
+	var trs = document.querySelectorAll("#routeTableDetail tbody tr");
+	   for (var tableCount=0;tableCount<trs.length;tableCount++){
+	     if($(trs[tableCount]).hasClass("currtr")){
+	    	$("#setRouteId").val(trs[tableCount].children[1].innerHTML);
+	    	tableCount=trs.length;
+	     }
+    }
+})
+
+//确定、关闭、清空的点击事件
+$(".sidebar_close").click(function(){
+	$(".sidebarDiv").html("");
+})
+$(".cancel").click(function(){
+	$(".sidebarDiv").html("");
+})
+/**下发门限**/
+$(".confirm").click(function(){
+	setThreshold();
+})
+function setThreshold(){
+	$.ajax({
+	    url:'route/setThreshold',
+        type:'post', //数据发送方式
+        dataType:'json', //接受数据格式
+        async: false,
+        data:{
+        	   "routeId":$("#setRouteId").val(),
+        	   "thre1":$("#thre1").val(),
+        	   "thre2":$("#thre2").val(),
+        	   "thre3":$("#thre3").val(),
+        	   "thre4":$("#thre4").val(),
+        	   "threSwitch":$("#threSwitch").val(),
+        	 },
+        success: function(json){
+  	       	        $(".sidebarDiv").html("");
+  			    	var txt="";
+  			    	if(json[0].status){
+  			    		txt+="下发门限参数成功<br/>"
+  			    	}
+  			    	else{
+  			    		txt+="下发门限失败，请重试";
+  			    	}
+  				     var option = {
+  								title: "提示",
+  								btn: parseInt("0001",2),
+  								onOk: function(){//点击确认的执行方法
+  								}
+  							}
+  					  window.wxc.xcConfirm(txt, "info", option);
+  			      },
+  			    error:function(XMLHttpRequest,Error)
+  			      {
+  			    	    $(".sidebarDiv").html("");
+  			    	    var txt="下发门限失败<br/>";
+  			    	    txt+="失败原因：";
+  			    	    if(XMLHttpRequest.status==401){
+  			    	        txt+="您不具有当前操作的权限<br/>";
+  			    	     }
+  			    	     else{
+  			    	        	txt+="网络错误<br/>";
+  			    	        	txt+="状态码："+XMLHttpRequest.status;
+  			    	        }
+  			    	      var option={
+  			    	   					title: "提示",
+  			    	   					btn: parseInt("0001",2),
+  			    	   					onOk: function(){//点击确认的执行方法
+  			    	   						
+  			    	  			       }
+  			    	   				}
+  			    	   	window.wxc.xcConfirm(txt, "info", option);
+  			  }
+ });  
+}
+</script>
+</body>
+</html>

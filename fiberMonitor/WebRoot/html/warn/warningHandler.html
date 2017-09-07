@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar" style="height:250px;">
+			<div class="sidebarTitle">
+				<span>邮件处理</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="funcName" style="width:30%;">
+				<p>报警标识</p>
+				<p>接收邮箱</p>
+				<p>处理指示</p>
+			</div>
+			<div class="funcCoff" style="width:65%;">
+				<input type="text" id="warnId" disabled="disabled" />
+				<input type="text" id="emailName" />
+				<textarea name="" id="handlerInformation" cols="30" rows="5"></textarea>
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="handlerConfirm" id="handlerConfirm">发送</li>
+					<!--添加确定对应事件-->
+					<li class="clear">清空</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script>
+//载入这个页面的时候，给出它在数据库中的值，供修改
+var trs = document.querySelectorAll("#warningQueryTableDetail tbody tr");
+var warnId = 0;
+	    for (var i=0;i<trs.length;i++){
+	        if($(trs[i]).hasClass("currtr")){
+	        	warnId = trs[i].children[1].innerHTML;	             	            
+	        } 	        
+	    }
+$("#warnId").val(warnId);
+//document.getElementById("routeId").value = routeID;
+//确定、关闭、清空的点击事件
+$(".sidebar_close").click(function(){
+	$(".sidebarDiv").html("");
+})
+$(".clear").click(function(){
+	
+})
+$("#handlerConfirm").click(function(){	
+	$.ajax({
+        type : "post",
+        async : false,  //异步请求 先执行后续操作，再执行sucess
+        url : "sendEmail",
+        dataType:"text",
+        data : {
+        		"warnId":warnId,
+				"emailName":$("#emailName").val(),
+				"handlerInformation":$("#handlerInformation").val()
+        },
+        success:function(data){
+             $(".sidebarDiv").html("");
+             getWarningInfo();
+             alert("发送成功！");
+        },
+        error:function(XMLHttpRequest,Error,F,data)
+     {
+         
+    }
+    });
+})
+</script>
+</body>
+
+</html>

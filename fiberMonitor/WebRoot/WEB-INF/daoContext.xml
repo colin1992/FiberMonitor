@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+    <!-- 引入jdbc配置文件 -->    
+<!--     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" -->
+<!--    			 p:location="classpath:properties/jdbc.properties" p:fileEncoding="UTF-8" p:ignoreUnresolvablePlaceholders="true"/> -->
+   <bean id="propertyConfigurer"  
+        class="fiberMonitor.bean.GvtvPropertyPlaceholderConfigurer">  
+        <property name="locations">  
+            <list>  
+                <value>classpath:properties/jdbc.properties</value>  
+            </list>  
+        </property> 
+        <property name="fileEncoding"> 
+       		 <value>UTF-8</value>    
+        </property>
+    </bean>  
+    <!-- dataSource 配置 -->  
+	<!-- 定义数据源Bean，使用C3P0数据源实现 -->
+	<!-- 并设置连接数据库的驱动、URL、用户名、密码，
+	连接池最大连接数、最小连接数、初始连接数等参数  -->
+<!-- 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" -->
+<!-- 		destroy-method="close" -->
+<!-- 		p:driverClass="com.mysql.jdbc.Driver" -->
+<!-- 		p:jdbcUrl="${jdbc.url}" -->
+<!-- 		p:user="${jdbc.user}" -->
+<!-- 		p:password="${jdbc.password}"  -->
+<!-- 		p:maxPoolSize="200" -->
+<!-- 		p:minPoolSize="2" -->
+<!-- 		p:initialPoolSize="2" -->
+<!-- 		p:maxIdleTime="20"/> -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"  
+        destroy-method="close" lazy-init="true" depends-on="propertyConfigurer">  
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />  
+        <property name="jdbcUrl" value="${jdbc.url}" />  
+        <property name="user" value="${jdbc.user}" />  
+        <property name="password" value="${jdbc.password}" />  
+        <property name="autoCommitOnClose" value="true" />  
+        <property name="minPoolSize" value="5" />  
+        <property name="maxPoolSize" value="200" />  
+        <property name="maxIdleTime" value="1800" />  
+        <property name="maxStatements" value="100" />  
+        <property name="acquireIncrement" value="5" />  
+        <property name="idleConnectionTestPeriod" value="6000" />  
+        <property name="testConnectionOnCheckout" value="true" />  
+        <property name="checkoutTimeout" value="10000" />  
+    </bean>  	
+	<!-- 定义Hibernate的SessionFactory，并依赖注入数据源，注入上面定义的dataSource -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		p:dataSource-ref="dataSource">
+		<!-- annotatedClasses属性用于列出全部持久化类 -->
+		<property name="annotatedClasses">
+			<list>
+				<!-- 以下用来列出Hibernate的持久化类 -->
+				<value>domain.Areas</value>
+				<value>domain.Cabinets</value>
+				<value>domain.Curves</value>
+				<value>domain.Distributing_frames</value>
+				<value>domain.Event_curves</value>
+				<value>domain.Fiber_cores</value>
+				<value>domain.Frame_ports</value>
+				<value>domain.Jumper_frames</value>
+				<value>domain.Jumper_routes</value>
+				<value>domain.Jumper_backups</value>
+				<value>domain.Landmarks</value>
+				<value>domain.Optical_cables</value>
+				<value>domain.Optimize_parameters</value>
+				<value>domain.Parameter_curves</value>
+				<value>domain.Period_parameters</value>
+				<value>domain.Preparatory_routes</value>
+				<value>domain.Racks</value>
+				<value>domain.Routes</value>
+				<value>domain.Rtu_ports</value>
+				<value>domain.Rtus</value>
+				<value>domain.Stations</value>
+				<value>domain.Topologic_points</value>
+				<value>domain.Topologic_routes</value>
+				<value>domain.Priorities</value>
+				<value>domain.TempGroupInfo</value>
+				<value>domain.Alarm_ways</value>
+				<value>domain.Protect_groups</value>
+				<value>domain.Optical_powers</value>
+				<value>domain.Alarm</value>
+				<value>domain.Role</value>
+				<value>domain.Permissions</value>
+				<value>domain.User</value>
+				<value>domain.Permissions</value>
+				<value>domain.User</value>
+				<value>domain.Threshold</value>
+				<value>domain.Duty_schedule</value>
+				<value>domain.Duty_operator</value>
+				<value>domain.Log</value>
+				<value>domain.SystemInfo</value>
+				<value>domain.AlarmBank</value>
+				<value>domain.SerialCode</value>
+				<value>domain.Verify_codes</value>
+			</list>
+		</property>
+		<!-- 定义Hibernate的SessionFactory的属性 -->
+		<property name="hibernateProperties">
+			<!-- 指定数据库方言、是否自动建表、是否生成SQL语句等 	-->
+			<value>
+				hibernate.dialect=org.hibernate.dialect.MySQLDialect
+				hibernate.hbm2ddl.auto=update
+				hibernate.show_sql=false
+				hibernate.format_sql=false
+			</value>
+		</property>
+	</bean>
+	
+<!-- 配置DAO组件的模板 -->
+<bean id="daoTemplate" abstract="true" lazy-init="true"
+	p:sessionFactory-ref="sessionFactory"/>
+
+<bean id="areaDao"
+	class="daoImpl.AreaDaoImpl"
+	parent="daoTemplate"/>
+
+<bean id="cabinetDao"
+	class="daoImpl.CabinetDaoImpl"
+	parent="daoTemplate"/>
+	
+<bean id="curveDao"
+	class="daoImpl.CurveDaoImpl"
+	parent="daoTemplate"/>
+	
+<bean id="eventCurveDao"
+	class="daoImpl.EventCurveDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="fiberCoreDao"
+	class="daoImpl.FiberCoreDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="frameDao"
+	class="daoImpl.FrameDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="framePortDao"
+	class="daoImpl.FramePortDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="jumperFrameDao"
+	class="daoImpl.JumperFrameDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="jumperRouteDao"
+	class="daoImpl.JumperRouteDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="jumperBackupDao"
+	class="daoImpl.JumperBackupDaoImpl"
+	parent="daoTemplate"/>		
+<bean id="landmarkDao"
+	class="daoImpl.LandmarkDaoImpl"
+	parent="daoTemplate"/>	
+		
+<bean id="opticalCableDao"
+	class="daoImpl.OpticalCableDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="optimizeParameterDao"
+	class="daoImpl.OptimizeParameterDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="parameterCurveDao"
+	class="daoImpl.ParameterCurveDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="periodParameterDao"
+	class="daoImpl.PeriodParameterDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="preparatoryRouteDao"
+	class="daoImpl.PreparatoryRouteDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="rackDao"
+	class="daoImpl.RackDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="routeDao"
+	class="daoImpl.RouteDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="rtuDao"
+	class="daoImpl.RtuDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="rtuPortDao"
+	class="daoImpl.RtuPortDaoImpl"
+	parent="daoTemplate"/>		
+		
+<bean id="stationDao"
+	class="daoImpl.StationDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="topologicPointDao"
+	class="daoImpl.TopologicPointDaoImpl"
+	parent="daoTemplate"/>
+	
+<bean id="topologicRouteDao"
+	class="daoImpl.TopologicRouteDaoImpl"
+	parent="daoTemplate"/>
+
+<bean id="priorityDao"
+	class="daoImpl.PriorityDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="tempGroupInfoDao"
+	class="daoImpl.TempGroupInfoDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="alarmWayDao"
+	class="daoImpl.AlarmWayDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="protectGroupDao"
+	class="daoImpl.ProtectGroupDaoImpl"
+	parent="daoTemplate"/>	
+
+<bean id="opticalPowerDao"
+	class="daoImpl.OpticalPowerDaoImpl"
+	parent="daoTemplate"/>		
+
+<bean id="alarmDao"
+	class="daoImpl.AlarmDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="roleDao"
+	class="daoImpl.RoleDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="permissionDao"
+	class="daoImpl.PermissionDaoImpl"
+	parent="daoTemplate"/>	
+	
+<bean id="userDao"
+	class="daoImpl.UserDaoImpl"
+	parent="daoTemplate"/>			
+	
+<bean id="thresholdDao"
+	class="daoImpl.ThresholdDaoImpl"
+	parent="daoTemplate"/>	
+	<bean id="dutyScheduleDao"
+	class="daoImpl.DutyScheduleDaoImpl"
+	parent="daoTemplate"/>		
+	
+<bean id="dutyOperatorDao"
+	class="daoImpl.DutyOperatorDaoImpl"
+	parent="daoTemplate"/>
+<bean id="verifyCodeDao"	
+    class="daoImpl.VerifyCodeDaoImpl"
+    parent="daoTemplate"/>
+    
+<bean id="logDao"	
+    class="daoImpl.LogDaoImpl"
+    parent="daoTemplate"/>
+ <bean id="systemDao"	
+    class="daoImpl.SystemDaoImpl"
+    parent="daoTemplate"/>  
+ <bean id="alarmBankDao"	
+    class="daoImpl.AlarmBankDaoImpl"
+    parent="daoTemplate"/> 
+ <bean id="serialCodeDao"	
+    class="daoImpl.SerialCodeDaoImpl"
+    parent="daoTemplate"/>     
+</beans>
+	

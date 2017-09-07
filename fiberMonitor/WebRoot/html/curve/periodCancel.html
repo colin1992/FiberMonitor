@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+        <div class="bgDiv"></div>
+        <div class="sidebar" style="height: 180px;margin-top: 50px;">
+            <div class="sidebarTitle">
+                <span>提示</span>
+                <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+            </div>
+            <div style="text-align: center; font-size: 16px; font-family: 'Microsoft YaHei';margin-top: 40px;">是否取消当前光路的周期测试</div>
+            <div class="funcConfirm">
+                <ul class="callTestingFunc">
+                    <!--需要对“是”“否”添加点击事件，在下方script框架中添加------------------------------------后台-->
+                    <li class="cancelPeriodSure">是</li>
+                    <li class="cancelPeriodCan">否</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(".sidebar_close").click(function(){
+            $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+        });
+        
+        /*是*/
+        $(".cancelPeriodSure").click(function(){
+        	var canIndex=[];
+        	var CM=0;
+        	var CLP=0;
+        	var SN=0;
+        	var index=0;
+        	var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+        	var dat=[];
+    	    if(cells==16){
+ 			  index=1; 
+    	    }
+    	    var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+    	    for (var i=0;i<trs.length;i++){
+    	        if($(trs[i]).hasClass("currtrPeriod")){
+    	        	/*data[0] SNo   data[1] CM data[2] CLP   data[3] 端口数*/
+    	           dat=[
+    	                getPortOrder(trs[i].children[4+index].innerHTML),
+    	                trs[i].children[9+index].innerHTML,
+    	                trs[i].children[10+index].innerHTML,
+    	                trs[i].children[11+index].innerHTML
+    	               ];
+    	        	i=trs.length;
+    	        }
+    	    }
+        	if(cells==16){
+		    	   canIndex=JSON.parse(localStorage.getItem('routeList'));//读取取消测试的ID
+		     }
+		     else{
+		    	 canIndex[0]=parseInt(dat[0]);
+		    	 index=0;
+		     }
+		       CM=dat[1];
+			   CLP=dat[2];
+			   SN=dat[3];
+    	       var str=JSON.stringify(canIndex);
+    	   
+    	   $.ajax({
+           	   
+           	 url:"curve/periodTest/cancelPeriodTest",//服务器地址
+           	 type:"POST",//采用POST请求
+           	 dataType:"json",//否则用Text或其他
+           	 timeout:2000,
+           	 data:{
+           		   'CM':CM,
+           		   'CLP':CLP,
+                   'SN':SN,//端口数目
+                   'canCount':canIndex.length,
+           	       'canIndex':str,//获取SNo
+           	     
+           	  },
+           	  success: function(json){
+		        	$(".sidebarDiv").html("");
+			  		var txt="";
+			  		if(json[0].status){
+			  			  txt+="取消周期测试成功<br/>"
+			  		}
+			  		else{
+			  			  txt+="取消失败，请重试<br/>";
+			  			  txt+="错误原因："+json[0].err;
+			  		}
+			  		var option = {
+			  						title: "提示",
+			  						btn: parseInt("0001",2),
+			  						onOk: function(){//点击确认的执行方法
+			  							 
+			  						}
+			  					}
+			  			 window.wxc.xcConfirm(txt, "info", option);
+			  		     var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+		    	    	 if(cells==16){
+		    	    	    selectPath();
+		    	    	 }	
+						getRouteByRtuId(CM);
+			  	},
+			  	error:function(XMLHttpRequest,Error){
+			  			$(".sidebarDiv").html("");
+			  		    var txt="取消失败<br/>";
+			  			txt+="失败原因：";
+			  			if(XMLHttpRequest.status==401){
+			  			    txt+="您不具有当前操作的权限<br/>";
+			  			}
+			  			else if(XMLHttpRequest.status==0){
+			  				txt+="连接超时";
+			  			}
+			  			else{
+			  			    	txt+="网络错误<br/>";
+			  			    	txt+="状态码："+XMLHttpRequest.status;
+			  			   }
+			  			 var option={
+			  			    	   		title: "提示",
+			  			    	   		btn: parseInt("0001",2),
+			  			    	   		onOk: function(){//点击确认的执行方法
+			  			    	   		 		
+			  			    	  		}
+			  			  }
+			  			window.wxc.xcConfirm(txt, "info", option);
+			  			var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+			    	    if(cells==16){
+			    	    	selectPath();
+			    	    }	
+			  	}
+    	    });
+    	   
+    	   $(".contentDiv").html("");
+           $(".sidebarDiv").html("");
+        });
+        /*否*/
+        $(".cancelPeriodCan").click(function(){
+       	 
+       	   $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+       });
+       
+    </script>
+</body>
+</html>

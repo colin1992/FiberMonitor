@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/pickList.css" type="text/css">
+    <link rel="stylesheet" href="css/xcConfirm.css" type="text/css"/>
+    <link rel="stylesheet" href="css/ulSelect.css" type="text/css"/>
+     <script src="js/BootstrapMenu.min.js" type="text/javascript"></script>
+    <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/pickList.js" type="text/javascript"></script> 
+    <script src="js/setRoutePriority.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+     <style>
+     #alarmGroupArea{
+            display:none;
+            z-index:1000000;
+            width:300px;
+            height:350px;
+            position:absolute;
+            background-color:white;
+            border:1px solid #333;
+            top:10px;
+            left:40%;
+     }
+   </style>
+    </head>
+   <body>
+      <div class="container">
+       <div id="alarmGroupArea">
+       </div>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <h3 class="panel-title">障碍告警分组配置</h3>
+            </div>
+            <div id="dropdown">
+              <span>告警组别</span>
+              <input class="priorityLevel" type="text" style="cursor:pointer" value="--请选择--"/>
+              <ul id="LevelList">
+             </ul>
+            </div>
+            <div class="panel-body">
+               <div id="pickList"></div>
+               <div align="center">
+               <button class='btn btn-primary' id="getSelected">确定</button>
+               </div>
+               <div style="margin-top:5px" align="center">
+                 <button class="btn btn-primary" id="submit">完成</button>
+                 <button class="btn btn-primary" id="cancel">取消</button>
+               </div>
+            </div>
+         </div>
+      </div>
+     
+</body>
+</html>

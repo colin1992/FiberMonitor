@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+    <style>
+       .sidebar span{
+            padding: 1px;
+			margin-left:15px;
+			width:60px;
+       } 
+   </style>
+</head>
+<body>
+<script>
+$(document).ready(function(){
+	$.ajax({
+	    url:'create_tree',
+	    type:'post', //数据发送方式
+	    dataType:'json', //接受数据格式
+	    async: false,
+	    success: function(json){
+	   	 var allAreaId=[];
+	     var allAreaName=[];
+	     for(var allCount=0;allCount<json.length;allCount++){
+	   	         var areaId=" ";//定义字符串来承接areaId
+	    		 var areaName=json[allCount].name;
+	             if(parseInt(json[allCount].id[0])==1){//为区域
+	           	  
+	          		for(var index=2;index<json[allCount].id.length;index++){ //读取areaId，    id新式为x_xxx,所以从第二位开始为areaId
+	          			areaId+=json[allCount].id[index];//拼接字符串，获得字符串形式的areaId
+	          		 }
+	          		
+	          		allAreaId.push(parseInt(areaId));//读取各个area的id和名称
+	          		allAreaName.push(areaName);
+	          		
+	          	   }
+	        }
+	     for(var areaIndex=0;areaIndex<allAreaName.length;areaIndex++){
+	   	    $("#belongToArea").append("<option value="+allAreaId[areaIndex]+">"+allAreaName[areaIndex]+"</option>");//给区域选项菜单赋值
+	   	}
+	    },
+  });
+	    var trs = document.querySelectorAll("#stationTableDetail tbody tr");
+	   /**给区域选择赋初值**/
+	    $("#belongToArea").val(thisAreaId);
+})
+
+          
+
+</script>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar">
+        <div class="sidebarTitle">
+            <span>新增局站</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div>
+           <div>
+                  <label  for=""> <span>所属区域</span></label>
+                  <select class="funcCoffselect" id="belongToArea"></select>
+           </div>
+            <div>
+                  <label  for=""> <span>局站名称</span></label>
+                  <input class="funcCoffinput" type="text" id="stationName" />
+           </div>
+            <div>
+                  <label  for=""> <span>局站经度</span></label>
+                   <select class="LongAndLatitudeSelect" style="width:50px" id="LongtitudeOrientation">
+			            <option value="东经">东经</option>
+			            <option value="西经">西经</option>
+            	  </select>
+	            <input class="formFolat" style="width:110px;height:22px;margin-left:10px;ime-mode:disabled" id="lngFloat" name="float"  placeholder="形式如113.211"/>
+	            <span class="unitFloat" style="margin-left:0px;width:5px;">°</span>
+           </div>
+            
+             <div>
+                 <label  for=""> <span>局站纬度</span></label>
+                 <select class="LongAndLatitudeSelect" style="width:50px" id="LatitudeOrientation">
+		            <option value="北纬">北纬</option>
+		            <option value="南纬">南纬</option>
+                 </select>
+		         <input class="formFolat" style="width:110px;height:22px;margin-left:10px;ime-mode:disabled" id="latFloat"  name="float" placeholder="形式如113.211"/>
+			     <span class="unitFloat" style="margin-left:0px;width:5px;">°</span>
+             </div>
+            <div>  
+		           <label  for=""><span >局站描述</span></label>
+		           <textarea id="description" style="margin-left: 10px;" cols="24" rows="8"></textarea>
+           </div>
+        </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    /**所有经纬度都只能是数字新形式**/
+    $(".formFolat").focus(function(){
+ 	   $(this).keypress(function (event) {
+            var eventObj = event || e;
+            var keyCode = eventObj.keyCode || eventObj.which;
+            if ((keyCode >= 48 && keyCode <= 57)||(keyCode==46))
+                return true;
+            else
+                return false;
+ 	  	})
+    })
+
+    /**确认增加**/
+    $(".confirm").click(function(){   //确认
+	    	var validate=false;
+    		var lng=$("#lngFloat").val();
+    		var lat=$("#latFloat").val();
+    		if(lng.indexOf(".")>0&&lat.indexOf(".")>0&&(!isNaN(lat))&&(!isNaN(lng))&&(parseInt(lat)>0&&parseInt(lat)<180)&&(parseInt(lng)>0&&parseInt(lng)<180)){//必须含有小数点,必须为数字
+    			   validate=true;
+    		}
+    		else{
+    			     validate=false;
+    			     var txt="经纬度格式不正确，经纬度必须为0-180范围内的小数。请重新输入经纬度"
+    			     var option = {
+    							title: "提示",
+    							btn: parseInt("0001",2),
+    							onOk: function(){//点击确认的执行方法
+    								
+    							}
+    						}
+    				  window.wxc.xcConfirm(txt, "info", option);
+    	}
+        var areaId=$("#belongToArea").val();
+        if(validate){
+        	  $.ajax({
+     	       	 url:"station/addStation",//服务器地址
+     	       	 type:"POST",//采用POST请求
+     	       	 dataType:"json",//回传数据类型
+     	       	 timeout:2000,
+     	       	 data:{
+     	       		    'stationName':$("#stationName").val(),
+     	             	'areaId':areaId,
+     	             	'stationLongitude':$("#LongtitudeOrientation").val()+lng,
+      					"stationLatitude":$("#LatitudeOrientation").val()+lat,
+     	                'description':$("#description").val(),
+     	       	  },
+     	      	success: function(json){
+            	        $(".sidebarDiv").html("");
+     		    	var txt="";
+     		    	if(json[0].status){
+     		    		txt+="增加成功<br/>"
+     		    	}
+     		    	else{
+     		    		txt+="增加失败，请重试";
+     		    	}
+     			     var option = {
+     							title: "提示",
+     							btn: parseInt("0001",2),
+     							onOk: function(){//点击确认的执行方法
+     								getStationByAreaId(areaId);
+     							}
+     						}
+     				  window.wxc.xcConfirm(txt, "info", option);
+     		      },
+     		    error:function(XMLHttpRequest,Error,F,data)
+     		      {
+     		    	    $(".sidebarDiv").html("");
+     		    	    var txt="增加失败<br/>";
+     		    	    txt+="失败原因：";
+     		    	    if(XMLHttpRequest.status==401){
+     		    	        txt+="您不具有当前操作的权限<br/>";
+     		    	     }
+     		    	    else if(XMLHttpRequest.status==401){
+     		    	    	txt+="连接超时<br/>";
+     		    	    }
+     		    	     else{
+     		    	        	txt+="网络错误<br/>";
+     		    	        	txt+="状态码："+XMLHttpRequest.status;
+     		    	        }
+     		    	      var option={
+     		    	   					title: "提示",
+     		    	   					btn: parseInt("0001",2),
+     		    	   					onOk: function(){//点击确认的执行方法
+     		    	   						
+     		    	  			       }
+     		    	   				}
+     		    	   		  window.wxc.xcConfirm(txt, "info", option);
+     		  }
+     	  });
+        }
+      
+    	
+     });
+   $(".cancel").click(function(){   //取消
+	   $(".contentDiv").html("");
+       $(".sidebarDiv").html("");
+    });
+</script>
+</body>
+</html>

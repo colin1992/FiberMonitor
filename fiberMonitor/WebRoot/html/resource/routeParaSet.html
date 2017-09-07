@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+   <link rel="stylesheet" href="../../css/routeParaSet.css" type="text/css"/>
+</head>
+<body>
+   	<div class="routeParaSidebar">
+   	    <div class="routeParaBar">
+            <div class="sidebarTitle">
+                <span>光路参数设置</span>
+                <span class="sidebar_close"><img src="../../images/close.png" alt="close"/></span>
+            </div>
+            <div class="funcName">
+                <p style="margin-top:1px">光路路由</p>
+                <p>光路名称</p>
+                <p>光路状态</p>
+                <p>链路方向</p>
+                <p>光路描述</p>
+            </div>
+            <div class="funcCoff">
+                <input id="routePath" type="text" readonly="readonly">
+                <input id="name" type="text"/>
+                <select id="isOnline" style="height:23px;">
+                   <option value='true'>在线纤</option>
+                   <option value='false'>备纤</option>
+                </select>
+                 <select id="isUplink" style="height:23px;">
+                   <option value='true'>上行链路</option>
+                   <option value='false'>下行链路</option>
+                </select>
+                <textarea id="description" cols="24" rows="7"></textarea>
+           </div>
+            <div class="funcConfirm">
+                <ul class="callTestingFunc">
+                    <li class="paraConfirm">确定</li>          <!--添加确定对应事件-->
+                    <li class="paraCancel">取消</li>
+                </ul>
+            </div>
+        </div>
+   </div>
+
+<script>
+$("#routePath").val(localStorage.getItem("routeLogic"))
+/**获取预备光路所在RTU端口的模块类型，从而限定当前光路的类型
+ *如果在在线模块：光路只能为在线
+   如果在备纤模块：只能为备纤
+   如果在混合模块：可以选择在线或备纤
+
+ ***/
+$.ajax({
+	 url:"../../getPreparatoryRouteMoudle",
+	 dataType:'json', //接受数据格式
+     async: false,
+     data:{"preId":preparatoryId[localStorage.getItem("selectValue")],
+     },
+	 success: function(json){
+		 if(json[0].status){
+			  var moudleType=json[0].moudleType;//模块类型
+			  switch(moudleType){
+				case"1"://在线 
+				    $("#isOnline").val('true');
+				    $("#isOnline").attr("disabled","disabled");
+					break;
+				case"2"://备纤
+					 $("#isOnline").val('false');
+					 $("#isOnline").attr("disabled","disabled");
+					break;
+				case"3"://保护-主
+					 $("#isUplink").val(String(json[0].isUpLink));
+			     	 $("#isUplink").attr("disabled","disabled");
+					break;
+				default:
+					break;
+			}
+		}
+	},	 
+})
+$(".paraCancel").click(function(){
+	 $(".sidebarRouteDiv").hide();
+	 
+})
+$(".sidebar_close").click(function(){
+	 $(".sidebarRouteDiv").hide();
+})
+$("#isOnline").change(function(){
+	$("#isOnline option[value='index']").remove(); 
+})
+$(".paraConfirm").click(function(){
+	var routePara=JSON.parse(localStorage.getItem("routeSetedPara"));
+	var sValue=localStorage.getItem("selectValue");
+	/**参数信息包括：路由信息、光路名称、光路描述、光路状态、链路方向**/
+	var thisPara=[sValue,$("#name").val(),$("#description").val(),$("#isOnline").val(),$("#isUplink").val()];
+	if(routePara.length==0){
+		routePara.push(thisPara);
+	}
+	else{
+		var flag=false;
+		for(var count=0;count<routePara.length;count++){
+			if(parseInt(routePara[count][0])==parseInt(sValue)){
+				routePara[count]=thisPara;
+			    flag=true;
+			}
+		}
+		if(!flag){
+			routePara.push(thisPara);
+		}
+	}
+	localStorage.setItem('routeSetedPara', JSON.stringify(routePara));	
+	 $(".sidebarRouteDiv").html('');
+	 $(".sidebarRouteDiv").css('display','none');
+})
+
+
+</script>
+       
+</body>
+</html>

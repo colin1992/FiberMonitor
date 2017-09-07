@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar" style="height: 180px;margin-top: 50px;">
+        <div class="sidebarTitle">
+            <span>提示</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div style="text-align: center; font-size: 16px; font-family: 'Microsoft YaHei';margin-top: 40px;">是否执行光路的周期测试</div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <!--需要对“是”“否”添加点击事件，在下方script框架中添加------------------------------------后台-->
+                <li class="periodBegin">是</li>
+                <li class="cancel">否</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    
+        
+    $(".periodBegin").click(function(){
+    	$(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+        var SNo;
+    	var CM;
+    	var CLP;
+    	var SN;
+    	var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+   	    for (var i=0;i<trs.length;i++){
+   	        if($(trs[i]).hasClass("currtrPeriod")){
+   	        	SNo=getPortOrder(trs[i].children[4].innerHTML);
+   	        	CM=trs[i].children[9].innerHTML;
+   	        	CLP=trs[i].children[10].innerHTML;
+   	        	SN=trs[i].children[11].innerHTML;
+   	        	i=trs.length;
+   	        }
+         }
+   	 
+   	 var timeTable=JSON.parse(localStorage.getItem('timeTable'));
+   	 var optiPara=JSON.parse(localStorage.getItem('optiPara'));//获取参数表
+   	 var checkDataBaseFlag=false;
+   	 var optiParaFlag=false;
+   	 if(optiPara==null){//参数表为空，需要查数据库
+   		checkDataBaseFlag=true;
+   		
+   	 } else{//参数表不为空，查询参数表是否暂存了
+   		for(var paraCheckIndex=0;paraCheckIndex<optiPara.length;paraCheckIndex++){
+		   		 if(optiPara[paraCheckIndex][0]==parseInt(SNo))//设置了该光路的优化参数
+		   			optiParaFlag=true//将标志位置位
+		   			checkDataBaseFlag=false;//不许查询数据库
+		   	 }
+   	 }
+   	 if(!checkDataBaseFlag){//需要查询数据库看是否存在优化参数
+   		$.ajax({
+             url:"checkOptimize",
+             type:"post", //数据发送方式
+             dataType:"text", //接受数据格式
+             data : {
+            	      "SNo":parseInt(SNo),
+            	      "CM":CM,
+                    },     
+             async: false,
+             success: function(data){
+          	   if(data!="null")//数据库中存在优化测试参数
+          		   {   
+          		     optiParaFlag=true;
+          		   }
+          	   
+             },
+         });
+   	 }
+   	 if(!optiParaFlag){
+   		    var txt="当前光路尚未配置优化参数，请先配置优化测试参数";
+		    var option = {
+					title: "提示",
+					btn: parseInt("0001",2),
+					onOk: function(){//点击确认的执行方法
+						
+					}
+				}
+		  window.wxc.xcConfirm(txt, "info", option);
+   	 }
+   	 else{  //优化参数已经配置
+   		          var checkTimeFlag=0;
+			      for(var tb=0;tb<timeTable.length;tb++){
+			    		
+			    		if(parseInt(SNo)==timeTable[tb][0])//勾选的该项已经配置了时间表
+			    		{
+			    			checkTimeFlag=1;
+			    			
+			    		}
+			     }
+			      
+			    if(checkTimeFlag==0){//轮询完成，时间表中未配置该项的时间
+			    	var txt="当前光路尚未配置时间表，请先配置时间表";
+				    var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+								
+							}
+						}
+				  window.wxc.xcConfirm(txt, "info", option);
+			    }
+			    
+			    else{//时间表也已经配置下发参数
+			                var clear=[];
+					    	localStorage.setItem('timeTable',JSON.stringify(clear));//移除本地暂存
+					    	localStorage.setItem('optiPara',JSON.stringify(clear));
+							var strPara=JSON.stringify(optiPara);//将参数数组转为字符串
+							var strTable=JSON.stringify(timeTable);//将时间表转为字符串
+							// alert("CM:"+CM+"\nCLP:"+CLP+"\nSN"+SN+"\noptiPara:"+optiPara+"\nTimeTable:"+timeTable);
+					     /*---------先发送优化参数表-----------*/
+					        if(optiPara.length==0)//数据库都有优化参数，只发时间表
+					        {
+						    	 $.ajax({
+									   
+										 url:"curve/periodTest/setPeriodTest",//服务器地址
+										 type:"POST",//采用POST请求
+										 dataType:"json",//否则用Text或其他
+										 timeout:2000,
+										 data:{
+											  'CM':CM,
+											  'CLP':CLP,
+											  'SN':SN,//端口数目
+											  'tableCount':timeTable.length,
+											  'timeTable':strTable,//优化测试参数表
+											  
+										  },
+										  success:function(json)
+						            	  {
+											 var txt=""; 
+						            		  if(json[0].status){
+						            			  txt="设置周期测试成功";
+						            			  
+						            		  }
+						            		  else{
+						            			    txt="设置周期测试失败<br/>";
+										  			txt+="失败原因："+json[0].err;
+										  		}
+										  	var option={
+								  			    	   		title: "提示",
+								  			    	   		btn: parseInt("0001",2),
+								  			    	   		onOk: function(){//点击确认的执行方法
+									  			    	   		
+								  			    	  		}
+								  			        }
+								  			 window.wxc.xcConfirm(txt, "info", option);
+										  	 var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+				  			    	    	 if(cells==16){
+				  			    	    	    selectPath();
+				  			    	    	 }	
+										  	 /***刷新列表**/
+			  			    	   		     getRouteByRtuId(CM);  	
+						            	  },
+						            	  error:function(XMLHttpRequest,Error){
+									  			$(".sidebarDiv").html("");
+									  		    var txt="设置周期测试失败<br/>";
+									  			txt+="失败原因：";
+									  			if(XMLHttpRequest.status==401){
+									  			    txt+="您不具有当前操作的权限<br/>";
+									  			}
+									  			if(XMLHttpRequest.status==0){
+									  				txt+="连接超时";
+									  			}
+									  			else{
+									  			    	txt+="网络错误<br/>";
+									  			    	txt+="状态码："+XMLHttpRequest.status;
+									  			   }
+									  			 var option={
+									  			    	   		title: "提示",
+									  			    	   		btn: parseInt("0001",2),
+									  			    	   		onOk: function(){//点击确认的执行方法
+										  			    	   		var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+										  			    	    	 if(cells==16){
+										  			    	    	    selectPath();
+										  			    	    	 }			
+									  			    	  		}
+									  			  }
+									  			  window.wxc.xcConfirm(txt, "info", option);
+									  		}
+											 
+									});
+					     }
+					     else{//事先未配置优化参数，先下发优化参数
+					    	    $.ajax({
+					     
+									     url:"route/optiRoute",//服务器地址
+										 type:"POST",//采用POST请求
+										 dataType:"json",//否则用Text或其他
+										 timeout:2000,
+										 data:{
+											  'CM':CM,
+											  'CLP':CLP,
+											  'SN':SN,//端口数目
+											  'setCount':optiPara.length,
+											  'optiPara':strPara,//优化测试参数表
+											 
+										  },
+									 success:function(json)//优化参数发送完成，发送时间表
+									  {
+										if(json[0].status)
+										{	/*------------------优化参数发送成功，发送时间表------------------------------------*/
+											   $.ajax({
+									   
+													url:"curve/periodTest/setPeriodTest",//服务器地址
+													 type:"POST",//采用POST请求
+													 dataType:"json",//否则用Text或其他
+													 timeout:2000,
+													 data:{
+														  'CM':CM,
+														  'CLP':CLP,
+														  'SN':SN,//端口数目
+														  'tableCount':timeTable.length,
+														  'timeTable':strTable,//优化测试参数表
+														 
+													  },
+													  success:function(json)
+									            	  {
+														  var txt=""; 
+									            		  if(json[0].status){
+									            			  txt="设置周期测试成功";
+									            			  
+									            		  }
+									            		  else{
+									            			    txt="设置周期测试失败<br/>";
+													  			txt+="失败原因："+json[0].err;
+									            		  }	
+													  	  var option={
+											  			    	   		title: "提示",
+											  			    	   		btn: parseInt("0001",2),
+											  			    	   		onOk: function(){//点击确认的执行方法
+												  			    	   		
+											  			    	  		}
+											  			        }
+											  			window.wxc.xcConfirm(txt, "info", option);
+													  	var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+							  			    	    	if(cells==16){
+							  			    	    	    selectPath();
+							  			    	    	 }	
+													  	/***刷新光路列表**/
+						  			    	   		     getRouteByRtuId(CM);  	
+									            		    
+									            	  },
+									            	  error:function(XMLHttpRequest,Error){
+												  			$(".sidebarDiv").html("");
+												  		    var txt="设置周期测试失败<br/>";
+												  			txt+="失败原因：";
+												  			if(XMLHttpRequest.status==401){
+												  			    txt+="您不具有当前操作的权限<br/>";
+												  			}
+												  			if(XMLHttpRequest.status==0){
+												  				txt+="连接超时";
+												  			}
+												  			else{
+												  			    	txt+="网络错误<br/>";
+												  			    	txt+="状态码："+XMLHttpRequest.status;
+												  			   }
+												  			 var option={
+												  			    	   		title: "提示",
+												  			    	   		btn: parseInt("0001",2),
+												  			    	   		onOk: function(){//点击确认的执行方法
+												  			    	   		 var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+												  			    	    	 if(cells==16){
+												  			    	    	    selectPath();
+												  			    	    	 }				
+												  			    	  		}
+												  			  }
+												  			  window.wxc.xcConfirm(txt, "info", option);
+												  		}
+														 
+												});
+											
+										}
+										else{  //设置失败
+											var txt="设置周期测试失败<br/>";
+								  			txt+="失败原因："+json[0].err;
+								  			var option={
+								  			    	   		title: "提示",
+								  			    	   		btn: parseInt("0001",2),
+								  			    	   		onOk: function(){//点击确认的执行方法
+									  			    	   		 var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+									  			    	    	 if(cells==16){
+									  			    	    	    selectPath();
+									  			    	    	 }			
+								  			    	  		}
+								  			  }
+								  			  window.wxc.xcConfirm(txt, "info", option);
+										}
+										
+									  },
+									  error:function(XMLHttpRequest,Error){
+								  			$(".sidebarDiv").html("");
+								  		    var txt="设置周期测试失败<br/>";
+								  			txt+="失败原因：";
+								  			if(XMLHttpRequest.status==401){
+								  			    txt+="您不具有当前操作的权限<br/>";
+								  			}
+								  			if(XMLHttpRequest.status==0){
+								  				txt+="连接超时";
+								  			}
+								  			else{
+								  			    	txt+="网络错误<br/>";
+								  			    	txt+="状态码："+XMLHttpRequest.status;
+								  			   }
+								  			 var option={
+								  			    	   		title: "提示",
+								  			    	   		btn: parseInt("0001",2),
+								  			    	   		onOk: function(){//点击确认的执行方法
+								  			    	   		 var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length;//读取当前表格的列数
+								  			    	    	 if(cells==16){
+								  			    	    	    selectPath();
+								  			    	    	 }			
+								  			    	  		}
+								  			  }
+								  			  window.wxc.xcConfirm(txt, "info", option);
+								  		}
+								});
+					     }
+							
+				        $(".contentDiv").html("");
+			    }
+   	    }
+    });
+    $(".cancel").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    /*添加“是” “否”时间触发事件--------------------------------------------------------------------后台--*/
+</script>
+</body>
+</html>

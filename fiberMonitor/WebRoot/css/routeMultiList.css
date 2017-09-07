@@ -1,0 +1,59 @@
+@CHARSET "UTF-8";
+.sidebarContent{
+	z-index:10;
+	position:relative;
+}
+.sidebarRouteDiv{
+ 	position: relative; 
+    top:10px;
+    left:0;
+    background-color: white;
+    width:320px;
+    height: 510px;
+    border: solid 1px gray;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index:1000; 
+}
+.sidebar{
+    position:absolute;
+    top:10px;
+    left:0;
+/*     z-index:1000;  */
+    background-color: white;
+    width:320px;
+    height: 500px;
+    border: solid 1px gray;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.sidebarTitle{
+    text-align: center;
+    height: 30px;
+    width:100%;
+    line-height: 30px;
+    color:white;
+    background-color: #343434;
+    font-size: 18px;
+    font-family: "Microsoft YaHei";
+    margin-bottom: 10px;
+}
+.sidebarTitle img{
+    float: right;
+    margin-top: 1px;
+    margin-right: 1px;
+}
+.funcConfirm{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    text-align: center;
+}
+
+.funcConfirm li{
+    display: inline-block;
+    width:80px;
+    height: 50px;
+    line-height: 50px;
+    cursor:pointer;
+}

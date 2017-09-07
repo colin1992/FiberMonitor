@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/jquery.printArea.js" type="text/javascript"></script>
+    <script src="js/xlsx.core.min.js" type="text/javascript"></script>
+    <script src="js/Blob.js" type="text/javascript"></script>
+    <script src="js/FileSaver.js" type="text/javascript"></script>
+    <script src="js/tableexport.js" type="text/javascript"></script>
+    <script src="js/jumper.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+    <style type="text/css">
+        #jumperMapArea,
+        #tab,
+        #mapfrm {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+        #menu {
+            height: 100%;
+            overflow-y: auto
+        }
+        
+        td {
+            font-size: 14px
+        }
+        
+        h4 {
+            margin: 0;
+        }
+        
+        .btn-toolbar.top {
+            padding: 1px;
+        }
+        
+        .btn.btn-default {
+            width: 100px;
+            padding: 1px;
+        }
+        
+        .btn.btn-default.xlsx {
+            margin-left: 500px;
+        }
+        
+        #printBtn,
+        #exportBtn {
+            cursor: pointer;
+        }
+        
+        .mapDiv {
+            width: 83%;
+            float: right;
+        }
+        
+        #controlMapArea {
+            margin-top: 0px;
+            width: 100%;
+            height: 100%;
+            float: right;
+            overflow: hidden;
+            font-family: "微软雅黑";
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fiberContent">
+        <div class="leftTreeCont">
+            <div class="leftTree" id="leftTree">
+            </div>
+        </div>
+        <div class="mapDiv" style="height:680px;margin-top:20px;">
+            <div id="controlMapArea">
+                <iframe width="98.5%" height="100%" src="html/system/systemMap.html"></iframe>
+            </div>
+        </div>
+        <div class="rightTable" style="display:none">
+            <div class="fiberTable tableSet">
+                <div class="tableSearch">
+                    <span id="backToGis">回到GIS</span>
+                    <span>跳纤类型</span>
+                    <select id="searchJumperType">
+                          <option value="全部">==全部==</option>
+		                  <option value="光路跳纤">光路跳纤</option>
+		                  <option value="配线架跳纤">配线架跳纤</option>
+		                  <option value="备纤光源跳纤">备纤光源跳纤</option>
+                	</select>
+                    <span>跳纤名称</span>
+                    <input id="searchJumperName" type="text" />
+                    <span id="doSearch" class="spanbutton">查询</span>
+                    <span class="spanbutton jumperAdd">新增跳纤</span>
+                    <span class="spanbutton jumperModify">修改跳纤</span>
+                    <span class="spanbutton jumperDelete">删除跳纤</span>
+                    <span  id="printBtn" class="spanbutton">打印</span>
+                    <span id="exportBtn" class="spanbutton">导出</span>
+                </div>
+                <div class="printArea">
+                    <table class="table table-bordered jumperTableDetail tableDetail" style="cursor:default" id="jumperTableDetail">
+                        <thead>
+                            <tr>
+                                <th width="4%">序号</th>
+                                <th width="6%">跳纤标识</th>
+                                <th width="8%">跳纤名称</th>
+                                <th width="6%">跳纤长度(m)</th>
+                                <th width="6%">跳纤类型</th>
+                                <th width="9%">A端设备名称</th>
+                                <th width="6%">A端设备标识</th>
+                                <th width="7%">A端设备端口</th>
+                                <th width="9%">Z端设备名称</th>
+                                <th width="6%">Z端设备标识</th>
+                                <th width="7%">Z端设备端口</th>
+                                <th width="9%">所属局站名称</th>
+                                <th width="6%">所属局站标识</th>
+                                <th width="14%">跳纤描述</th>
+                                <th width="10%">创建时间</th>
+                                <th width="10%">修改时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="pageon"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+    </script>
+</body>
+
+</html>

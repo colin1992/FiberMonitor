@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <!-- http 1.0 -->
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <!-- http 1.1 -->
+    <script src="js/laypage.js" type="text/javascript"></script>
+    <script src="js/jquery.printArea.js" type="text/javascript"></script>
+    <script src="js/xlsx.core.min.js" type="text/javascript"></script>
+    <script src="js/Blob.js" type="text/javascript"></script>
+    <script src="js/FileSaver.js" type="text/javascript"></script>
+    <script src="js/tableexport.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+    <style>
+        .btn-toolbar.top {
+            padding: 1px;
+        }
+        
+        .btn.btn-default {
+            width: 100px;
+            padding: 1px;
+        }
+        
+        .btn.btn-default.xlsx {
+            margin-left: 500px;
+        }
+        
+        #printBtn,
+        #exportBtn {
+            cursor: pointer;
+        }
+        .pageJumper{
+            margin-left:10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="callTestingContent">
+
+        <div class="leftTreeCont">
+            <div class="leftTree" id="leftTree">
+            </div>
+        </div>
+        <div class="rightTable">
+            <div class="cableTable tableSet">
+                <div class="tableSearch">
+                    	<span>曲线来源</span>
+	                    <select name="" id="qxly">
+	                    <option value="index" selected>请选择</option>
+	                    <option value="点名测试">点名测试</option>
+	                    <option value="周期测试">周期测试</option>
+	                    <option value="障碍告警测试">障碍告警测试</option>
+	                </select>
+	                <span class="spanbutton search" onclick="serachCurve()" style="cursor:pointer">查询</span>
+	                <span class="spanbutton checkcurve">查看曲线</span>
+	                <span  id="printBtn" class="spanbutton" class="spanbutton">打印</span>
+	                <span id="exportBtn" class="spanbutton" class="spanbutton">导出</span>
+                </div>
+                <div class="printArea">
+                    <table class="table table-bordered curveQueryTableDetail tableDetail" style="cursor:default" id="curveQueryTableDetail">
+                        <thead>
+                            <tr>
+                                <th width="9%">序号</th>
+                                <th width="9%">曲线标识</th>
+                                <th width="20%">光路名称</th>
+                                <th width="11%">曲线来源</th>
+                                <th width="11%">是否为参考曲线</th>
+                                <th width="20%">测试时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id='pagination' style="display:none;text-align:center">
+             	     第<span id="currentPage">1</span>页|
+        		     共<span id="totalPage">1</span>页
+        		  <span class="pageJumper">第</span><input style="width:40px;height:20px ;" id="pointPage" min="1" type="number">页 
+        		  <a href="javascript:gotoPointPage()" class="pageJumper">跳转</a>
+        		  <a href="javascript:gotoPrePage()" class="pageJumper">上一页</a> 
+        		  <a href="javascript:gotoNextPage()" class="pageJumper">下一页</a>
+        		  <a href="javascript:gotoFirstPage()" class="pageJumper"> 首页</a>
+        		  <a href="javascript:gotoLastPage()" class="pageJumper"> 尾页</a>
+                </div>
+           </div>
+      </div>
+  </div>    
+<script>
+/**全局变量**/
+ /**当前页码**/
+ var currentPage=1;
+ /**当前选中的光路Id**/
+ var currentRouteId=1;
+ /**当前表格的列数**/
+ var perCount=document.querySelectorAll(".curveQueryTableDetail tbody tr").length;
+ /**跳转到指定页**/
+ function gotoPointPage(){
+	 var pointPage=$("#pointPage").val();
+	 var isValidate=false;
+	 if(!isNaN(pointPage)){//必须为数字
+		 //必须在合理的页码范围内
+		 if(parseInt(pointPage)<=parseInt($("#totalPage").text())&&parseInt(pointPage)>0){
+			 currentPage=parseInt(pointPage);
+			 getCurvesByPage(currentPage);
+			 $("#currentPage").text(currentPage);
+			 isValidate=true;
+		 }
+	 }
+	 //不合法输入
+	 if(!isValidate){
+		    var txt="您输入的页码有误，请输入合法的页码，跳转页码必须为整数且不超过总页码数。";
+	    	var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   						
+	    	   					},
+	    	  			       
+	    	   				}
+	    	  window.wxc.xcConfirm(txt, "info", option); 
+	 }
+ }
+ /**上一页**/
+ function gotoPrePage(){
+	if(currentPage>1){//页码必须不小于1
+		currentPage-=1;
+		$("#currentPage").text(currentPage);
+		getCurvesByPage(currentPage);
+		
+	}
+	else{
+		    var txt="当前页已为首页。";
+	    	var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   						
+	    	   					},
+	    	  			       
+	    	   				}
+	    	  window.wxc.xcConfirm(txt, "info", option); 
+	}
+ }
+ /**下一页**/
+ function gotoNextPage(){
+	if(currentPage<parseInt($("#totalPage").text())){//页码最大为尾页
+		currentPage+=1;
+		$("#currentPage").text(currentPage);
+		getCurvesByPage(currentPage);
+		
+	}
+	else{
+		    var txt="当前页已为尾页。";
+	    	var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   						
+	    	   					},
+	    	  			       
+	    	   				}
+	    	  window.wxc.xcConfirm(txt, "info", option); 
+	}
+ }
+	 /**首页**/
+	function gotoFirstPage(){
+			currentPage=1;
+			getCurvesByPage(currentPage);
+			$("#currentPage").text(currentPage);
+ }
+	 /**尾页**/
+	function gotoLastPage(){
+			currentPage=parseInt($("#totalPage").text());
+			getCurvesByPage(currentPage);
+			$("#currentPage").text(currentPage);
+ }
+ /**通过指定页码和每页的条目数获取指定页的曲线条目**/
+ function getCurvesByPage(page){
+	 $.ajax({
+			type : "post",
+			async : false,  //异步请求 先执行后续操作，再执行sucess
+			url : "getCurvesByPage",
+			dataType:"json",
+			data : {
+					'page':page,
+					'perCount':perCount,
+					'routeId':currentRouteId,
+			},
+			success:function(json){
+			    var curves=json[0].curves;
+			    var dataInput=[]; 
+				for(i=0;i<curves.length;i++){
+					var referring="否";
+					if(curves[i].referring){
+						referring="是";
+					}
+  				dataInput.push(
+  						   [
+  						 	   curves[i].curve_id,
+  				               curves[i].route_name,
+  				               curves[i].curve_type,
+  				               referring,
+    				      	   curves[i].test_date]);                   			
+  				}
+				tableDataIn(dataInput);  
+			},
+		});
+ }
+ /**验证session是否有效**/
+ $.ajax({
+     url:'checkSession',
+     type:'post', //数据发送方式
+     dataType:'json', //接受数据格式
+     async: false,
+     success: function(json){
+     	if(!json[0].status){
+     		var txt="由于长时间未使用，当前登录信息已过期，请重新登录";
+	    	var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   						localStorage.clear();
+	    	   					    window.location.href="Login.html";
+	    	   					},
+	    	  			       onClose:function(){
+	    	  			    	    localStorage.clear();
+	    	  					    window.location.href="Login.html";
+	    	  					    
+	    	  			       },
+	    	   				}
+	    	  window.wxc.xcConfirm(txt, "info", option);
+     	}
+     },
+     error:function(XMLHttpRequest,Error){
+	    	  
+	   }
+   });
+    $(document).ready(function() {
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+/**************************** 形成左侧的树 *******************************/
+            tree = new dTree('tree');//创建一个对象.
+			tree.config.folderLinks=true;
+            tree.config.useCookies=false;
+            tree.config.check=true;
+            $.ajax({
+                url:'curveTree',
+                type:'post', //数据发送方式
+                dataType:'json', //接受数据格式
+                async: false,
+                success: function(json){
+                    $(json).each(function(){
+                        var nodeId=$(this).attr("id");
+                        var parentId=$(this).attr("pid");
+                        var hrefAddress="";
+                        var nodeName=$(this).attr("name");
+                        var equiId="";
+                        if(nodeId=="0"||nodeId==0){
+                           nodeName="曲线查阅";	
+                        }
+                        else if(parseInt(nodeId[0])==4){//为光路
+                        	 for(var index=2;index<nodeId.length;index++){ //
+                          		equiId+=nodeId[index];//拼接字符串
+                          	 }
+                        	 hrefAddress="javascript:listCurvesByRouteId("+parseInt(equiId)+")";//
+                       }
+                       tree.add(nodeId,parentId,nodeName,hrefAddress,"","","","",false);
+                    });
+                },
+                error:function(XMLHttpRequest,Error){
+      	       }
+            });
+            document.getElementById("leftTree").innerHTML = tree;
+/************************表格写入函数***************************/
+            function tableDataIn(tabledata){
+                var trs = document.querySelectorAll("#curveQueryTableDetail tbody tr");
+                var tds = document.querySelectorAll("#curveQueryTableDetail tbody tr td");
+                var cells=document.getElementById("curveQueryTableDetail").rows.item(0).cells.length;
+                //写入前先清空
+                for (var i=0;i<tds.length;i++){
+                     tds[i].innerHTML = "";
+                }
+              	var index=(currentPage-1)*perCount;
+                for (var i=0; i<tabledata.length;i++) {
+                      var Ele = trs[i].children;
+                      for(var j=0; j<cells-1; j++){
+                           Ele[0].innerHTML=i+1+index;
+                           Ele[j+1].innerHTML=tabledata[i][j];
+                       }
+                }
+           }
+/************************叶节点执行的查询数据库并写入table的操作*************************/            
+          function listCurvesByRouteId(routeId){
+               currentRouteId=routeId;//给光路Id赋值
+			   $("#pagination").css('display','block');
+			   $("#currentPage").text(currentPage);
+			   $.ajax({
+                      			type : "post",
+                      			async : false,  //异步请求 先执行后续操作，再执行sucess
+                      			url : "listCurvesByRouteId",
+                      			dataType:"json",
+                      			data : {
+                      					'routeId':routeId,
+                      					'perCount':perCount,
+                      			},
+                      			success:function(json){
+                      			    var curves=json[0].curves;
+                      			    //写入总页数
+                      			   $("#totalPage").text(json[0].pageCount);
+                      			   $("#pointPage").attr("max",json[0].pageCount);
+                      			   var dataInput=[]; 
+                      				for(i=0;i<curves.length;i++){
+                      					var referring="否";
+                      					if(curves[i].referring){
+                      						referring="是";
+                      					}
+                         				dataInput.push(
+                         						   [
+                         						 	   curves[i].curve_id,
+                         				               curves[i].route_name,
+                         				               curves[i].curve_type,
+                         				               referring,
+                           				      		   curves[i].test_date]);                   			
+                         				}
+                      				tableDataIn(dataInput);  
+                      			},
+                });
+              	
+           }
+/**************************下拉框中的按条件查询的操作*******************************/            
+            function serachCurve(){
+               var curveType = $("#qxly").val();
+               if(curveType=="index"){
+            	   listCurvesByRouteId(currentRouteId); 
+               }
+               else{
+	               $.ajax({
+	         			type : "post",
+	         			async : false,  //异步请求 先执行后续操作，再执行sucess
+	         			url : "searchCurve",
+	         			dataType:"json",
+	         			data : {
+	         					'curveType':curveType,
+	         					'routeId':currentRouteId,
+	          					'perCount':perCount,
+	         			},
+	         			success:function(json){
+	         			    var curves=json[0].curves;
+	         			    if(json[0].status){
+	         			    	 //写入总页数
+	 	         			   $("#totalPage").text(json[0].pageCount);
+	 	         			   var dataInput=[]; 
+	 	         				for(i=0;i<curves.length;i++){
+	 	         					var referring="否";
+	 	         					if(curves[i].referring){
+	 	         						referring="是";
+	 	         					}
+	 	            				dataInput.push(
+	 	            						   [
+	 	            						 	   curves[i].curve_id,
+	 	            				               curves[i].route_name,
+	 	            				               curves[i].curve_type,
+	 	            				               referring,
+	 	              				      		   curves[i].test_date]);                   			
+	 	            				}
+	 	         				tableDataIn(dataInput);  
+	         			    }
+	         			    else{
+	         			    	var txt="不存在满足条件的曲线，请核对后重新查询。";
+	         			    	var option={
+	         			    	   					title: "提示",
+	         			    	   					btn: parseInt("0001",2),
+	         			    	   					onOk: function(){//点击确认的执行方法
+	         			    	   						
+	         			    	   					},
+	         			    	  			      
+	         			    	   				}
+	         			    	  window.wxc.xcConfirm(txt, "info", option);
+	         			    }
+	         			   
+	         			},
+	         });
+          }         
+      }
+           
+   $(".checkcurve").click(function(){
+        	var trs=document.querySelectorAll("#curveQueryTableDetail tbody tr");
+     	    var curveId="";
+     	    for (var i=0;i<trs.length;i++){
+     	        if($(trs[i]).hasClass("currtr")){
+     	        	curveId = trs[i].children[1].innerHTML;
+     	        	i=trs.length;
+     	        }
+     	   }
+     	  if(curveId==""){
+     		 var txt= "您当前尚未选择曲线，请先选择您要查看的曲线。";
+       	     var option = {
+      					title: "提示",
+      					btn: parseInt("0001",2),
+      					onOk: function(){//点击确认的执行方法
+      				  }
+      				}
+      		  window.wxc.xcConfirm(txt, "info", option);
+     	  }
+     	  else{
+     		  
+     		 isPerCheckCurve(curveId);
+     	  }
+     	 /**判断是否有查看曲线的权限**/
+     	    function isPerCheckCurve(curveId){
+     	    	 $.ajax({
+     	    		 url:"isPerCheckCurve",
+     	        	 dataType:'json', //接受数据格式
+     	             async: false,
+     	             data:null,
+     	    		 success: function(json){
+     	    			 if(json[0].status){
+     	    				 localStorage.setItem('curveId',curveId);
+     	    	   		      /*-----------显示曲线--------*/
+     	    	        	  $(".dynamicSupernatant").height(document.documentElement.clientHeight);
+     	    	        	  $(".dynamicSupernatant").width(document.documentElement.clientWidth);
+     	    	              $(".dynamicSupernatant").show();
+     	    	              $("#supernatantArea").css({"width":"95%" ,"height":"90%" ,"backgroundColor":"#f9f9f9","margin":"0 auto","positon":"absolute","margin-top":"-2%"});
+     	    	              $("#supernatant").height($("#supernatantArea").height()-30);
+     	    	        	  $("#supernatant").width("99.6%");
+     	    	        	  $("#supernatant").attr("src","html/curve/curveAnalyze.html");
+     	    			 }
+     	    			 else{
+     	    				    var txt= "您不具有当前操作的权限，请联系管理员<br/>"
+     	    					var option = {
+     	    								title: "提示",
+     	    								btn: parseInt("0001",2),
+     	    								onOk: function(){
+     	    							    	
+     	    								  }
+     	    							}
+     	    					  window.wxc.xcConfirm(txt, "info", option);
+     	    								
+     	    			 }
+     	    		 },	 
+     	    	})
+     	    }    
+     	 
+        });
+    /**表格区域范围内禁止系统右键，使用自定义右键**/
+    $("#curveQueryTableDetail").hover(function(){
+    	 $(document).bind("contextmenu",function(e){
+    	   e.preventDefault();
+  		   return false;   
+  		 });
+    },
+    function(){
+    	$(document).unbind("contextmenu","")
+    });	
+    /****************************添加右键菜单功能***********************************/
+        $(".curveQueryTableDetail tbody tr").click(function(){
+        	$(this).addClass("currtr").siblings().removeClass("currtr");
+        	var selectId=this.children[1].innerHTML;
+        	var isRe=this.children[4].innerHTML;
+        	if(selectId!=""){
+        		 $(this).addClass("curvQuery").siblings().removeClass("curvQuery");
+        	}
+           var menu = new BootstrapMenu('.curvQuery', {
+                    actions: [{
+                        name: '查看曲线',
+                        onClick: function() {
+                        	   $(this).parent().remove();;
+                        	  localStorage.setItem('curveId',selectId);
+                        	  /***-----------显示曲线--------*/
+     	    	        	  $(".dynamicSupernatant").height(document.documentElement.clientHeight);
+     	    	        	  $(".dynamicSupernatant").width(document.documentElement.clientWidth);
+     	    	              $(".dynamicSupernatant").show();
+     	    	              $("#supernatantArea").css({"width":"95%" ,"height":"90%" ,"backgroundColor":"#f9f9f9","margin":"0 auto","positon":"absolute","margin-top":"-2%"});
+     	    	              $("#supernatant").height($("#supernatantArea").height()-30);
+     	    	        	  $("#supernatant").width("99.6%");
+     	    	        	  $("#supernatant").attr("src","html/curve/curveAnalyze.html");
+     	    	        }
+                    },
+                    {
+                        name: '删除曲线',
+                        onClick: function() {
+                        	 $(this).parent().remove();;
+                        	var txt= "";
+                        	if(isRe=="是"){
+                        		txt="当前曲线为参考曲线，如果光路不存在参考曲线将影响检测性能,请谨慎选择!";
+                        	}
+                        	else{
+                        		txt="删除操作不可逆，请谨慎选择。";
+                        	}
+                     	     var option = {
+                    					title: "提示",
+                    					btn: parseInt("0011",2),
+                    					onOk: function(){//点击确认的执行方法
+                    						 delCurve(selectId);
+                    				  }
+                    				}
+                    		  window.wxc.xcConfirm(txt, "info", option);
+                        }
+                    }]
+             })
+        }) 
+        /**删除曲线**/ 
+       function delCurve(curveId){
+        	$.ajax({
+    	   		 url:"curve/delCurve",
+	        	 dataType:'json', //接受数据格式
+	             async: false,
+	             data:{'curveId':curveId},
+	    		 success: function(json){
+	    			 if(json[0].status){
+	    				     var routeId=json[0].routeId;
+	    				     var txt= "删除成功<br/>"
+	    					 var option = {
+ 								title: "提示",
+ 								btn: parseInt("0001",2),
+ 								onOk: function(){
+ 									listCurvesByRouteId(routeId);
+ 								  }
+ 							}
+ 					      window.wxc.xcConfirm(txt, "info", option);
+	    			 }
+	    			 else{
+	    				     var txt= "删除失败，请重试<br/>"
+	    					 var option = {
+ 								title: "提示",
+ 								btn: parseInt("0001",2),
+ 								onOk: function(){
+ 									
+ 								  }
+ 							}
+ 					  window.wxc.xcConfirm(txt, "info", option); 
+	    								
+	    			 }
+	    		 },	
+	    		 error: function (XMLHttpRequest, Error) {
+	    				var txt = "删除失败<br/>";
+	    				txt += "失败原因：";
+	    				if (XMLHttpRequest.status == 401) {
+	    					txt += "您不具有当前操作的权限，请联系管理员取得权限<br/>";
+	    				}
+	    				else {
+	    					txt += "网络错误<br/>";
+	    					txt += "状态码：" + XMLHttpRequest.status;
+	    				}
+	    				var option = {
+	    					title: "提示",
+	    					btn: parseInt("0001", 2),
+	    					onOk: function () {//点击确认的执行方法
+
+	    					}
+	    				}
+	    				window.wxc.xcConfirm(txt, "info", option);
+	    			}
+        	})
+       } 
+    </script>
+</body>
+
+</html>

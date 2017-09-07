@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/jquery.printArea.js" type="text/javascript"></script>
+	<script src="js/xlsx.core.min.js" type="text/javascript"></script>
+	<script src="js/Blob.js" type="text/javascript"></script>
+	<script src="js/FileSaver.js" type="text/javascript"></script>
+	<script src="js/tableexport.js" type="text/javascript"></script>
+
+	<link rel="stylesheet" href="css/dtree.css" type="text/css">
+	<link rel="stylesheet" href="css/index.css" type="text/css" />
+	<link rel="stylesheet" href="css/system.css" type="text/css" />
+
+	<style>
+		.btn-toolbar.top {
+			padding: 1px;
+		}
+		
+		.btn.btn-default {
+			width: 100px;
+			padding: 1px;
+		}
+		
+		.btn.btn-default.xlsx {
+			margin-left: 750px;
+		}
+		
+		#printBtn,
+		#exportBtn {
+			cursor: pointer;
+		}
+		.laydate-icon{
+		  cursor:pointer;
+		}
+		 .pageJumper{
+            margin-left:10px;
+        }
+	</style>
+
+</head>
+
+<body>
+	<div class="RTULogContent tableSet">
+		<div class="tableSearch" style="text-align:center">
+			<span style="margin-left:200px">开始时间：</span>
+			<input placeholder="请输入日期" id="start" class="laydate-icon">
+			<span>结束时间：</span>
+			<input placeholder="请输入日期" id="end" class="laydate-icon">
+			<span id="seachRtuLog" class="spanbutton">查询</span>
+			<span  id="printBtn" class="spanbutton">打印</span>
+			<span id="exportBtn" class="spanbutton">导出</span>
+		</div>
+		<div class="printArea">
+			<table class="table table-bordered RTULogTableDetail" style="margin-left:1%;width:98%;cursor:default" id="RTULogTableDetail">
+			<thead>
+				<tr>
+					<th width="4%">序号</th>
+					<th width="4%">日志标识</th>
+					<th width="4%">资源类型</th>
+					<th width="14%">资源名称</th>
+					<th width="25%">操作过程</th>
+					<th width="6%">操作人员</th>
+					<th width="12%">操作时间</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+			</table>
+			<div id='pagination' style="text-align:center">
+             	     第<span id="currentPage">1</span>页|
+        		     共<span id="totalPage">1</span>页
+        		  <span class="pageJumper">第</span><input style="width:40px;height:20px ;" id="pointPage" min="1" type="number">页 
+        		  <a href="javascript:gotoPointPage()" class="pageJumper">跳转</a>
+        		  <a href="javascript:gotoPrePage()" class="pageJumper">上一页</a> 
+        		  <a href="javascript:gotoNextPage()" class="pageJumper">下一页</a>
+        		  <a href="javascript:gotoFirstPage()" class="pageJumper"> 首页</a>
+        		  <a href="javascript:gotoLastPage()" class="pageJumper"> 尾页</a>
+                </div>
+		</div>
+	</div>
+
+	<script>
+	/**检查session**/
+	  checkSession();
+	  /**全局变量**/
+	  /**当前页码**/
+	  var currentPage=1;
+	  /**当前选中的光路Id**/
+	  var currentRouteId=1;
+	  /**当前表格的列数**/
+	  var perCount=document.querySelectorAll(".RTULogTableDetail tbody tr").length;
+	  /**跳转到指定页**/
+	  function gotoPointPage(){
+	 	 var pointPage=$("#pointPage").val();
+	 	 var isValidate=false;
+	 	 if(!isNaN(pointPage)){//必须为数字
+	 		 //必须在合理的页码范围内
+	 		 if(parseInt(pointPage)<=parseInt($("#totalPage").text())&&parseInt(pointPage)>0){
+	 			 currentPage=parseInt(pointPage);
+	 			 getRtuLogsByPage(currentPage);
+	 			 $("#currentPage").text(currentPage);
+	 			 isValidate=true;
+	 		 }
+	 	 }
+	 	 //不合法输入
+	 	 if(!isValidate){
+	 		    var txt="您输入的页码有误，请输入合法的页码，跳转页码必须为整数且不超过总页码数。";
+	 	    	var option={
+	 	    	   					title: "提示",
+	 	    	   					btn: parseInt("0001",2),
+	 	    	   					onOk: function(){//点击确认的执行方法
+	 	    	   						
+	 	    	   					},
+	 	    	  			       
+	 	    	   				}
+	 	    	  window.wxc.xcConfirm(txt, "info", option); 
+	 	 }
+	  }
+	  /**上一页**/
+	  function gotoPrePage(){
+	 	if(currentPage>1){//页码必须不小于1
+	 		currentPage-=1;
+	 		$("#currentPage").text(currentPage);
+	 		getRtuLogsByPage(currentPage);
+	 		
+	 	}
+	 	else{
+	 		    var txt="当前页已为首页。";
+	 	    	var option={
+	 	    	   					title: "提示",
+	 	    	   					btn: parseInt("0001",2),
+	 	    	   					onOk: function(){//点击确认的执行方法
+	 	    	   						
+	 	    	   					},
+	 	    	  			       
+	 	    	   				}
+	 	    	  window.wxc.xcConfirm(txt, "info", option); 
+	 	}
+	  }
+	  /**下一页**/
+	  function gotoNextPage(){
+	 	if(currentPage<parseInt($("#totalPage").text())){//页码最大为尾页
+	 		currentPage+=1;
+	 		$("#currentPage").text(currentPage);
+	 		getRtuLogsByPage(currentPage);
+	 		
+	 	}
+	 	else{
+	 		    var txt="当前页已为尾页。";
+	 	    	var option={
+	 	    	   					title: "提示",
+	 	    	   					btn: parseInt("0001",2),
+	 	    	   					onOk: function(){//点击确认的执行方法
+	 	    	   						
+	 	    	   					},
+	 	    	  			       
+	 	    	   				}
+	 	    	  window.wxc.xcConfirm(txt, "info", option); 
+	 	}
+	  }
+	 	 /**首页**/
+	 	function gotoFirstPage(){
+	 			currentPage=1;
+	 			getRtuLogsByPage(currentPage);
+	 			$("#currentPage").text(currentPage);
+	  }
+	 	 /**尾页**/
+	 	function gotoLastPage(){
+	 			currentPage=parseInt($("#totalPage").text());
+	 			getRtuLogsByPage(currentPage);
+	 			$("#currentPage").text(currentPage);
+	  }
+	  /**通过指定页码和每页的条目数获取指定页的曲线条目**/
+	  function getRtuLogsByPage(page){
+	 	 $.ajax({
+	 			type : "post",
+	 			async : false,  //异步请求 先执行后续操作，再执行sucess
+	 			url : "getLogsByPage",
+	 			dataType:"json",
+	 			data : {
+	 				    "logType":"RTU",
+	 					'page':page,
+	 					'perCount':perCount,
+	 			},
+	 			success:function(json){
+	 			    var rtuLogs=json[0].logs;
+	 			    var dataInput=[]; 
+	 				for(i=0;i<rtuLogs.length;i++){
+	 					dataInput.push([
+	 								   rtuLogs[i].id,
+	 								   rtuLogs[i].resourceType,
+	 								   rtuLogs[i].resourceName,
+	 								   rtuLogs[i].operateDetail,
+	 								   rtuLogs[i].user,
+	 								   rtuLogs[i].date
+	 								]);  
+	 				}
+	 				tableDataIn(dataInput);  
+	 			},
+	 		});
+	  }
+	//查找RTU日志获取总页数和第一页的数据  
+	function getRtuLogs(){
+		$.ajax({
+ 			type : "post",
+ 			async : false,  //异步请求 先执行后续操作，再执行sucess
+ 			url : "getLogs",
+ 			dataType:"json",
+ 			data : {
+ 				    "logType":"RTU",
+ 					'perCount':perCount,
+ 			},
+ 			success:function(json){
+ 			    var rtuLogs=json[0].logs;
+ 			   //写入总页数
+   			   $("#totalPage").text(json[0].pageCount);
+   			   $("#pointPage").attr("max",json[0].pageCount);
+ 			    var dataInput=[]; 
+ 				for(i=0;i<rtuLogs.length;i++){
+ 					dataInput.push([
+							   rtuLogs[i].id,
+							   rtuLogs[i].resourceType,
+							   rtuLogs[i].resourceName,
+							   rtuLogs[i].operateDetail,
+							   rtuLogs[i].user,
+							   rtuLogs[i].date
+							]);                   			
+   				}
+ 				tableDataIn(dataInput);  
+ 			},
+ 		});
+	}
+    $(document).ready(function() {
+    	//获取RTU日志
+    	getRtuLogs();
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+
+	    //开始时间和结束时间的限制
+    var start = {
+        elem: '#start',
+        format: 'YYYY-MM-DD hh:mm:ss',
+        max: laydate.now(), //最大日期
+        istime: true,
+        festival:true,
+        choose: function(datas){
+            end.min = datas; //开始日选好后，重置结束日的最小日期
+            end.start = datas ; //将结束日的初始值设定为开始日
+        }
+    };
+    var end = {
+        elem: '#end',
+        format: 'YYYY-MM-DD hh:mm:ss',
+        max: laydate.now(),
+        istime: true,
+        festival:true,
+        choose: function(datas){
+            start.max = datas; //结束日选好后，重置开始日的最大日期
+        }
+    };
+    laydate(start);
+    laydate(end);
+    
+    
+    /**表格范围内禁止系统右键，使用自定义右键**/
+    $("#RTULogTableDetail").hover(function(){
+    	 $(document).bind("contextmenu",function(e){   
+    		   return false;   
+    		 });
+    },
+    function(){
+    	$(document).unbind("contextmenu","")
+    }); 
+    /** 定义表格的邮件菜单 */
+    $(".RTULogTableDetail tbody tr").click(function(){
+    	 $(this).addClass("currtr").siblings().removeClass("currtr");
+    }) 
+    $("#seachRtuLog").click(function(){
+    	$.ajax({
+  			type : "post",
+  			async : false,  //异步请求 先执行后续操作，再执行sucess
+  			url : "listResourceLog",
+  			dataType:"json",
+  			data : {
+  					"logType":"RTU",
+					"startTime":$("#start").val(),
+					"endTime":$("#end").val(),
+					'perCount':perCount
+  			},
+  			success:function(json){
+  			  var rtuLogs=json[0].logs;
+  			  var dataInput=[];
+			   //写入总页数
+  			   $("#totalPage").text(json[0].pageCount);
+  			   $("#pointPage").attr("max",json[0].pageCount);
+  			   if(json[0].status){
+  				 for(i=0;i<rtuLogs.length;i++){
+      				dataInput.push([rtuLogs[i].id,
+      				               rtuLogs[i].resourceType,
+      				               rtuLogs[i].resourceName,
+      				               rtuLogs[i].operateDetail,
+      				               rtuLogs[i].user,
+      				           	   rtuLogs[i].date]);  
+      				} 
+   				tableDataIn(dataInput);
+  			   }
+  			   else{
+  				    tableDataIn(dataInput)
+  				    var txt="不存在满足条件的条目，请核对后重新查询。";
+			    	var option={
+			    	   					title: "提示",
+			    	   					btn: parseInt("0001",2),
+			    	   					onOk: function(){//点击确认的执行方法
+			    	   						
+			    	   					},
+			    	  			      
+			    	   				}
+			    	  window.wxc.xcConfirm(txt, "info", option);
+  			   }
+  				
+  			},
+  			error:function(XMLHttpRequest,Error,F,data){
+     	    }
+		});
+    	
+    })
+    /************************表格写入函数***************************/
+            function tableDataIn(tabledata){
+                var trs = document.querySelectorAll("#RTULogTableDetail tbody tr");
+                var tds = document.querySelectorAll("#RTULogTableDetail tbody tr td");
+                var cells=document.getElementById("RTULogTableDetail").rows.item(0).cells.length;
+                //写入前先清空
+                for (var i=0;i<tds.length;i++){
+                     tds[i].innerHTML = "";
+                }
+              	var index=(currentPage-1)*perCount;
+                for (var i=0; i<tabledata.length;i++) {
+                      var Ele = trs[i].children;
+                      for(var j=0; j<cells-1; j++){
+                           Ele[0].innerHTML=i+1+index;
+                           Ele[j+1].innerHTML=tabledata[i][j];
+                       }
+                }
+           }
+   
+    </script>
+</body>
+
+</html>

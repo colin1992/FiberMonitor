@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style>
+		.error {
+			color: red;
+			text-align: right;
+			margin-right: 10px;
+		}
+		
+		.topForm {
+			float: left;
+			width: 300px;
+			top: -2%;
+			left: 5px;
+		}
+		
+		.validFormDiv {
+			float: left;
+			width: 300px;
+			top: 40%;
+			left: 5px;
+		}
+		
+		.sidebar span {
+			width: 120px;
+			padding: 5px;
+			text-align: right;
+		}
+		
+		.sidebar select {
+			width: 155px;
+		}
+		.sidebar input {
+			width: 155px;
+		}
+		
+		.sidebar {
+			height: 650px;
+		}
+		
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar" style="height:600px">
+			<div class="sidebarTitle">
+				<span>查看RTU</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="topForm">
+				<p>
+					<label for=""><span>RTU标识： </span></label>
+					<input value="" id="alterRtuId" type="text" disabled/>
+				</p>
+				<p>
+					<label for=""><span>RTU名称： </span></label>
+					<input value="" id="alterRtuName" type="text" disabled="disabled"/>
+				</p>			
+				<p>
+					<label for=""><span>RTU激活码： </span></label>
+					<input id="alterRtuKey" name="alterRtuKey" type="text" disabled="disabled"/>
+				</p>
+				<p>
+					<label for=""><span>RTU地址： </span></label>
+					<input id="alterRtuUrl" name="alterRtuUrl" type="text" disabled="disabled"/>
+				</p>
+				<p>
+					<label for=""><span>局站： </span></label>
+					<input id="viewStationName" name="viewStationName" type="text" disabled="disabled"/>
+				</p>
+				<p>
+					<label for="" id="module1Name"><span>模块1： </span></label>
+					<select name="type" id="module1" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module2Name"><span>模块2： </span></label>
+					<select name="type" id="module2" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                         <option value="2">备纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                       	<option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module3Name"><span>模块3： </span></label>
+					<select name="type" id="module3" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module4Name"><span>模块4： </span></label>
+					<select name="type" id="module4" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module5Name"><span>模块5： </span></label>
+					<select name="type" id="module5" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module6Name"><span>模块6： </span></label>
+					<select name="type" id="module6" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module7Name"><span>模块7： </span></label>
+					<select name="type" id="module7" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for="" id="module8Name"><span>模块8： </span></label>
+					<select name="type" id="module8" disabled="disabled">
+						<option value="0">--无--</option>
+                        <option value="1">在纤模块</option>
+                        <option value ="4">在纤模块(OPM)</option>
+                        <option value="2">备纤模块</option>
+                        <option value="3">保护模块-主</option>
+                        <option value="5">保护模块-从</option>
+                    </select>
+				</p>
+				<p>
+					<label for=""><span>RTU描述： </span></label>
+					<textarea name="" id="alterRtuDescription" disabled="disabled"  cols="20" rows="3"></textarea>
+				</p>
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="confirm">确定</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+
+    $(".confirm").click(function(){
+    	$(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+
+/**************将原来的值作为修改框中的默认值***************/
+var trs = document.querySelectorAll("#RTUTableDetail tbody tr");
+ 	    var dataBefore=[];
+ 	    for (var i=0;i<trs.length;i++){
+ 	        if($(trs[i]).hasClass("currtr")){
+ 	        	dataBefore = [trs[i].children[1].innerHTML,  //rtu标识
+ 	        	              trs[i].children[2].innerHTML,  //rtu名称
+ 	        	              trs[i].children[4].innerHTML,  //rtu激活码
+ 	        	              trs[i].children[5].innerHTML,  //rtu地址
+ 	        	              trs[i].children[6].innerHTML,  //rtu状态
+ 	        	              trs[i].children[9].innerHTML,  //rtu描述
+ 	        	              trs[i].children[7].innerHTML,  //局站的ID
+ 	        	              trs[i].children[8].innerHTML,  //局站的名称
+ 	        	              trs[i].children[3].innerHTML,  //rtu类型
+ 	        	              ];
+ 	        }
+ 	    }
+$("#alterRtuId").val(dataBefore[0]);
+$("#alterRtuName").val(dataBefore[1]);
+$("#alterRtuKey").val(dataBefore[2]);
+$("#alterRtuUrl").val(dataBefore[3]);
+$("#alterRtuDescription").val(dataBefore[5]);
+$("#viewStationName").val(dataBefore[7]);
+if(dataBefore[8]=="普通rtu")
+	{
+	$.ajax({
+		type : "post",
+		async : false,  //异步请求 先执行后续操作，再执行sucess
+		url : "getRtuInfoById",
+		dataType:'json',
+		data : {
+				'rtuId':dataBefore[0],
+           },
+		success:function(json){
+			$("#module1").attr("value",json[0].installInfo[0]);
+			$("#module2").attr("value",json[0].installInfo[1]);
+			$("#module3").attr("value",json[0].installInfo[2]);
+			$("#module4").attr("value",json[0].installInfo[3]);
+			$("#module5").attr("value",json[0].installInfo[4]);
+			$("#module6").attr("value",json[0].installInfo[5]);
+			$("#module7").attr("value",json[0].installInfo[6]);
+			$("#module8").attr("value",json[0].installInfo[7]);
+	      },
+	});
+	}
+else
+{
+	$("#module1").hide();
+	$("#module1Name").hide();
+	
+	$("#module2").hide();
+	$("#module2Name").hide();
+	
+	$("#module3").hide();
+	$("#module3Name").hide();
+	
+	$("#module4").hide();
+	$("#module4Name").hide();
+	
+	$("#module5").hide();
+	$("#module5Name").hide();
+	
+	$("#module6").hide();
+	$("#module6Name").hide();
+	
+	$("#module7").hide();
+	$("#module7Name").hide();
+	
+	$("#module8").hide();
+	$("#module8Name").hide();
+	$(".sidebar").css("height","450px");
+}
+
+var selects = document.getElementsByName("alterRtuStatus");  //指定选中radio的某一项
+for (var i=0; i<selects.length; i++){  
+    if (selects[i].value==dataBefore[4]) {  
+        selects[i].checked= true;  
+        break;  
+    }  
+}  
+
+</script>
+</body>
+
+</html>

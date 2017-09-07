@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <script src="js/alterCable.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="cableSidebar">
+        <div class="sidebarTitle">
+            <span>修改光缆</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+         <div class="cableFuncName">
+                <p>光缆标识</p>
+                <p>光缆名称</p>
+                <p>总长度(km)</p>
+                <p>A端局站名</p>
+                <p>A端盘留长度(m)</p>
+                <p>Z端局站名</p>
+                <p>Z端盘留长度(m)</p>
+                <p>网络层次</p>
+                <p>铺设方式</p>
+                <p>纤芯数量</p>
+                <p>纤芯结构</p>
+                <p>光缆折射率</p>
+                <p>光缆描述</p>
+            </div>
+            
+            <div class="cableFuncCoff">
+                <input id="cableId" type="text" readonly="readonly" disabled="disabled"/>
+          		<input id="cableName" type="text"/>
+                <input id="cableLength" type="text" readonly="readonly" disabled="disabled"/>
+                <input id="AStationName" type="text" readonly="readonly" disabled="disabled" >
+                <input id="ARemainLen" type="text"/>
+                <input id="ZStationName" type="text" readonly="readonly" disabled="disabled" >
+                <input id="ZRemainLen" type="text"/>
+                <select id="newworkLevel">
+                    <option value="省际一级干线">省际一级干线</option>
+                    <option value="省内二级干线">省内二级干线</option>
+                    <option value="市内">市内</option>
+                    <option value="接入网">接入网</option>
+                </select>
+                <select id="laidWay" >
+                    <option value="架空">架空</option>
+                    <option value="直埋">直埋</option>
+                    <option value="管道">管道</option>
+                    <option value="隧道">隧道</option>
+                    <option value="水底">水底</option>
+                </select>
+                <input id="cableCoreCount" type="text" readonly="readonly" disabled="disabled"/>
+                 <select  id="cableCore" >
+                    <option value="中心管式">中心管式</option>
+                    <option value="层绞式">层绞式</option>
+                    <option value="骨架式">骨架式</option>
+               </select>
+                <input id="refractiveIndex" type="text"/>
+                <textarea id="description" cols="24" rows="5"></textarea>
+           </div>
+            
+            <div class="funcConfirm">
+                <ul class="callTestingFunc">
+                    <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                    <li class="cancel">取消</li>
+                </ul>
+            </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <script src="js/json2.js" type="text/javascript"></script>
+    <script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/pickList.js" type="text/javascript"></script> 
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div  class="sidebarPickList" style="width:70%;height:350px;left:20%;top:100px;over-flow:auto">
+        <div class="sidebarTitle">
+            <span>光路配对</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div id="pickList"></div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="confirm">确定</li>          <!--添加确定对应事件-->
+                <li class="cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>   
+//载入页面的时候自动将光路信息载入到左侧的框框中    
+   
+    $.ajax({
+        type : "post",
+        async : false,  //异步请求 先执行后续操作，再执行sucess
+        url : "switch/getPrepareGroup",
+        dataType:"json",
+        data : {
+        	       "id":currentRtuId
+        	    },
+        success:function(json){
+            if(json[0].status){
+            	var routeList=json[0].group;
+            	pick = $("#pickList").pickList({
+            									data:routeList
+            								   });
+            }
+            else{//不存在可用配对组
+            	  $(".contentDiv").html("");
+                  $(".sidebarDiv").html("");
+            	  var txt=json[0].err;
+				  var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+								
+						 }
+						}
+				  window.wxc.xcConfirm(txt, "info", option);
+            }
+        },
+    });
+    /**list范围内禁止系统右键**/
+    $(".sidebarPickList").hover(function () {
+    	$(document).bind("contextmenu", function (e) {
+    		return false;
+    	});
+    },
+    	function () {
+    		$(document).unbind("contextmenu", "")
+    	});
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    /**取消**/
+    $(".cancel").click(function(){
+    	 $(".contentDiv").html("");
+         $(".sidebarDiv").html("");
+    });
+     $(".confirm").click(function(){
+    	var p = pick.getValues();
+    	var idUplinks = [];
+    	var idDownlinks = [];
+    	/***保护组id值得形为idA1-idA2,idB1-idB2
+    	其中idA1-idA2为上行配对组   idB1-idB2下行配对组
+    	**/
+    	for(var i=0;i<p.length;i++){
+    		/**将上行和下行的配对组分隔
+    		  ids[0]为上行 idA1-idA2
+    		  ids[1]为下行idB1-idB2
+    		**/
+    		var ids=p[i].id.split(",");
+    		var idUplink=ids[0].split('-');
+    		var idDownlink=ids[1].split('-');
+    		idUplinks.push([parseInt(idUplink[0]),parseInt(idUplink[1])]);
+    		idDownlinks.push([parseInt(idDownlink[0]),parseInt(idDownlink[1])]);
+    	} 
+     	$.ajax({
+            type : "post",
+            async : false,  //异步请求 先执行后续操作，再执行sucess
+            url : "switch/setSwitchGroup",
+            dataType:"json",
+            data : {
+            	"idUplink":JSON.stringify(idUplinks),
+            	"idDownlink":JSON.stringify(idDownlinks),
+            	"rtuId":currentRtuId
+            },
+            success:function(data){            	
+                if(data[0].status){
+                	$(".sidebarDiv").html("");
+                    getRouteMatchByRtuId(currentRtuId);
+                      var txt= "配置信息已成功下发到RTU！如果您需要开启自动切换保护，请选中配对组后右键或点击\"障碍告警参数设置\"按键配置参数";
+					  var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									
+							 }
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+				  }
+				  else{
+					   var txt= "配置失败,失败原因："+data[0].err;    
+				       var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									
+								}
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+				  }
+			  },
+			  error:function(XMLHttpRequest,textStatus){
+				    $(".sidebarDiv").html("");
+				    var txt="配置失败，失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限<br/>";
+		    	     }
+		    	    else if(XMLHttpRequest.status==0){
+		    	    	txt+="连接超时";
+		    	    }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	     window.wxc.xcConfirm(txt, "info", option);
+				},
+      })
+
+        
+    }); 
+</script>
+</body>
+</html>

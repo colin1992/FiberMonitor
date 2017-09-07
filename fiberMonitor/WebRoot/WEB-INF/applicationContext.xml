@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+ 	<!-- 定义业务逻辑组件模板,为之注入DAO组件 -->
+	<bean id="managerTemplate" abstract="true" lazy-init="true"
+		p:areaDao-ref="areaDao"
+		p:cabinetDao-ref="cabinetDao"
+		p:curveDao-ref="curveDao"
+		p:eventCurveDao-ref="eventCurveDao"
+		p:fiberCoreDao-ref="fiberCoreDao"
+		p:frameDao-ref="frameDao"
+		p:framePortDao-ref="framePortDao"
+		p:jumperFrameDao-ref="jumperFrameDao"
+		p:jumperRouteDao-ref="jumperRouteDao"
+		p:jumperBackupDao-ref="jumperBackupDao"
+		p:landmarkDao-ref="landmarkDao"
+		p:opticalCableDao-ref="opticalCableDao"
+		p:optimizeParameterDao-ref="optimizeParameterDao"
+		p:parameterCurveDao-ref="parameterCurveDao"
+		p:periodParameterDao-ref="periodParameterDao"
+		p:preparatoryRouteDao-ref="preparatoryRouteDao"
+		p:rackDao-ref="rackDao"
+		p:routeDao-ref="routeDao"
+		p:rtuDao-ref="rtuDao"
+		p:rtuPortDao-ref="rtuPortDao"
+		p:stationDao-ref="stationDao"
+		p:topologicPointDao-ref="topologicPointDao"
+		p:topologicRouteDao-ref="topologicRouteDao"
+		p:priorityDao-ref="priorityDao"
+		p:tempGroupInfoDao-ref="tempGroupInfoDao"
+		p:alarmWayDao-ref="alarmWayDao"
+		p:alarmDao-ref="alarmDao"
+		p:protectGroupDao-ref="protectGroupDao"
+		p:opticalPowerDao-ref="opticalPowerDao"
+		p:roleDao-ref="roleDao"
+		p:permissionDao-ref="permissionDao"
+		p:userDao-ref="userDao"
+		p:thresholdDao-ref="thresholdDao"
+		p:dutyScheduleDao-ref="dutyScheduleDao"
+		p:dutyOperatorDao-ref="dutyOperatorDao"
+		p:verifyCodeDao-ref="verifyCodeDao"
+		p:logDao-ref="logDao"
+		p:systemDao-ref="systemDao"
+		p:alarmBankDao-ref="alarmBankDao"
+		p:serialCodeDao-ref="serialCodeDao"
+		/>
+
+	<!-- 定义三个业务逻辑组件，继承业务逻辑组件的模板 -->
+	<bean id="addService"
+		class="serviceImpl.AddServiceImpl"
+		parent="managerTemplate"/>
+	<bean id="findService"
+		class="serviceImpl.FindServiceImpl"
+		parent="managerTemplate"/>
+	<bean id="alterService"
+		class="serviceImpl.AlterServiceImpl"
+		parent="managerTemplate"/>
+	<bean id="deleteService"  
+		class="serviceImpl.DeleteServiceImpl"
+		parent="managerTemplate"/>
+		
+	<!-- 配置Hibernate的局部事务管理器，使用HibernateTransactionManager类 
+		并注入SessionFactory的引用 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory"/>	
+	<!-- 配置事务增强处理Bean,指定事务管理器 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<!-- 用于配置详细的事务语义 -->
+		<tx:attributes>
+			<!-- 所有以'get'开头的方法是read-only的 -->
+			<tx:method name="find*" read-only="true"/>
+			<!-- 其他方法使用默认的事务设置 -->
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<!-- 配置一个切入点，匹配empManager和mgrManager
+			两个Bean的所有方法的执行 -->
+		<aop:pointcut id="leePointcut"
+			expression="bean(addService) or bean(findService) or bean(alterService) or bean(deleteService)"/>
+		<!-- 指定在leePointcut切入点应用txAdvice事务增强处理 -->
+		<aop:advisor advice-ref="txAdvice" 
+			pointcut-ref="leePointcut"/>
+	</aop:config>	
+</beans>

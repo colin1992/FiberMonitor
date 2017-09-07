@@ -1,0 +1,89 @@
+.warnContent{
+    overflow:auto;
+    position: relative;
+    background-color: #f7f7f7;
+    width:100%;
+    height: 720px;
+    display: none;
+}
+/*告警查询*/
+.query_bank_Content div{
+    float: left;
+    text-align: center;
+    width: 100%;
+    margin-top: 15px;
+    line-height: 25px;
+}
+
+.query_bank_Content span{
+    margin-left: 50px;
+}
+
+.query_bank_Content table{
+    width:90%;
+    height: 550px;
+    margin: 0 auto;
+}
+.query_bank_Content th{
+    background-color: rgba(50, 50, 50, 0.64);
+    color:white;
+}
+
+.query_bank_Content tr{
+    height: 45px;
+    background-color: rgba(155, 143, 108, 0.27);
+}
+
+/*告警库查询*/
+
+
+/*告警设置*/
+.warnSettingContent{
+    margin: 50px auto;
+    width:350px;
+    height: 350px;
+    line-height: 30px;
+    border:solid 1px #000000;
+    text-align: center;
+}
+
+.warn_set_title{
+    font-size: 16px;
+    height: 30px;
+    background-color: #343434;
+    color:white;
+    font-family: "Microsoft YaHei";
+    margin-bottom: 10px;
+}
+
+.warn_set_title img{
+    float: right;
+    margin-top: 1px;
+    margin-right: 1px;
+}
+
+.warn_set_left{
+    float: left;
+    width:30%;
+    text-align: right;
+    line-height: 40px;
+}
+
+.warn_set_right{
+    float: left;
+    width:65%;
+    text-align: left;
+    line-height: 40px;
+    padding-left: 10px;
+}
+
+.warn_set_bottom{
+    float: left;
+    margin-top: 30px;
+    margin-left: 100px;
+
+}
+
+.warn_set_bottom span{
+    margin: 0 20px;
+}

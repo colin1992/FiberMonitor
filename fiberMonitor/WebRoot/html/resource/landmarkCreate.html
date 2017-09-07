@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
+    <link rel="stylesheet" href="css/sidebar.css" type="text/css"/>
+    <script src="js/landmarkAdd.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+   <style>
+       .landmarksidebar span{
+            padding: 1px;
+			margin-left:15px;
+			width:60px;
+       }
+      .formFolat{
+          width:110px;
+          height:22px;
+          margin-left:10px;
+          ime-mode:disabled 
+       }
+   </style>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+     <div class="landmarksidebar">
+        <div class="sidebarTitle">
+            <span>新增光缆地标</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div>
+            <div>
+                <label  for=""> <span>光缆名称</span></label>
+                 <input class="funcCoffinput" id="thisCableName" type="text" disabled="disabled" readonly="readonly"/>
+           </div>
+           <div>
+                 <label  for=""><span>地标名称</span></label>
+                  <input class="funcCoffinput" id="addLandmarkName" type="text"/>
+           </div>
+           <div>
+                 <label  for=""><span>地标经度</span></label>
+                 <select class="LongAndLatitudeSelect" style="width:50px" id="LongtitudeOrientation">
+	            	<option value="东经">东经</option>
+		            <option value="西经">西经</option>
+                 </select>
+	             <input class="formFolat"  id="lngFloat"  name="float" placeholder="输入形式如113.211"/>
+	            <span class="unitFloat" style="margin-left:0px;width:5px;">°</span>
+           </div>
+            <div>
+                <label  for=""><span>地标纬度</span></label>
+                <select class="LongAndLatitudeSelect" style="width:50px" id="LatitudeOrientation">
+		            <option value="北纬">北纬</option>
+		            <option value="南纬">南纬</option>
+	            </select>
+	            
+			       <input class="formFolat" id="latFloat"  name="float" placeholder="输入形式如113.211"/>
+			       <span class="unitFloat" style="margin-left:0px;width:5px;">°</span>
+	           
+           </div>
+           <div>
+                 <label  for=""><span >地标描述</span></label>
+                 <textarea id="landmarkDescription" style="margin-left: 10px;" cols="24" rows="8"></textarea>
+           </div>
+           
+       </div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <li class="addConfirm">确定</li>          
+                <li class="addCancel">取消</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

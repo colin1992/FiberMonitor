@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<script src="js/alterFiber.js" type="text/javascript"></script>
+	<script src="js/jquery.validate.js"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		.error {
+			color: red;
+			text-align: right;
+			margin-right: 25px;
+		}
+		
+		.topForm {
+			float: left;
+			width: 300px;
+			top: -2%;
+			left: 5px;
+		}
+
+        .bottomForm {
+            float: left;
+            width: 300px;
+            top: 40%;
+            left: 5px;
+        }
+		
+		.validFormDiv {
+			float: left;
+			width: 300px;
+			top: 40%;
+			left: 5px;
+		}
+		
+		.sidebar span {
+			width: 105px;
+			padding: 5px;
+			text-align: right;
+		}
+		
+		.sidebar select {
+			width: 155px;
+		}
+		.sidebar input {
+			width: 155px;
+		}
+		
+		textarea {
+            height: 80px;
+			resize: none;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle">
+				<span>修改纤芯</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="topForm">
+		     <p>	
+				<label for=""><span>纤芯标识： </span></label>
+				<input type="text" id="fiberId" disabled/>
+			</p>
+			<p>	
+				<label for=""><span>纤芯名称： </span></label>
+				<input type="text" id="fiberName" required/>
+			</p>
+			</div>
+			<div class="validFormDiv">
+				<form id="modifyFiberForm">
+				<p>
+					<label for=""><span>长度： </span></label>
+					<input type="number" id="length" name="length" min='0'/>
+				</p>	
+				<p>
+					<label for=""><span>折射率： </span></label>
+					<input type="number" min=1 max=2 id="reIndex" name="reIndex"/>
+				</p>	
+				</form>
+			</div>
+			<div class="bottomForm">
+		      <p>	
+				<label for=""><span>A端配线架： </span></label>
+				<select id="frameA"></select>
+			 </p>
+			 <p>	
+				<label for=""><span>A配线架端口： </span></label>
+				<select id="frameAPort"></select>
+			</p>
+			<p>	
+				<label for=""><span>Z端配线架： </span></label>
+				<select id="frameZ"></select>
+			</p>
+			<p>	
+				<label for=""><span>Z配线架端口： </span></label>
+				<select id="frameZPort"></select>
+			</p>
+			<p>	
+				<label for=""><span>纤芯描述： </span></label>
+				<textarea id="description"></textarea>
+			</p>	
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li class="confirm">确定</li>
+					<li class="cancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

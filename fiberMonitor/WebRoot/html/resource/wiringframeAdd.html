@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle">
+				<span>新增配线架</span>
+				<span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+			</div>
+			<div class="funcName">
+				<p>机柜</p>
+				<p>机架</p>
+				<p>名称</p>
+				<p>端口数</p>
+				<p>描述</p>
+			</div>
+			<div class="funcCoff">
+				<select class="paraSelect" name="cabinetSelect" id="cabinetAdd">
+            <option value="index">请选择</option>
+            </select>
+				<select class="paraSelect" name="rackSelect" id="rackAdd">
+            <option value="index">请选择</option>
+            </select>
+				<input type="text" id="frameNameAdd" required/>
+				<input type="number" min="0" id="framePortNumAdd" placeholder="请输入正整数"  required/>
+				<textarea name="" cols="24" rows="5" id="frameDescriptionAddUnderStation"></textarea>
+
+			</div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li id="confirm">确定</li>
+					<li id="calcel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+
+   $("#framePortNumAdd").focus(function(){
+	   $(this).keypress(function (event) {
+           var eventObj = event || e;
+           var keyCode = eventObj.keyCode || eventObj.which;
+           if ((keyCode >= 48 && keyCode <= 57))
+               return true;
+           else
+               return false;
+	  	})
+   })
+
+/*获取机柜列表 */
+$.ajax({
+    type : "post",
+    async : false,  //异步请求 先执行后续操作，再执行sucess
+    url : "ResourceAddFrameUnderStationListCabinetes",
+    dataType:"json",
+    data : {stationId:wiringframeStationId},
+    success:function(data){
+    	for (var count = 0; count < data[0].cabinetId.length; count++) {         
+            $("#cabinetAdd").append("<option value='" + data[0].cabinetId[count] + "'>" + data[0].cabinetName[count] + "</option>");
+        }
+    },
+});
+
+/*获取机架列表 rackSelect*/                
+$("#cabinetAdd").change(function(){
+    $("#cabinetAdd option[value='index']").remove();
+    var cabinetId = $("#cabinetAdd option:selected").val();
+    $.ajax({
+        type : "post",
+        async : false,  //异步请求 先执行后续操作，再执行sucess
+        url : "ResourceAddFrameUnderStationListracks",
+        dataType:"json",
+        data : {"cabineteId":cabinetId},
+        success:function(data){
+            $("#rackAdd option[value='index']").remove();
+            $("#rackAdd").html("");
+            for (var count = 0; count < data[0].racksId.length; count++) {         
+            $("#rackAdd").append("<option value='" + data[0].racksId[count] + "'>" + data[0].racksOrder[count] + "</option>");
+        }
+        },
+       
+    })
+
+});
+</script>
+	<script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    $("#cancel").click(function(){
+    	$(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    
+    /*读取配线架信息:frameName framePortNum stationName frameDescription cabinetName rackOrder，发送至后台   */
+    $("#confirm").click(function(){
+   	 var frameNameAdd = $("#frameNameAdd").val();
+   	 var framePortNumAdd = $("#framePortNumAdd").val();
+   	 var frameDescriptionAddUnderStation = $("#frameDescriptionAddUnderStation").val();
+   	 var rackIdSelect = $("#rackAdd option:selected").val();
+   	 if(framePortNumAdd==""){
+   		 var txt="请输入端口数量";
+		 var option = {
+					title: "提示",
+					btn: parseInt("0001",2),
+					onOk: function(){//点击确认的执行方法
+						
+					}
+				}
+		  window.wxc.xcConfirm(txt, "info", option);
+   	 }
+   	 else{
+   		$.ajax({
+		     type : "post",
+		     async : false,  //异步请求 先执行后续操作，再执行sucess
+		     url : "frame/addFrame",
+		     dataType:"json",
+		     data : {
+			     "frameName":frameNameAdd,
+			     "framePortNum":framePortNumAdd,
+			     "frameDescription":frameDescriptionAddUnderStation,
+			     "rackId":rackIdSelect
+		     },
+		     success: function(json){
+	 		 		$(".sidebarDiv").html("");
+	 		    	var txt="";
+	 		    	if(json[0].status){
+	 		    		txt+="增加成功<br/>"
+	 		    	}
+	 		    	else{
+	 		    		txt+="增加失败，请重试";
+	 		    	}
+	 			     var option = {
+	 							title: "提示",
+	 							btn: parseInt("0001",2),
+	 							onOk: function(){//点击确认的执行方法
+	 								
+	 							}
+	 						}
+	 				  window.wxc.xcConfirm(txt, "info", option);
+	 		      },
+	 		     error:function(XMLHttpRequest,Error)
+	 		      {
+	 		    	    
+	 		    	    $(".sidebarDiv").html("");
+	 		    	    var txt="增加失败<br/>";
+	 		    	    txt+="失败原因：";
+	 		    	    if(XMLHttpRequest.status==401){
+	 		    	        txt+="您不具有当前操作的权限<br/>";
+	 		    	     }
+	 		    	     else{
+	 		    	        	txt+="网络错误<br/>";
+	 		    	        	txt+="状态码："+XMLHttpRequest.status;
+	 		    	        }
+	 		    	      var option={
+	 		    	   					title: "提示",
+	 		    	   					btn: parseInt("0001",2),
+	 		    	   					onOk: function(){//点击确认的执行方法
+			    	   						
+	 		    	  			       }
+	 		    	   				}
+	 		    	   		  window.wxc.xcConfirm(txt, "info", option);
+	 		  }
+	     });
+
+   	 }
+	     
+    //这个方法位于wiringframe.html中，每次查询之后都会根据这个新增的rtu所属局站的id再进行一次叶节点的搜索更新
+    selectWiringframeByStation(wiringframeStationId);
+    });
+</script>
+</body>
+
+</html>

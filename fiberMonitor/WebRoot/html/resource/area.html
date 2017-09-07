@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/laypage.js" type="text/javascript"></script>
+	<script src="js/jquery.printArea.js" type="text/javascript"></script>
+	<script src="js/xlsx.core.min.js" type="text/javascript"></script>
+	<script src="js/Blob.js" type="text/javascript"></script>
+	<script src="js/FileSaver.js" type="text/javascript"></script>
+	<script src="js/tableexport.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/xcConfirm.css" type="text/css" />
+
+	<style>
+		.btn-toolbar.top {
+			padding: 1px;
+		}
+		
+		.btn.btn-default {
+			width: 100px;
+			padding: 1px;
+		}
+		
+		.btn.btn-default.xlsx {
+			margin-left: 500px;
+		}
+		
+		#printBtn,
+		#exportBtn {
+			cursor: pointer;
+		}
+		
+		.tableSearch {
+			margin-left: 30%;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="areaContent">
+		<div class="areaTable tableSet">
+			<div class="tableSearch">
+				<span>区域名称</span>
+				<input id="areaName" type="text" />
+				<span onclick="searchArea()" class="spanbutton">查询</span>
+				<span class="spanbutton areaCreate">新增区域</span>
+				<span class="spanbutton areaModify">修改区域</span>
+				<span class="spanbutton areaDelete">删除区域</span>
+				<span  id="printBtn" class="spanbutton">打印</span>
+				<span id="exportBtn" class="spanbutton">导出</span>
+			</div>
+			<div class="printArea">
+			<table class="table table-bordered areaTableDetail tableDetail" style="cursor:default;width:95%;margin-left:2%;" id="areaTableDetail">
+				<thead>
+					<tr>
+						<th width="12%">序号</th>
+						<th width="14%">区域标识</th>
+						<th width="16%">区域名称</th>
+						<th width="26%">区域描述</th>
+						<th width="16%">创建时间</th>
+						<th width="16%">修改时间</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+			<div id="pageon"></div>
+		</div>
+
+<script>
+/**检查session**/
+  checkSession();
+ /**表格范围内禁止系统右键，使用自定义右键**/
+ $("#areaTableDetail").hover(function(){
+ 	 $(document).bind("contextmenu",function(e){   
+ 		   return false;   
+ 		 });
+ },
+ function(){
+ 	$(document).unbind("contextmenu","")
+ });	
+ /****************************添加右键菜单功能***********************************/
+ $(".areaTableDetail tbody tr").click(function(){
+ 	 $(this).addClass("currtr").siblings().removeClass("currtr");
+ 	 if(this.children[1].innerHTML!=""){
+ 		 $(this).addClass("area").siblings().removeClass("area");
+ 	 }
+ 	 else{
+ 		 $(this).removeClass("area").siblings().removeClass("area");
+ 	 }
+ 	var selectId=this.children[1].innerHTML;
+ 	var menu = new BootstrapMenu('.area', {
+             actions: [{
+                 name: '修改区域',
+                 onClick: function() {
+                	 $(this).remove();
+                	 localStorage.setItem('ResourceAreaId',selectId);
+                	 $(".sidebarDiv").load("html/resource/areaModify.html");
+                 }
+             },
+             {
+                 name: '删除区域',
+                 onClick: function() {
+                	 $(this).remove();
+                	 var txt="删除区域将删除该区域下的所有资源，请谨慎选择,";
+         		    txt+="确认删除？";
+             	    var option = {
+             						title: "提示",
+             						btn: parseInt("0011",2),
+             						onOk: function(){//点击确认的执行方法
+             							delArea(selectId);
+             					  }
+             					}
+                  window.wxc.xcConfirm(txt, "info", option);
+                 }
+             }]
+         });
+ }) 
+ function loadArea(){
+	 $(".containerDiv").load("html/resource/area.html");
+ }
+
+  $(".areaCreate").click(function(){
+    $(".sidebarDiv").load("html/resource/areaCreate.html");
+  });
+
+ $(".areaModify").click(function(){
+     var trs = document.querySelectorAll("#areaTableDetail tbody tr");
+     var ifSelectArea="";
+      var data="";
+     	    for (var i=0;i<trs.length;i++){
+     	        if($(trs[i]).hasClass("currtr")){
+     	            data = trs[i].children[1].innerHTML;
+     	           ifSelectArea=trs[i].children[0].innerHTML;
+     	        }
+     	        
+     	    }
+        	localStorage.setItem('ResourceAreaId',data);
+        	 if(ifSelectArea==""){
+        		 var txt="请先选择您要修改的区域"
+     	         var option = {
+     						title: "提示",
+     						btn: parseInt("0001",2),
+     						onOk: function(){//点击确认的执行方法
+     					  }
+     					}
+     			  window.wxc.xcConfirm(txt, "info", option);
+        	 }   
+        	 else{
+        		 $(".sidebarDiv").load("html/resource/areaModify.html");
+        	}
+        });
+
+        $(".areaDelete").click(function(){
+        	var areaId="";
+        	var trs = document.querySelectorAll("#areaTableDetail tbody tr");
+     	     for (var i=0;i<trs.length;i++){
+     	        if($(trs[i]).hasClass("currtr")){
+     	        	areaId =trs[i].children[1].innerHTML;
+     	        }
+     	    }
+        	if(areaId==""){
+        		var txt="请先选择您要删除的区域"
+        	    var option = {
+        						title: "提示",
+        						btn: parseInt("0001",2),
+        						onOk: function(){//点击确认的执行方法
+        					  }
+        					}
+        			  window.wxc.xcConfirm(txt, "info", option);
+        	}
+        	else{
+        		    var txt="删除区域将删除该区域下的所有资源，请谨慎选择<br/>";
+        		    txt+="确认删除？";
+            	    var option = {
+            						title: "提示",
+            						btn: parseInt("0011",2),
+            						onOk: function(){//点击确认的执行方法
+            							delArea(areaId);
+            					  }
+            					}
+            			  window.wxc.xcConfirm(txt, "info", option);
+        	}
+           
+        });
+    function delArea(areaId){
+    	$.ajax({
+  			type : "post",
+  			async : false,  //异步请求 先执行后续操作，再执行sucess
+  			url : "area/delArea",
+  			dataType:"json",
+  			data : {'areaID':areaId},
+  			success:function(json){
+  				var txt="";
+		    	if(json[0].status){
+		    		txt+="删除区域成功<br/>"
+		    	}
+		    	else{
+		    		txt+="删除失败，失败原因："+json[0].err;
+		    	}
+			     var option = {
+							title: "提示",
+							btn: parseInt("0001",2),
+							onOk: function(){//点击确认的执行方法
+								ListArea();//重新刷新表格
+						 }
+						}
+				  window.wxc.xcConfirm(txt, "info", option);
+		      },
+		    error:function(XMLHttpRequest,Error,F,data)
+		      {
+		    	    var txt="删除区域失败<br/>";
+		    	    txt+="失败原因：";
+		    	    if(XMLHttpRequest.status==401){
+		    	        txt+="您不具有当前操作的权限<br/>";
+		    	     }
+		    	     else{
+		    	        	txt+="网络错误<br/>";
+		    	        	txt+="状态码："+XMLHttpRequest.status;
+		    	        }
+		    	      var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   					
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+		  }
+
+      	});
+    	
+    }    
+    </script>
+
+		<script>
+/************************实现分页的表格写入函数***************************/
+            function tableDataIn(tabledata){
+
+                var tableData = tabledata;/*tableData为后台需渲染到表格中的所有数据*/
+                var nums = document.querySelectorAll(".areaTableDetail tbody tr").length;
+                var cells = document.getElementById("areaTableDetail").rows.item(0).cells.length;
+                var pages = Math.ceil(tableData.length/nums);
+                var thisData = function (curr) {
+                    var tableDataCurr= [];
+                    var last = curr*nums - 1;
+                    last = last >= tableData.length ? (tableData.length - 1) : last;
+                    tableDataCurr = tableData.slice(curr*nums - nums,last + 1);
+                    return tableDataCurr;
+                };
+                
+                laypage({
+                    cont: 'pageon',
+                    pages: pages,
+                    jump: function(obj) {
+                        var currTableData = thisData(obj.curr);
+                        var trs = document.querySelectorAll("#areaTableDetail tbody tr");
+                        var tds = document.querySelectorAll("#areaTableDetail tbody tr td");
+                        for (var i=0;i<tds.length;i++){
+                            tds[i].innerHTML = "";
+                        }
+                        
+                        for (var i = 0; i < currTableData.length; i++) {
+                            var Ele = trs[i].children;
+                            for(var j=0; j<cells-1; j++){
+                                Ele[0].innerHTML = i + 1;
+                                Ele[j+1].innerHTML = currTableData[i][j];
+                            }
+                        }
+                    }
+                });
+            }
+$(document).ready(function(){
+            	ListArea();
+            })
+/************************页面载入后列表区域*************************/   
+            function ListArea(){
+            	var dataInput=[];            	    
+              	$.ajax({
+                      			type : "post",
+                      			async : false,  //异步请求 先执行后续操作，再执行sucess
+                      			url : "ResourceListArea",
+                      			dataType:"json",
+                      			data : null,
+                      			success:function(data){
+                      				
+                      				dataSearch=data;
+                      				for(i=0;i<data.length;i++){
+                         				dataInput.push([data[i].area_id,
+                           				                data[i].area_name,
+                           				      		    data[i].description,
+                           				    			data[i].create_date,
+                           							    data[i].alter_date]);  
+                         				
+                         				
+                         				
+                         				}
+                      			},
+                      		});
+              	tableDataIn(dataInput);
+			}
+           	 
+              	
+/**********************根据区域名字查询区域***********************/              	
+              	 function searchArea(){
+	                 var dataINPUT=[];
+              		 var areaNAME=document.getElementById("areaName").value;
+              		 if(areaNAME==""){
+              			var txt="请输入查询条件";
+              			var option={
+		    	   					title: "提示",
+		    	   					btn: parseInt("0001",2),
+		    	   					onOk: function(){//点击确认的执行方法
+		    	   						
+		    	  			       }
+		    	   				}
+		    	   		  window.wxc.xcConfirm(txt, "info", option);
+              		 }
+              		 else{
+	              		  for(i=0;i<dataSearch.length;i++){
+	              		    if(dataSearch[i].area_name==areaNAME){
+	              			dataINPUT.push([dataSearch[i].area_id,
+	              			              dataSearch[i].area_name,
+	              			            dataSearch[i].description,
+	              			          dataSearch[i].create_date,
+	              			        dataSearch[i].alter_date]); 
+	              			
+	              		 }
+	              		 }
+	              		  if(dataINPUT.length==0){
+	              			var txt="不存在满足要求的条目";
+	              			var option={
+			    	   					title: "提示",
+			    	   					btn: parseInt("0001",2),
+			    	   					onOk: function(){//点击确认的执行方法
+			    	   						
+			    	  			       }
+			    	   				}
+			    	   		  window.wxc.xcConfirm(txt, "info", option);
+	              		  } 
+	              		  else  tableDataIn(dataINPUT);
+              		 }
+              	 }
+              	 
+
+//打印和导出
+    $(document).ready(function() {
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+              	</script>
+	</div>
+</body>
+
+</html>

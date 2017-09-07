@@ -1,0 +1,80 @@
+@CHARSET "UTF-8";
+
+/***************************************
+   Chapter Styles
+************************************** */
+
+.horiz {
+  float: left;
+  list-style: none;
+  margin: 10px;
+}
+.sub-level {
+  background: #00ffff;
+}
+a.mailto {
+  background: url(../images/email.png) no-repeat 100% 2px;
+  padding-right: 18px;
+}
+a.pdflink {
+  background: url(../images/pdf.png) no-repeat 100% 0;
+  padding-right: 18px;
+}
+a.imaglink {
+  background: url(../images/ima.png) no-repeat 100% 0;
+  padding-right: 18px;
+}
+a.henrylink {
+  background-color: #fff;
+  padding: 2px;
+  border: 1px solid #000;
+}
+a.external {
+  background: #fff url(../images/external.png) no-repeat 100% 2px;
+  padding-right: 16px;
+}
+ul.tragedy {
+  border: 1px solid #999;
+}
+li.afterlink {
+  border-right: 4px solid #090;
+}
+table {
+  border-collapse: collapse;
+}
+th, td {
+  text-align: left;
+  padding: 2px 4px;
+}
+.table-heading {
+  background-color: #000;
+  color: #fff;
+}
+
+.alt {
+  background-color: #ccc;
+}
+
+.highlight {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.italic {
+  font-style: italic;
+}
+.bold {
+  font-weight: bold;
+}
+
+.special {
+  color: #f00;
+}
+.year {
+  background-color: #888;
+  color: #fff;
+  padding: 0 10px;
+  text-align: center;
+}
+
+	

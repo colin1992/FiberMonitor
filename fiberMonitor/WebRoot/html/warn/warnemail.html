@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+    <style>
+		.warnEmailMain {
+			height: 85%;
+			padding: 10px;
+		}
+		
+		.warnEmailMain>p>label>span {
+			width: 80px;
+			text-align: center;
+		}
+		
+		.emailContent {
+			display: inline;
+			width: 50%;
+			min-width: 100px;
+			min-height: 60px;
+			resize: none;
+		}
+		
+		.emailButtonDiv {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			text-align: center;
+		}
+		
+		.emailButtonDiv li {
+			display: inline-block;
+			width: 80px;
+			height: 50px;
+			line-height: 50px;
+			cursor: pointer;
+		}
+		.bDiv{
+		    background-color: #c6c6c6;
+		    width: 100%;
+		    height: 750px;
+		    opacity: 0.3;
+		    position: absolute;
+		    z-index: 10;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bDiv"></div>
+		<div class="sidebar" style="height:350px;margin-top:5%">
+			<div class="sidebarTitle">
+				<span>邮件处理</span>
+				<span class="sidebar_close">
+                    <img src="images/close.png" alt="close" width="28" height="28"></span>
+			</div>
+			<div class="warnEmailMain">
+				<p>
+					<label for="selectUser"><span>值班人员：</span></label>
+					<select id="selectUser">
+                    </select>
+				</p>
+				<p>
+					<label for="userEmail"><span>电子邮箱：</span></label>
+					<input id="userEmail" class="userEmail" type="email" readonly>
+				</p>
+				<p>
+					<label for="emailTitle"><span>邮件主题：</span></label>
+					<input id="emailTitle" class="emailTitle" type="text">
+				</p>
+				<p>
+					<label for="emailContent"><span>发送内容：</span></label>
+					<textarea id="emailContent" class="emailContent" cols="30" rows="5"></textarea>
+				</p>
+			</div>
+			<div class="emailButtonDiv">
+				<ul class="emailButton">
+					<li class="handlerSend" id="handlerSend">发送</li>
+					<li class="handlerCancel" id="handlerCancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        $(document).ready(function() {
+            $.ajax({
+                type : "post",
+                async : false,
+                url : "getAllOperatorsEmail",
+                dataType: "json",
+                data : null,
+                success:function(data) {                     				
+                    var dataInput = [];
+                    var operatorName = data[0];
+                    var operatorEmail = data[1];
+                    for(i=0;i<data[0].length;i++) {
+                        $("#selectUser").append("<option value='" + data[1][i] + "'>" + data[0][i] + "</option>");
+                    }
+                    document.getElementById("userEmail").value = data[1][0];
+                },
+                error:function(XMLHttpRequest,Error) {
+                
+                }
+            });
+        });
+
+        $("#selectUser").change(function() {
+        	document.getElementById("userEmail").value = $("#selectUser option:selected").val();
+        });
+
+        $(".sidebar_close").click(function() {
+	        $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+        });
+
+        $(".handlerCancel").click(function() {
+            $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+        });
+
+        $(".handlerSend").click(function() {
+        	var trs = document.querySelectorAll("#warningQueryTableDetail tbody tr");
+        	var alarmId=0;
+            for (var i=0;i<trs.length;i++){
+	       	     if($(trs[i]).hasClass("currtr")){
+	       	    	 alarmId= trs[i].children[1].innerHTML;
+	       	    	 i=trs.length;
+	       	      }
+       	     }
+            $.ajax({
+                type: "post",
+                async: false,
+                url: "alarm/handleAlarm/email",
+                dataType: "json",
+                data: {
+	                	"alarmId":alarmId,
+	                    "email": $("#userEmail").val(),
+	                    "head": $("#emailTitle").val(),
+	                    "info": $("#emailContent").val()
+                },
+                success: function(json) {
+                	$(".sidebarDiv").html("");
+                	var txt="";
+			    	if(json[0].status){
+			    		txt+="处理成功，邮件已成功发送至工作人员<br/>"
+			    	}
+			    	else{
+			    		txt+="处理失败，请重试："+json[0].err;
+			    	}
+				     var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+									getWarnByRouteId(json[0].routeId);//通过RTU id刷新表格  该方法在warnQuery.js中
+								}
+							}
+					  window.wxc.xcConfirm(txt, "info", option);
+			      },
+			    error:function(XMLHttpRequest,Error)
+			      {
+			    	    $(".sidebarDiv").html("");
+			    	    var txt="处理告警失败<br/>";
+			    	    txt+="失败原因：";
+			    	    if(XMLHttpRequest.status==401){
+			    	        txt+="您不具有当前操作的权限<br/>";
+			    	     }
+			    	     else{
+			    	        	txt+="网络错误<br/>";
+			    	        	txt+="状态码："+XMLHttpRequest.status;
+			    	        }
+			    	      var option={
+			    	   					title: "提示",
+			    	   					btn: parseInt("0001",2),
+			    	   					onOk: function(){//点击确认的执行方法
+			    	   						
+			    	  			       }
+			    	   				}
+			    	   		  window.wxc.xcConfirm(txt, "info", option);
+			  }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

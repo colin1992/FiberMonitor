@@ -1,0 +1,37 @@
+@CHARSET "UTF-8";
+ul,li{
+         list-style:none;
+         padding:0;margin:0;
+     }
+#dropdown{
+           width:300px; 
+           margin:10px 10px; 
+           position:relative
+}
+.priorityLevel{
+    width:150px; 
+    height:24px; 
+	line-height:24px;
+    padding-left:4px; 
+	padding-right:30px; 
+	border:1px solid #a9c9e2; 
+	background:#e8f5fe url(arrow.gif) no-repeat rightright 4px;
+	color:#807a62; 
+}
+#dropdown ul{
+                   width:184px;
+                   background:#e8f5fe; 
+                   margin-top:2px;
+                   margin-left:60px;
+                   border:1px solid #a9c9e2;
+                   z-index:1000000;
+                   position:absolute; 
+                   display:none
+                  }
+#dropdown ul li{
+                     height:24px;
+                     line-height:24px; 
+                     text-indent:10px
+                     }
+#dropdown ul li a{display:block; height:24px; color:#807a62; text-decoration:none}
+#dropdown ul li a:hover{background:#c6dbfc; color:#369}

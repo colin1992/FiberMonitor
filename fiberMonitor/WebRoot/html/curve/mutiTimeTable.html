@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+   <style>
+       .interSelect{
+           width:40px;
+           margin-left:2px;
+       }
+       .error {
+			color: red;
+			text-align: right;
+			margin-right: 10px;
+		}
+		
+		.timerPara {
+			float: left;
+			width: 300px;
+			top: -2%;
+			left: 5px;
+		}
+		
+		.validFormDiv {
+			float: left;
+			width: 300px;
+			top: 40%;
+			left: 5px;
+		}
+		.sidebar span {
+		    width: 100px;
+			padding: 1px;
+			text-align: right;
+			margin-right:5px;
+		}
+		
+    </style>
+  <script>
+  
+     $(document).ready(function(){
+    	var url = document.location.href.split("//")[1];//通过读取浏览器地址栏来获取构建webSocket的地址
+ 	    url =url.split(":")[0];
+ 	    var ip = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+ 	    if(!(ip.test(url)&&(RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256))){
+	    		/**如果从浏览器获取到的不是IP地址，查询数据库**/
+ 	    	$.ajax({
+ 	    		type: 'post', //数据发送方式
+ 	    		dataType: 'json', //接受数据格式
+ 	    		async: false,
+ 	    		url: 'getServerIp',
+ 	    		data: '',
+ 	    		success: function (json) {
+ 	    			if (json[0].status) {
+ 	    				url=json[0].ip;
+ 	    			}
+ 	    		}
+ 	    	})
+         }
+ 	    $("#returnIP1").val(url);
+ 	    $("#returnIP2").val(url);
+ 	   /**获取服务器当前时间**/
+    	$.ajax({
+    		type: 'post', //数据发送方式
+    		dataType: 'json', //接受数据格式
+    		async: false,
+    		url: 'getServerTime',
+    		data: '',
+    		success: function (json) {
+    			if (json[0].status) {
+    				/**获取成功设置开始时间为服务器时间**/
+    				 $("#startTime").val(json[0].time);
+    			}
+    			else{//获取失败设置为客户端时间
+    				 $("#startTime").val(getNowFormatDate());
+    			}
+    		},
+    		error:function(){
+    			 $("#startTime").val(getNowFormatDate());
+    		}
+    	})
+    	var startTime = {
+    	     elem: '#startTime',
+    	     format: 'YYYY-MM-DD hh:mm:ss',
+     	     min: laydate.now(), //最小日期
+    	     istime: true,
+    	     festival:true,
+    	     choose: function(datas){
+    	     }
+    	 };
+    	laydate(startTime);
+    	
+     })
+    
+   
+  </script>  
+   
+</head>
+<body>
+    <div class="contentDiv" id="contentDiv">
+        <div class="bgDiv"></div>
+        <div class="sidebar" style="height:300px;margin-top:50px;width:350px">
+            <div class="sidebarTitle">
+             <!---------------------------日历插件后期完善--------------------------------->
+                <span>时间表设置</span>
+                <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+            </div>
+           <div class="timerPara">
+              <p>	
+                    <label for=""><span>开始时间</span></label>
+                    <input name="startTime" placeholder="请选择开始时间" id="startTime" style="cursor:pointer" class="laydate-icon" />
+              </p>
+              <p>
+                   <label for=""><span>时间间隔</span></label>
+                   <input type="number" class="interSelect" value=0 id="interDay" min="0" max="29" />天 
+                   <input type="number" class="interSelect"  value=0 id="interHour" min="0" max="59" />时
+                   <input type="number" class="interSelect"  value=3 id="interMinute" min="0" max="59" />分
+              </p>
+              </div>
+              <div class="validFormDiv">
+                  <form id="ipForm">
+	                  <p>
+	                  		<label for="returnIP1"><span>回传IP1</span></label>
+	                  		<input name="returnIP1" id="returnIP1" style="width:175px" readonly value=""/>
+	                  </p>
+	                  <p>
+	                 		<label for="returnIP2"><span>回传IP2</span></label>
+	                 		<input name="returnIP2" id="returnIP2" style="width:175px"  value="" />
+	                   </p>
+                 </form>
+              </div>
+            <div class="funcConfirm">
+                <ul>
+                    <!--需要对“确定”“清除”添加点击事件，在下方script框架中添加------------------------------------后台-->
+                    <li class="timeTableSure">确定</li>
+                    <li class="timeTableCan">取消</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(".sidebar_close").click(function(){
+            $(".contentDiv").html("");
+            $(".sidebarDiv").html("");
+        });
+        /**添加IP验证的方法**/
+        jQuery.validator.addMethod("ip", function(value, element) {    
+        	var ip = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        	return this.optional(element) || (ip.test(value) && (RegExp.$1 < 256 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256));
+        	}, "ip地址格式错误");
+        /*----------------------------验证表单-------------------------------------------*/
+        function validateForm() {
+        	return $("#ipForm").validate({
+        		rules: {
+        			returnIP1: {
+        				required: true,
+        				ip: true
+        			},
+        			returnIP2: {
+        				required: true,
+        				ip: [1, 2]
+        			},
+        			
+        		},
+        		messages: {
+        			returnIP1: {
+        				required: "请输入IP地址",
+        				
+        			},
+        			returnIP2: {
+        				required: "请输入IP地址",
+        				
+        			},
+        		}
+        	}).form();
+        }
+      
+        
+        /**读取输入时间----------------------------------------------------------后台--*/
+       $(".timeTableSure").click(function(){
+    	  if(validateForm()) {
+	    		   var startTime=$("#startTime").val();// '/g'为全文标识符
+	    	  	   var interalDay=$("#interDay").val(); 
+	    	  	   var interalMinute=$("#interMinute").val();
+	    	  	   var interalHour=$("#interHour").val();
+	    	  	   if(parseInt(interalDay)<10){
+	    	  	    	interalDay="0"+interalDay;
+	    	  	   }
+	    	  	   if(parseInt(interalMinute)<10){
+	    	  	    	interalMinute="0"+interalMinute;
+	    	  	   }
+	    	  	   if(parseInt(interalHour)<10){
+	    	  	    	interalHour="0"+interalHour;
+	    	  	   }
+	    	  	   var interalTime=interalDay+interalHour+interalMinute;
+    	      	   var returnIP1=$("#returnIP1").val();
+    	           var returnIP2=$("#returnIP2").val();
+    	           var timeTable=JSON.parse(localStorage.getItem("timeTable"));//时间表  
+    	           $(".contentDiv").html("");
+    	           $(".sidebarDiv").html("");
+    	           /**----------判断是否为多条选择----------*/
+    	           var paraList=JSON.parse(localStorage.getItem('paraList'));//读取复选框参数暂存
+    	           if(paraList!=null) {
+    	        	     //勾选了多条
+    	        	     if(paraList.length>0){
+    	        	      	var checkFlag=0;
+    	        	   	    for(var snCount=0;snCount<paraList.length;snCount++){
+    	        	   	    		if(timeTable.length!=0){//本地已经有记录
+    				        	   	    	 for(var tb=0;tb<timeTable.length;tb++){
+    				        	   	    		/***端口序号**/
+    					        	   	    	if(paraList[snCount][0]==timeTable[tb][0]){//勾选的该项已经配置了时间表
+    					        	   	    		timeTable[tb]=[timeTable[tb][0],startTime,interalTime,returnIP1,returnIP2];//将其替换为新的时间表
+    					        	   	    		checkFlag=1;
+    					        	   	    	}
+    				        	   	    	  }
+    	        	   	    				  if(checkFlag==0){//轮询完成，时间表中未配置该项的时间
+    						        	   	      timeTable.push([paraList[snCount][0],startTime,interalTime,returnIP1,returnIP2]);//在时间表中插入新项
+    						        	   	  }
+    						        	   	  else{
+    						        	   	        checkFlag=0;
+    						        	   	    }
+    	        	   	            }else{   //本地不存在记录
+    	        	   	            	timeTable.push([paraList[snCount][0],startTime,interalTime,returnIP1,returnIP2]);//在时间表中插入新项
+    	        	   	            }
+    	        	   	    	
+    	        	   	     }
+    	        	   }
+    	          }
+    	           else{  //未勾选多条
+    	        	 	 var cells = document.getElementById("periodTestingTableDetail").rows.item(0).cells.length; 
+    		             var cellFlag=(cells==16)?1:0;
+    		             var trs = document.querySelectorAll("#periodTestingTableDetail tbody tr");
+    		             var SNo=0;
+    		    	   	 for (var i=0;i<trs.length;i++){
+    		    	   	       if($(trs[i]).hasClass("currtrPeriod")){
+    		    	   	    	    SNo=getPortOrder(trs[i].children[4+cellFlag].innerHTML), 
+    		    	   	        	i=trs.length;
+    		    	   	       }
+    		    	   	 }
+    		      /*--包含SNo，T1，T2 IP1 IP2-------*/
+    	    	   var Time=[parseInt(SNo),startTime,interalTime,returnIP1,returnIP2];
+    	    	   var flag=0;
+    	    	  /**---------存放新的参数组之前先连理查询该条数据对应光路参数是否已经在localStorage暂存，防止出现一条光路多条配置参数信息的情况----------------*/
+    	    	   if(timeTable.length!=0){
+    	    		   for(var count=0;count<timeTable.length;count++){
+    		     		   if(timeTable[count][0]==parseInt(SNo)){
+    		    	    		timeTable[count]=Time;
+    		    	    	    flag=1;//存在相同的，将标志位设置为1
+    		    	    	}
+    		    	    }
+    		    	    
+    		    	    /*循环结束，没有已经设置过的光路*/
+    		    	  if(flag==0){
+    		    		  
+    		    		  timeTable.push(Time); //将新的组放入
+    		    	   }else{
+    		    		      flag=0;
+    		    	    }
+    	   	       }else{
+    	   	    	      timeTable.push(Time);//为第一条参数信息  ，直接存放
+    	   	          }
+    	          } 
+    	           
+    	    	    localStorage.setItem("timeTable",JSON.stringify(timeTable));//将改变后的timeTable存回
+    	  }
+    	
+    	 }); 
+        /*取消*/
+       $(".timeTableCan").click(function(){
+    	   $(".contentDiv").html("");
+           $(".sidebarDiv").html("");
+       });
+    </script>
+</body>
+</html>

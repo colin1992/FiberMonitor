@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		textarea {
+			resize: none;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contentDiv" id="contentDiv">
+		<div class="bgDiv"></div>
+		<div class="sidebar">
+			<div class="sidebarTitle"> <span>新增机柜</span> <span class="sidebar_close">
+				<img src="images/close.png" alt="close"/></span> </div>
+			<div class="funcName">
+				<p>局站</p>
+				<p>机柜名称</p>
+				<p>机架数量</p>
+				<p>机柜描述</p>
+			</div>
+			<div class="funcCoff">
+				<input id="StationId" type="text" disabled/>
+				<input id="cabinetName" type="text" required/>
+				<input id="rackNum" type="number" min="0" required/>
+				<textarea name="" id="cabinetDescription" cols="24" rows="5"></textarea> </div>
+			<div class="funcConfirm">
+				<ul class="callTestingFunc">
+					<li id="confirm">确定</li>
+					<li id="cancel">取消</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script>
+   $("#rackNum").focus(function(){
+	   $(this).keypress(function (event) {
+           var eventObj = event || e;
+           var keyCode = eventObj.keyCode || eventObj.which;
+           if ((keyCode >= 48 && keyCode <= 57))
+               return true;
+           else
+               return false;
+	  	})
+   })
+/*给出默认的局站标识*/
+	$("#StationId").val(cabinetStationName); 
+   
+		//点击叶节点之后会首先对这个全局变量进行更新
+	 $(".sidebar_close").click(function() {
+			$(".contentDiv").html("");
+			$(".sidebarDiv").html("");
+		}
+		
+		);
+		$("#cancel").click(function() {
+			$(".contentDiv").html("");
+			$(".sidebarDiv").html("");
+		}
+		
+		);
+		$("#confirm").click(function() {
+			var cabinetName=document.getElementById("cabinetName").value;
+			var rackNum=document.getElementById("rackNum").value;
+			var cabinetDescription=document.getElementById("cabinetDescription").value;
+			if(rackNum=="") {
+				var txt="请输入机架数量";
+				var option= {
+					title: "提示", btn: parseInt("0001", 2), onOk: function() {
+						//点击确认的执行方法
+					}
+				}
+				window.wxc.xcConfirm(txt, "info", option);
+			}
+			else {
+				$.ajax({
+					type: "post", async: false, //异步请求 先执行后续操作，再执行sucess
+					url: "cabinet/addCabinet", 
+					dataType:"json", 
+					data: {
+						"stationId": cabinetStationId, 
+						"cabinetName": cabinetName,
+						 "rackNum": rackNum,
+						  "cabinetDescription": cabinetDescription
+					}
+					, success: function(json) {
+						$(".sidebarDiv").html("");
+						var txt="";
+						if(json[0].status) {
+							txt+="增加成功<br/>"
+						}
+						else {
+							txt+="增加失败，请重试";
+						}
+						var option= {
+							title: "提示", btn: parseInt("0001", 2), onOk: function() {
+								//点击确认的执行方法
+								selectCabinetByStation(cabinetStationId, cabinetStationName);
+							}
+						}
+						window.wxc.xcConfirm(txt, "info", option);
+					}
+					, error:function(XMLHttpRequest, Error) {
+						$(".sidebarDiv").html("");
+						var txt="增加失败<br/>";
+						txt+="失败原因：";
+						if(XMLHttpRequest.status==401) {
+							txt+="您不具有当前操作的权限<br/>";
+						}
+						else {
+							txt+="网络错误<br/>";
+							txt+="状态码："+XMLHttpRequest.status;
+						}
+						var option= {
+							title: "提示", btn: parseInt("0001", 2), onOk: function() {
+								//点击确认的执行方法
+							}
+						}
+						window.wxc.xcConfirm(txt, "info", option);
+					}
+				}
+				);
+			}
+		}
+		
+		);
+		</script>
+</body>
+
+</html>

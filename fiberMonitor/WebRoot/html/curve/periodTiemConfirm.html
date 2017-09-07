@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <script src="js/json2.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="contentDiv" id="contentDiv">
+    <div class="bgDiv"></div>
+    <div class="sidebar" style="height: 180px;margin-top: 50px;">
+        <div class="sidebarTitle">
+            <span>提示</span>
+            <span class="sidebar_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div style="text-align: center; font-size: 16px; font-family: 'Microsoft YaHei';margin-top: 40px;">您已成功修改当前光路的周期测试时间</div>
+        <div class="funcConfirm">
+            <ul class="callTestingFunc">
+                <!--需要对“是”“否”添加点击事件，在下方script框架中添加------------------------------------后台-->
+                <li  class="confirm">确认</li>
+               
+            </ul>
+        </div>
+    </div>
+</div>
+    <script>
+    $(".sidebar_close").click(function(){
+        $(".contentDiv").html("");
+        $(".sidebarDiv").html("");
+    });
+    
+    $(".confirm").click(function(){ 
+    	  $(".contentDiv").html("");
+    	  $(".sidebarDiv").html("");  
+   });
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <script src="js/jquery.validate.js"></script>
+    <script src="js/additional-methods.js"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	
+    <link rel="stylesheet" href="css/system.css" type="text/css" />
+
+    <style>
+        #noteConfigForm span {
+            width: 120px;
+            height: 24px;
+            text-align: right;
+        }
+        
+        #noteConfigForm input {
+            display: inline-block;
+            width: 200px;
+            height: 20px;
+        }
+        
+        #noteConfigForm label {
+            width: 120px;
+            max-width: 150px;
+        }
+        
+        .error {
+            color: red;
+            text-align: right;
+            margin-right: 60px;
+        }
+        
+        #noteConfig {
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="noteConfigContent">
+        <div class="email_note_Config_title">
+            <span>设置短信服务器地址</span>
+            <span class="email_note_Config_close"><img src="images/close.png" alt="close"/></span>
+        </div>
+        <div>
+            <div class="validFormDiv">
+                <form id="noteConfigForm">
+                    <p>
+                        <label for=""><span>服务地址： </span></label>
+                        <input type="text" id="serviceAdd" name="serviceAdd" />
+                    </p>
+                    <p>
+                        <label for=""><span>服务端口： </span></label>
+                        <input type="text" id ="servicePort" name="servicePort" />
+                    </p>
+                </form>
+            </div>
+            <div class="email_note_Config_bottom">
+                <span id="noteConfig">配置</span>
+                <span>测试</span>
+                <span>重置</span>
+            </div>
+        </div>
+
+        <script>
+         checkSession();
+
+        $(".email_note_Config_close").click(function(){
+            $(".containerDiv").html("");
+            $(".navContentDiv:eq("+6+")").show();
+        })
+
+        function validateForm() {
+	return $("#noteConfigForm").validate({
+		rules: {
+			serviceAdd: {
+				required: true,
+				ipv4: true
+			},
+			servicePort: {
+				required: true,
+				digits: true
+			}
+		},
+		messages: {
+    		serviceAdd: {
+				required: "请输入服务地址",
+				ipv4: "请输入正确的IPv4地址"
+			},
+			servicePort: {
+				required: "请输入服务端口",
+				digits: "请输入正确的服务端口"
+			}
+        }
+	}).form();
+}
+$("#noteConfig").click(function() {
+    if(validateForm()) {
+        alert("验证通过")
+    }
+});
+    </script>
+    </div>
+</body>
+
+</html>

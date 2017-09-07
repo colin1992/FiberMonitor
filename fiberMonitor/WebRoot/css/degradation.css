@@ -1,0 +1,43 @@
+.lightPower{
+    background-color: rgba(133, 145, 146, 0.96);
+}
+
+.incidentAnalyze{
+    background-color: #7ca4aa;
+}
+
+.parameterCon{
+    background-color: #88b6a6;
+}
+
+.powerTableDetail{
+    width:95%;
+    height: 570px;
+    margin: 20px auto;
+
+}
+
+.degradeCurvetu{
+    display: none;
+    width:100%;
+    height: 560px;
+}
+
+.degradeCurvetu div{
+    border: solid 1px #000000;
+    height: 530px;
+}
+
+.degradeCurvetu input{
+    margin-left: 70px;
+}
+
+.dataListtu{
+    display: block;
+    height: 540px;
+    width:100%;
+    border: solid 1px #000000;
+}
+.degradeParaSetting span{
+    margin-left: 40px;
+}

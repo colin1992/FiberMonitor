@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <script src="js/laypage.js" type="text/javascript"></script>
+    <script src="js/jquery.printArea.js" type="text/javascript"></script>
+    <script src="js/xlsx.core.min.js" type="text/javascript"></script>
+    <script src="js/Blob.js" type="text/javascript"></script>
+    <script src="js/FileSaver.js" type="text/javascript"></script>
+    <script src="js/tableexport.js" type="text/javascript"></script>
+    <script src="js/jquery.validate.js"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+    <style>
+        .btn-toolbar.top {
+            padding: 1px;
+        }
+        
+        .btn.btn-default {
+            width: 100px;
+            padding: 1px;
+        }
+        
+        .btn.btn-default.xlsx {
+            margin-left: 600px;
+        }
+        
+        #printBtn,
+        #exportBtn {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="RTUContent">
+        <div class="leftTreeCont">
+            <div class="leftTree" id="leftTree">
+            </div>
+        </div>
+        <div class="rightTable">
+            <div class="RTUTable tableSet">
+                <div class="tableSearch">
+                    <span>用户名</span>
+                    <input id="userName" type="text" />
+                    <span class="spanbutton checkUser">查询</span>
+                    <span class="spanbutton userAdd">新增用户</span>
+                    <span class="spanbutton userAlter">修改用户</span>
+                    <span class="spanbutton userDelete">删除用户</span>
+                    <span  id="printBtn" class="spanbutton">打印</span>
+                    <span id="exportBtn" class="spanbutton">导出</span>
+                </div>
+                <div class="printArea">
+                    <table class="table table-bordered userTableDetail tableDetail" style="cursor:default;" id="userTableDetail">
+                        <thead>
+                            <tr>
+                                <th width="4%">序号</th>
+                                <th width="4%">用户标识</th>
+                                <th width="10%">用户名</th>
+                                <th width="4%">角色标识</th>
+                                <th width="8%">角色名称</th>
+                                <th width="10%">手机号</th>
+                                <th width="10%">邮箱</th>
+                                <th width="12%">描述</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+                <div id="pageon"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+		/**检查session**/
+		checkSession();
+       $(document).ready(function() {
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+</script>
+    <!-- 表格部分页面的操作功能 -->
+    <script>
+tree = new dTree('tree');//创建一个对象.
+tree.config.folderLinks=true;
+tree.config.useCookies=false;
+tree.config.check=true;
+$.ajax({
+    url:'roleUserTree',
+    type:'post', //数据发送方式
+    dataType:'json', //接受数据格式
+    async: false,
+    success: function(json){
+        $(json).each(function(){
+        	for(var count=0;count<json.length;count++){ 
+        		 var  nodeName=json[count].name;  
+                 var hrefAddress="";//定义url指向js，当为区域时需要使用
+              	 if(parseInt(json[count].id)!=0){//为人员
+              		hrefAddress="javascript:selectUsersByRole('"+parseInt(json[count].id)+"')";
+              	   }
+              	 if(parseInt(json[count].id)==0){//为根节点
+              		hrefAddress="javascript:reloadCurentpage()";//为区域，添加点击事件，function()入口参数为areaId
+              		nodeName="用户管理";
+              	   }
+                	                        
+              tree.add(json[count].id,json[count].pid,nodeName,hrefAddress,"","","","",false);                                 
+        	}
+        });
+    }
+});
+document.getElementById("leftTree").innerHTML = tree;
+/**
+ * 
+ 重载页面**/
+ function reloadCurentpage(){
+     $(".containerDiv").load("html/personnel/user.html");
+}
+/**表格范围内禁止系统右键，使用自定义右键**/
+$("#userTableDetail").hover(function(){
+	 $(document).bind("contextmenu",function(e){   
+		   return false;   
+		 });
+},
+function(){
+	$(document).unbind("contextmenu","")
+});	
+/****************************添加右键菜单功能***********************************/
+$(".userTableDetail tbody tr").click(function(){
+	 $(this).addClass("currtr").siblings().removeClass("currtr");
+	 var selectId=this.children[1].innerHTML;
+	 var roleId=this.children[3].innerHTML;
+	 if(selectId!=""){
+		 $(this).addClass("user").siblings().removeClass("user");
+	 }
+	var menu = new BootstrapMenu('.user', {
+            actions: [{
+                name: '修改用户',
+                onClick: function() {
+                	$(this).remove();
+                	$(".sidebarDiv").load("html/personnel/userAlter.html"); 
+                }
+            },
+            {
+                name: '删除用户',
+                onClick: function() {
+                	 $(this).remove();
+                	 var txt="是否删除当前用户，删除操作不可恢复，点击\"确认\"键继续";
+                 	 var option = {
+         					title: "提示",
+         					btn: parseInt("0001",2),
+         					onOk: function(){//点击确认的执行方法
+         						delUser(selectId,roleId);
+         				  }
+         				}
+         		  window.wxc.xcConfirm(txt, "info", option);
+                }
+            }]
+        });
+}) 
+
+/************************实现分页的表格写入函数***************************/
+ function tableDataIn(tabledata){
+     var tableData = tabledata;/*tableData为后台需渲染到表格中的所有数据*/
+     var nums = document.querySelectorAll(".userTableDetail tbody tr").length;
+     var cells = document.getElementById("userTableDetail").rows.item(0).cells.length;
+     var pages = Math.ceil(tableData.length/nums);
+     var thisData = function (curr) {
+         var tableDataCurr= [];
+         var last = curr*nums - 1;
+         last = last >= tableData.length ? (tableData.length - 1) : last;
+         tableDataCurr = tableData.slice(curr*nums - nums,last + 1);
+         return tableDataCurr;
+     };
+     
+     laypage({
+         cont: 'pageon',
+         pages: pages,
+         jump: function(obj) {
+             var currTableData = thisData(obj.curr);
+             var trs = document.querySelectorAll("#userTableDetail tbody tr");
+             var tds = document.querySelectorAll("#userTableDetail tbody tr td");
+             for (var i=0;i<tds.length;i++){
+                 tds[i].innerHTML = "";
+             }
+             
+             for (var i = 0; i < currTableData.length; i++) {
+                 var Ele = trs[i].children;
+                 for(var j=0; j<cells-1; j++){
+                     Ele[0].innerHTML = i + 1;
+                     Ele[j+1].innerHTML = currTableData[i][j];
+                 }
+             }
+         }
+     });
+ }
+/************************叶节点执行的查询数据库并写入table的操作*************************/  
+var dataSearch=[];
+var ifClickStation="0";
+function selectUsersByRole(roleId){
+				var dataInput=[];            	    
+              	$.ajax({
+                      			type : "post",
+                      			async : false,  //异步请求 先执行后续操作，再执行sucess
+                      			url : "getUserByRole",
+                      			dataType:"json",
+                      			data : {"roleId":roleId},
+                      			success:function(data){
+                      				for(i=0;i<data.length;i++){
+                         				dataInput.push([data[i].id,
+                           				                data[i].account,
+                           				                data[i].roleId,
+                           				      		    data[i].roleName,
+                           				      		    data[i].phone,
+                           				      			data[i].email,
+                           							    data[i].description
+                           							    ]);                           				
+                         				}
+                      			},
+                      			error:function(XMLHttpRequest,Error,F,data)
+                         	  {
+                         	     
+                         	 }
+
+                          	});
+              	tableDataIn(dataInput); 
+}       
+
+
+    $(".userAdd").click(function () {    	
+        	$(".sidebarDiv").load("html/personnel/userAdd.html"); 
+    });
+   /***查询用户**/ 
+   $(".checkUser").click(function(){
+	   var account=$("#userName").val();
+	   if(account==""){
+		        var txt="请输入查询条件."
+	        	var option = {
+						title: "提示",
+						btn: parseInt("0001",2),
+						onOk: function(){//点击确认的执行方法
+					  }
+					}
+			  window.wxc.xcConfirm(txt, "info", option);
+	   }else{
+		   var info=[];
+		   $.ajax({
+				url:'user/searchByAccount',
+			    type:'post', //数据发送方式
+			    dataType:'json', //接受数据格式
+			    async: false,
+			    data:{'account':account},
+			    success: function(json){
+			    	if(json.status){
+			    		info.push([     
+			    		                json.id,
+			    		                json.account,
+			    		                json.roleId,
+			    		                json.roleName,
+           				      		    json.phone,
+           				      			json.email,
+           				      			json.description
+           							    ]);    
+			    	}
+			    	else{
+			    		var txt="";
+			    	    txt+="查找失败，系统中不存在满足条件的用户。";
+			    	    var option = {
+								title: "提示",
+								btn: parseInt("0001",2),
+								onOk: function(){//点击确认的执行方法
+								}
+							}
+					  window.wxc.xcConfirm(txt, "info", option);	
+			    	}
+			    	
+			   },
+			   error:function(XMLHttpRequest,Error){
+			    	    var txt="查找用户失败，";
+			    	    txt+="失败原因：";
+			    	    if(XMLHttpRequest.status==401){
+			    	        txt+="您不具有当前操作的权限<br/>";
+			    	     }
+			    	     else{
+			    	        	txt+="网络错误，";
+			    	        	txt+="状态码："+XMLHttpRequest.status;
+			    	        }
+			    	      var option={
+			    	   					title: "提示",
+			    	   					btn: parseInt("0001",2),
+			    	   					onOk: function(){//点击确认的执行方法
+			    	   						$(".sidebarDiv").html("");
+			    	  			       }
+			    	   				}
+			    	   		  window.wxc.xcConfirm(txt, "info", option);
+			  }
+			   
+		    })
+		    tableDataIn(info);
+	   }
+   })
+   /**
+          删除用户
+   **/
+    $(".userDelete").click(function () {
+    	var isSelect ="";
+    	var roleId="";
+    	var trs = document.querySelectorAll("#userTableDetail tbody tr");
+        for (var i=0;i<trs.length;i++){
+            if($(trs[i]).hasClass("currtr")){
+            	isSelect=trs[i].children[1].innerHTML;
+            	roleId=trs[i].children[3].innerHTML;
+            	i=trs.length;
+            }
+        }
+        if(isSelect=="") {
+        	var txt="请先选择您要删除的用户."
+        	var option = {
+					title: "提示",
+					btn: parseInt("0001",2),
+					onOk: function(){//点击确认的执行方法
+				  }
+				}
+		  window.wxc.xcConfirm(txt, "info", option);
+        }
+        else
+        {	
+        	    var txt="是否删除当前用户，删除操作不可恢复，点击\"确认\"键继续。";
+            	var option = {
+    					title: "提示",
+    					btn: parseInt("0001",2),
+    					onOk: function(){//点击确认的执行方法
+    						delUser(isSelect,roleId);
+    				  }
+    				}
+    		  window.wxc.xcConfirm(txt, "info", option);
+        } 
+    });
+ /**
+ 删除用户函数
+ **/  
+function delUser(userId,roleId){
+	$.ajax({
+		url:'user/delUser',
+	    type:'post', //数据发送方式
+	    dataType:'json', //接受数据格式
+	    async: false,
+	    data:{'userId':userId},
+	    success: function(json){
+	    	 var txt="";
+	    	if(json[0].status){
+	    		txt+="删除成功";
+	    	}
+	    	else{
+	    	    txt+="删除失败，请重试";
+	    	}
+	    	var option = {
+					title: "提示",
+					btn: parseInt("0001",2),
+					onOk: function(){//点击确认的执行方法
+						 selectUsersByRole(roleId);
+			        	 $(".sidebarDiv").html("");
+				  }
+				}
+		  window.wxc.xcConfirm(txt, "info", option);	
+	   },
+	   error:function(XMLHttpRequest,Error,F,data)
+	      {
+	    	    var txt="删除用户失败，";
+	    	    txt+="失败原因：";
+	    	    if(XMLHttpRequest.status==401){
+	    	        txt+="您不具有当前操作的权限<br/>";
+	    	     }
+	    	     else{
+	    	        	txt+="网络错误，";
+	    	        	txt+="状态码："+XMLHttpRequest.status;
+	    	        }
+	    	      var option={
+	    	   					title: "提示",
+	    	   					btn: parseInt("0001",2),
+	    	   					onOk: function(){//点击确认的执行方法
+	    	   						$(".sidebarDiv").html("");
+	    	  			       }
+	    	   				}
+	    	   		  window.wxc.xcConfirm(txt, "info", option);
+	  }
+	   
+    })
+	
+}
+/**
+ * 修改用户
+ */
+$(".userAlter").click(function () {    	
+	var isSelect ="";
+	var trs = document.querySelectorAll("#userTableDetail tbody tr");
+    for (var i=0;i<trs.length;i++){
+        if($(trs[i]).hasClass("currtr")){
+        	isSelect=trs[i].children[0].innerHTML;
+        	i=trs.length;
+        }
+    }
+    if(isSelect=="") {
+    	var txt="请先选择您要修改的用户。"
+    	var option = {
+				title: "提示",
+				btn: parseInt("0001",2),
+				onOk: function(){//点击确认的执行方法
+			  }
+			}
+	  window.wxc.xcConfirm(txt, "info", option);
+    }
+    else{
+    	$(".sidebarDiv").load("html/personnel/userAlter.html"); 
+    }
+    }); 
+
+ function reloadCurentpage(){
+	$(".containerDiv").load("html/personnel/user.html");
+ }
+</script>
+</body>
+
+</html>

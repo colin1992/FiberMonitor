@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<script src="js/laypage.js" type="text/javascript"></script>
+	<script src="js/jquery.printArea.js" type="text/javascript"></script>
+	<script src="js/xlsx.core.min.js" type="text/javascript"></script>
+	<script src="js/Blob.js" type="text/javascript"></script>
+	<script src="js/FileSaver.js" type="text/javascript"></script>
+	<script src="js/tableexport.js" type="text/javascript"></script>
+	<script src="js/inputLimit.js" type="text/javascript"></script>
+	<style>
+		#mapArea,
+		#tab,
+		#mapfrm {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+		
+		#menu {
+			height: 100%;
+			overflow-y: auto
+		}
+		
+		td {
+			font-size: 14px
+		}
+		
+		h4 {
+			margin: 0;
+		}
+		
+		.btn-toolbar.top {
+			padding: 1px;
+		}
+		
+		.btn.btn-default {
+			width: 100px;
+			padding: 1px;
+		}
+		
+		.btn.btn-default.xlsx {
+			margin-left: 500px;
+		}
+		
+		#printBtn,
+		#exportBtn {
+			cursor: pointer;
+		}
+		
+		.mapDiv {
+			width: 83%;
+			float: right;
+		}
+		
+		#controlMapArea {
+			margin-top: 0px;
+			width: 100%;
+			height: 100%;
+			float: right;
+			overflow: hidden;
+			font-family: "微软雅黑";
+		}
+	</style>
+
+	<script>
+            tree = new dTree('tree');//创建一个对象.
+            tree.config.folderLinks=true;
+            tree.config.useCookies=false;
+            tree.config.check=true;
+            $.ajax({
+                url:'create_tree',
+                type:'post', //数据发送方式
+                dataType:'json', //接受数据格式
+                async: false,
+                success: function(json){
+                    $(json).each(function(){
+                    	for(var count=0;count<json.length;count++){
+                    		var stationId=" ";//定义字符串来承接areaId
+                    		 var nodeId=json[count].id;//读取节点id
+                             var parentId=json[count].pid;//读取节点pid             
+                             var hrefAddress="";//定义url指向js，当为区域时需要使用
+                             if(parseInt(json[count].id[0])<3){//最多只到局站
+                          	 if(parseInt(json[count].id[0])==2){//为局站
+                          		 var stationName=json[count].name;
+                          		for(var index=2;index<json[count].id.length;index++){ //读取areaId，    id新式为x_xxx,所以从第二位开始为areaId
+                          			stationId+=json[count].id[index];//拼接字符串，获得字符串形式的areaId
+                          		 }
+                          		hrefAddress="javascript:selectRacksByStation('"+parseInt(stationId)+"','"+stationName+"')";
+                          	   }
+                          	if(parseInt(json[count].id[0])==0){//为根节点
+                          		stationId="0";
+                          		hrefAddress="javascript:reloadCurentpage()";
+                          		json[count].name="机架管理";
+                          	   }
+                            	var nodeName=json[count].name;                        
+                        tree.add(nodeId,parentId,nodeName,hrefAddress,"","","","",false);
+                             }
+                    	}
+                    });
+                }
+            });
+                document.getElementById("leftTree").innerHTML = tree;
+            </script>
+
+</head>
+
+<body>
+	<div class="fiberContent">
+		<div class="leftTreeCont">
+			<div class="leftTree" id="leftTree">
+			</div>
+		</div>
+		<div class="mapDiv" style="height:680px;margin-top:20px;">
+			<div id="controlMapArea">
+				<iframe width="98.5%" height="100%" src="html/system/systemMap.html"></iframe>
+			</div>
+		</div>
+		<div class="rightTable" style="display:none">
+			<div class="cabinetTable tableSet">
+				<div class="tableSearch">
+					<span id="backToGis">回到GIS</span>
+					<span>选择机柜</span>
+					<select class="paraSelect" id="cabinetSelect" name="stationSelect">
+			    <option value="index">请选择</option>
+                </select>
+					<span  id="printBtn" class="spanbutton">打印</span>
+					<span id="exportBtn" class="spanbutton">导出</span>
+				</div>
+				<div class="printArea">
+					<table class="table table-bordered racksTableDetail tableDetail" style="cursor:default" id="racksTableDetail">
+						<thead>
+							<tr>
+								<th width="10%">序号</th>
+								<th width="10%">机架标识</th>
+								<th width="10%">机架序号</th>
+								<th width="10%">使用情况</th>
+								<th width="10%">放置物类型</th>
+								<th width="10%">放置物名称</th>
+								<th width="18%">机柜名称</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div id="pageon"></div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+//载入这个页面的时候，首先呈现的是GIS界面
+$(".rightTable").css("display","none");
+$(".mapDiv").css("display","block");
+
+$("#backToGis").click(function(){
+	$(".rightTable").css("display","none");
+	$(".mapDiv").css("display","block");
+})
+ /**表格范围内禁止系统右键，使用自定义右键**/
+    $("#racksTableDetail").hover(function(){
+    	 $(document).bind("contextmenu",function(e){   
+    		   return false;   
+    		 });
+    },
+    function(){
+    	$(document).unbind("contextmenu","")
+    });	
+
+function tableDataIn(tabledata){
+    var tableData = tabledata;                                     /*tableData为后台需渲染到表格中的所有数据*/
+    var nums = document.querySelectorAll(".racksTableDetail tbody tr").length;
+    var cells = document.getElementById("racksTableDetail").rows.item(0).cells.length;
+    var pages = Math.ceil(tableData.length/nums);
+    var thisData = function (curr) {
+        var tableDataCurr= [];
+        var last = curr*nums - 1;
+        last = last >= tableData.length ? (tableData.length - 1) : last;
+        tableDataCurr = tableData.slice(curr*nums - nums,last + 1);
+        return tableDataCurr;
+    };
+    
+    laypage({
+        cont: 'pageon',
+        pages: pages,
+        jump: function(obj) {
+            var currTableData = thisData(obj.curr);
+            var trs = document.querySelectorAll("#racksTableDetail tbody tr");
+            var tds = document.querySelectorAll("#racksTableDetail tbody tr td");
+            for (var i=0;i<tds.length;i++){
+                tds[i].innerHTML = "";
+            }
+            
+            for (var i = 0; i < currTableData.length; i++) {
+                var Ele = trs[i].children;
+                for(var j=0; j<cells-1; j++){
+                    Ele[0].innerHTML = i + 1;
+                    Ele[j+1].innerHTML = currTableData[i][j];
+                }
+            }
+        }
+    });
+}
+/************************叶节点执行的查询数据库并写入table的操作   *************************/  
+	var dataSearch=[];
+	function selectRacksByStation(stationID,stationName){
+			 $(".rightTable").css("display","block");
+			 $(".mapDiv").css("display","none");
+			 ifClickStation="1";
+		     racksStationId=stationID;
+			 var dataInput=[]; 
+			 var cableList = [];
+	  		 $.ajax({
+	          			type : "post",
+	          			async : false,  //异步请求 先执行后续操作，再执行sucess
+	          			url : "ResourceListRack",                    
+	          			dataType:"json",
+	          			data : {"stationId":stationID},
+	          			success:function(data){
+	          				dataSearch=data;
+	          				for(i=0;i<data.length;i++){
+								dataInput.push([
+								                data[i].id,  
+	             				                data[i].order,
+	             				                data[i].isUsed,
+	             				                data[i].thingType,	
+	               				                data[i].thingName,
+	               				                data[i].cabineteName	               							    
+	               							    ]);  	             					             				             				
+	             				}
+	          			},
+	          			error:function(XMLHttpRequest,Error,F,data)
+	             	  {	             	      	             	 }
+	              	});
+	  		tableDataIn(dataInput);	  
+			//点击局站之后会更新机柜下拉框中的内容	  		
+	        $.ajax({
+	            type : "post",
+	            async : false,  //异步请求 先执行后续操作，再执行sucess
+	            url : "listCabinetesInRack",
+	            dataType:"json",
+	            data : {"stationId":stationID},
+	            success:function(data){
+	                 	$("#cabinetSelect").html("");
+	                 	$("#cabinetSelect").append("<option value='" + "index" + "'>" + "请选择" + "</option>");
+			            for (var count = 0; count < data[0].cabinetId.length; count++) {                    
+			            $("#cabinetSelect").append("<option value='" + data[0].cabinetId[count] + "'>" + data[0].cabinetName[count] + "</option>");
+			               }
+	            },
+	            error:function(XMLHttpRequest,Error,F,data)
+	            {
+	            }
+	        })
+	}   	
+	/***********给机柜添加点击事件，搜索该机柜下的机架***********/              
+  $("#cabinetSelect").change(function(){
+      $("#cabinetSelect option[value='index']").remove();
+      var cabinetId = $("#cabinetSelect option:selected").val();
+      var dataSearchResult=[];
+      for(var i=0;i<dataSearch.length;i++){
+    	  if(dataSearch[i].cabineteId==cabinetId)
+    		  dataSearchResult.push([
+									 data[i].id,  
+									 data[i].order,
+									 data[i].isUsed,
+									 data[i].thingType,	
+									 data[i].thingName,
+									 data[i].cabineteName	          							    
+       							    ]);
+      } 
+      tableDataIn(dataSearchResult);	 
+  });
+	$(".tableDetail>tbody>tr").click(function() {
+        $(this).addClass("currtr").siblings().removeClass("currtr");
+    });
+
+    function reloadCurentpage(){
+    	$(".containerDiv").load("html/resource/rack.html");
+     	}
+
+
+    $(document).ready(function() {
+        $("#printBtn").click(function() {
+            $(".printArea").printArea();
+        });
+        $("#exportBtn").click(function() {
+            if($(".btn-toolbar.top")) {
+                $(".btn-toolbar.top").remove();
+            }                
+            $("table").tableExport({
+                headings: true,                     
+                // (Boolean), display table headings (th/td elements) in the <thead>
+                footers: true,                      
+                // (Boolean), display table footers (th/td elements) in the <tfoot>
+                formats: ["xlsx", "xls"],     
+                // (String[]), filetype(s) for the export
+                fileName: "id",                     
+                // (id, String), filename for the downloaded file
+                bootstrap: true,                    
+                // (Boolean), style buttons using bootstrap
+                position: "top",                 
+                // (top, bottom), position of the caption element relative to table
+            });
+            $(".btn.btn-default.xlsx").bind("click",function() {
+                $(".btn-toolbar.top").remove();           
+            });
+            $(".btn.btn-default.xls").bind("click",function() {
+                $(".btn-toolbar.top").remove();
+            });
+        });
+    });
+
+function openSpeficTree(stationId){
+	tree.config.folderLinks=false;
+	tree.closeAll();
+	$(".rightTable").css("display","block");
+	$(".mapDiv").css("display","none");
+	var stationid="2_"+stationId;
+	tree.openTo(stationid,true);
+}
+</script>
+</body>
+
+</html>

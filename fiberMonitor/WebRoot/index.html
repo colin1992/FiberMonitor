@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Pragma" content="no-cache"><!-- http 1.0 -->
+	<meta http-equiv="Cache-Control" content="no-cache"><!-- http 1.1 -->
+	<title>光缆资源管理在线保护系统</title>
+	<script src="js/jquery-1.8.3.min.js" type="text/javascript"></script>
+	<script src="js/BootstrapMenu.min.js" type="text/javascript"></script>
+	<script src="js/xcConfirm.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/index.js" type="text/javascript"></script>
+	<script src="js/dtree.js" type="text/javascript"></script>
+	<script src="js/curve.js" type="text/javascript"></script>
+	<script src="js/degradation.js" type="text/javascript"></script>
+	<script src="js/resource.js" type="text/javascript"></script>
+	<script src="js/laypage.js" type="text/javascript"></script>
+	<script src="js/warn.js" type="text/javascript"></script>
+	<script src="js/business.js" type="text/javascript"></script>
+	<script src="js/personnel.js" type="text/javascript"></script>
+	<script src="js/system.js" type="text/javascript"></script>
+	<script src="js/laydate/laydate.js" type="text/javascript"></script>
+	<script src="js/baidumap_offline_load.js"></script>
+	<script src="js/baidumap_offline_v2_20160822_min.js"></script>
+	<script src="js/baidumap_offline_v2_20160822.js"></script>
+	<script src="layer/layer.js"></script>
+	<script src="js/jquery.validate.js"></script>
+	<script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/sessionCheck.js" type="text/javascript"></script>
+    <script src="js/inputLimit.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+	<link rel="stylesheet" href="css/laydate/need/laydate.css" type="text/css" />
+	<link rel="stylesheet" href="css/baidu_map_v2.css" type="text/css" />
+	<link rel="stylesheet" href="css/laydate/skins/qianhuang/laydate.css" type="text/css" />
+	<link rel="stylesheet" href="css/xcConfirm.css" type="text/css" />
+	<link rel="stylesheet" href="css/dtree.css" type="text/css" />
+	<link rel="stylesheet" href="css/index.css" type="text/css" />
+	<link rel="stylesheet" href="css/degradation.css" type="text/css" />
+	<link rel="stylesheet" href="css/resource.css" type="text/css" />
+	<link rel="stylesheet" href="css/warn.css" type="text/css" />
+	<link rel="stylesheet" href="css/system.css" type="text/css" />
+	<link rel="stylesheet" href="css/sidebar.css" type="text/css" />
+
+	<script>
+	/**检查session**/
+	$.ajax({
+		     url:'checkSession',
+		     type:'post', //数据发送方式
+		     dataType:'json', //接受数据格式
+		     async: false,
+		     success: function(json){
+		     	if(!json[0].status){
+		     		 localStorage.clear();
+			    	 window.location.href="Login.html";
+			    	 location.reload();
+			     }
+		     }
+		})
+	 window.onload=function() {
+		 	var aLink=document.getElementById('notification');
+			var aBox=document.getElementById('notificationDiv');     
+			var oLink=document.getElementById('admin');
+			var oBox=document.getElementById('accinfo');
+			aLink.onclick=function(ev) {
+					var ev = ev || window.event;
+					aBox.style.display='block';
+					ev.cancelBubble=true;
+					var notifyNum=parseInt($("#notifyNum").text());
+					if(notifyNum==0){
+						$('#notificationDiv').html('<span>当前无系统消息</span>');
+					}
+					   
+			};
+			aBox.onclick=function(ev) {
+					var ev = ev || window.event;
+					ev.cancelBubble=true;
+			};        
+			oLink.onclick=function(ev) {
+					var ev = ev || window.event;
+					oBox.style.display='block';
+					ev.cancelBubble=true;
+					         
+			};
+			oBox.onclick=function(ev) {
+					var ev = ev || window.event;
+					ev.cancelBubble=true;
+			};
+			document.onclick=function() {
+					aBox.style.display='none';
+					oBox.style.display='none';
+					
+			};
+		}
+    </script>
+</head>
+
+<body>
+	<header class="header">
+
+		<div id="load">
+			<div id="loaddiv"></div>
+		</div>
+
+		<div class="userLog">
+			<div class="userbox">
+			    <a href="javascript:;" id="notification" class="notification">消息(<span id="notifyNum">0</span>)</a>
+				<a href="javascript:;" id="admin" class="admin"><span class="userAccount"></span></a>
+				<a href="javascript:logout();" class="manager"><span>注销</span></a>
+			</div>
+		</div>
+		<div id="notificationDiv" class="notificationDiv" style="cursor:pointer">
+		</div>
+		<div id="accinfo" class="accinfo">
+			<div class="usernamediv">
+				<img class="head-icon" src="images/head-icon.png" /> 用户名：
+				<span class="username"></span>
+			</div>
+			<div id="emaildiv" class="emaildiv">
+				<img class="email-icon" src="images/email-icon.png" /> 邮&#12288;箱：
+				<span class="email"></span>
+			</div>
+			<div id="phonediv" class="phonediv">
+				<img class="email-icon" src="images/phone-icon.png" /> 手机号：
+				<span class="phone"></span>
+			</div>
+			<div class="button" align="center">
+				<a id="accmng" class="accmng" hidefocus="hidefocus">帐户管理</a>
+				<span>| </span>
+				<a id="pswd" class="pswd" hidefocus="hidefocus">密码修改</a>
+				<span>| </span>
+				<a id="logout" href="javascript:logout();" class="logout" hidefocus="hidefocus">退出登录</a>
+			</div>
+		</div>
+
+		<div class="headerLogo" style="cursor:default">
+			<img src="images/logo.png" height="60" width="60" alt="logo" />
+			<span>光缆资源管理在线保护系统</span>
+		</div>
+		<div class="navigation">
+			<div class="navBtns">
+				<ul class="navigations">
+					<li class="curve curr">
+						<div>
+							<img src="images/curve.png" height="45" width="45" alt="curve" />
+							<span>曲线管理</span>
+						</div>
+					</li>
+					<li class="degradation">
+						<div>
+							<img src="images/degradation.png" height="45" width="45" alt="degradation" />
+							<span>劣化分析</span>
+						</div>
+					</li>
+					<li class="resources">
+						<div>
+							<img src="images/resources.png" height="45" width="45" alt="resources" />
+							<span>资源管理</span>
+						</div>
+					</li>
+					<li class="alarm">
+						<div>
+							<img src="images/alarm.png" height="45" width="45" alt="alarm" />
+							<span>告警管理</span>
+						</div>
+					</li>
+					<li class="business">
+						<div>
+							<img src="images/business.png" height="45" width="45" alt="business" />
+							<span>业务切换</span>
+						</div>
+					</li>
+					<li class="personnel">
+						<div>
+							<img src="images/personnel.png" height="45" width="45" alt="personnel" />
+							<span>人员管理</span>
+						</div>
+					</li>
+					<li class="system">
+						<div>
+							<img src="images/system.png" height="45" width="45" alt="system" />
+							<span>系统管理</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</header>
+
+	<div class="container-fluid" style="padding:0; margin:0;">
+		<!---------------------------------------------------------------主要功能导航---------------------------------------------------------------->
+
+		<!--------------------------------------动态区域 进行每个子模块功能内容切换------------------------------------->
+		<!--第一层container添加-->
+		<div class="containerDiv" id="containerDiv">
+			<!--在第一层基础上弹出第二层信息填写框-->
+
+		</div>
+		<div class="sidebarDiv"></div>
+
+		<!------------------------------------曲线管理功能图标------------------------------------>
+		<div class="navContentDiv" style="display: block;">
+			<div class="navContent">
+				<ul class="curveManager">
+					<li class="curveQuery marginLeft" id="curveQuery">
+							<div class="modulebg">
+								<img src="images/curveQuery.png" height="60" width="60" alt="curveQuery" />
+								<p>曲线查阅</p>
+							</div>
+					</li>
+					<li class="callTesting marginLeft" id="callTesting">
+
+							<div class="modulebg">
+								<img src="images/callTesting.png" height="60" width="60" alt="callTesting" />
+								<p>点名测试</p>
+							</div>
+
+					</li>
+					<li class="periodTesting" id="periodTesting">
+							<div class="modulebg">
+								<img src="images/periodTesting.png" height="60" width="60" alt="periodTesting" />
+								<p>周期测试</p>
+							</div>
+                   </li>
+					<li class="curveWarn" id="obstacleTesting">
+							<div class="modulebg">
+								<img src="images/curveWarn.png" height="60" width="60" alt="curveWarn" />
+								<p>障碍告警测试</p>
+							</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!------------------------------------劣化分析功能图标------------------------------------>
+		<div class="navContentDiv">
+			<div class="navContent">
+				<ul class="degradationAnalyze">
+					<li class="lightPower" id="lightPower">
+
+							<div class="modulebg">
+								<img src="images/lightPower.png" alt="lightPower" />
+								<p>光功率实时查询</p>
+							</div>
+						
+					</li>
+					<li class="lightPower" id="degradAnalyze">
+						<div class="modulebg">
+								<img src="images/lightPower.png" alt="lightPower" />
+								<p>光功率劣化分析</p>
+						</div>
+						
+					</li>
+<!-- 					<li class="parameterCon" id="parameterCon"> -->
+<!-- 						  <div class="modulebg"> -->
+<!-- 								<img src="images/parameterCon.png" alt="parameterCon" /> -->
+<!-- 								<p>参数配置</p> -->
+<!-- 							</div> -->
+						
+<!-- 					</li> -->
+				</ul>
+			</div>
+		</div>
+		<!------------------------------------资源管理功能图标------------------------------------>
+		<div class="navContentDiv">
+			<div class="navContent">
+				<div class="resourceManage">
+					<div class="equipmentResource">
+						<img src="images/equipmentResource.png" alt="equipmentResource" />
+						<span>设备资源</span>
+						<ul class="equipmentContent">
+						<li class="OTDR" id="cabinet">
+								<div class="modulebg">
+									<img src="images/OTDR.png" alt="OTDR" />
+									<p>机柜管理</p>
+								</div>
+							</li>
+							<li class="RTU" id="rtu">
+								<div class="modulebg">
+									<img src="images/RTU.png" alt="RTU" />
+									<p>RTU管理</p>
+								</div>
+							</li>
+							<li class="powerMeter" id="frame">
+								<div class="modulebg">
+									<img src="images/powerMeter.png" alt="powerMeter" />
+									<p>配线架管理</p>
+								</div>
+							</li>
+							<li class="OTDR" id="rack">
+								<div class="modulebg">
+									<img src="images/fiberManage.png" alt="OTDR" />
+									<p>机架管理</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="lineResource">
+						<img src="images/lineResource.png" alt="lineResource" />
+						<span>线路资源</span>
+						<ul class="lineContent">
+							<li class="cableManage" id="cable">
+								<div class="modulebg">
+									<img src="images/cableManage.png" alt="cableManage" />
+									<p>光缆管理</p>
+								</div>
+							</li>
+							<li class="fiberManage" id="fiber">
+								<div class="modulebg">
+									<img src="images/fiberManage.png" alt="fiberManage" />
+									<p>纤芯管理</p>
+								</div>
+							</li>
+							<li class="fiberManage" id="jumper">
+								<div class="modulebg">
+									<img src="images/fiberManage.png" alt="fiberManage" />
+									<p>跳纤管理</p>
+								</div>
+							</li>
+							<li class="pathManage" id="route">
+								<div class="modulebg">
+									<img src="images/pathManage.png" alt="pathManage" />
+									<p>光路管理</p>
+								</div>
+							</li>
+							<li class="fiberManage" id="port">
+								<div class="modulebg">
+									<img src="images/fiberManage.png" alt="fiberManage" />
+									<p>端口管理</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="mapResource">
+						<img src="images/mapResource.png" alt="mapResource" />
+						<span>地图资源</span>
+						<ul class="mapContent">
+							<li class="areaManage" id="area">
+								<div class="modulebg">
+									<img src="images/areaManage.png" alt="areaManage" />
+									<p>区域管理</p>
+								</div>
+							</li>
+							<li class="stationManage" id="station">
+								<div class="modulebg">
+									<img src="images/stationManage.png" alt="strideTesting" />
+									<p>局站管理</p>
+								</div>
+							</li>
+							<li class="landmarkManage" id="landmark">
+								<div class="modulebg">
+									<img src="images/landmarkManage.png" alt="landmarkManage" />
+									<p>地标管理</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!------------------------------------告警管理功能图标------------------------------------>
+		<div class="navContentDiv">
+			<div class="navContent">
+				<ul class="warnManage">
+					<li class="warnQuery" id="warnQuery">
+						<div class="modulebg">
+							<img src="images/warnQuery.png" alt="warnQuery" />
+							<p>告警查询</p>
+						</div>
+					</li>
+					<li class="warnBank" id="warnBank">
+						<div class="modulebg">
+							<img src="images/warnBank.png" alt="warnBank" />
+							<p>告警经验库</p>
+						</div>
+					</li>
+<!-- 					<li class="warnSetting" id="warnSetting"> -->
+<!-- 						<div class="modulebg"> -->
+<!-- 							<img src="images/warnSetting.png" alt="warnSetting" /> -->
+<!-- 							<p>告警设置</p> -->
+<!-- 						</div> -->
+<!-- 					</li> -->
+				</ul>
+			</div>
+		</div>
+
+		<!------------------------------------业务切换功能图标------------------------------------>
+		<div class="navContentDiv">
+			<div class="navContent">
+				<ul class="businessSwitch">
+					<li class="fiberSwitch" id="fiberSwitch">
+						<img src="images/fiberSwitch.png" alt="fiberSwitch" />
+						<p>光纤切换</p>
+					</li>
+					<li class="switchSetting" id="switchSetting">
+						<img src="images/switchSetting.png" alt="switchSetting" />
+						<p>切换配置</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!------------------------------------人员管理功能图标------------------------------------>
+		<div class="navContentDiv">
+			<div class="navContent">
+				<ul class="personnelManage">
+					<li class="roleManage" id="role">
+						<img src="images/roleManage.png" alt="roleManage" />
+						<p>角色管理</p>
+					</li>
+					<li class="userManage" id="user">
+						<img src="images/userManage.png" alt="userManage" />
+						<p>用户管理</p>
+					</li>
+					<li class="dutyOperatorManage" id="dutyOperator" style="background-color: #4c91a4;">
+						<img src="images/userManage.png" alt="dutyOperatorManage" />
+						<p>值班人员管理</p>
+					</li>
+					<li class="dutyManage" id="duty">
+						<img src="images/dutyManage.png" alt="dutyManage" />
+						<p>值班管理</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!------------------------------------系统管理功能图标------------------------------------>
+		<div class="navContentDiv">
+			<div class="navContent">
+				<div class="SystemManage">
+					<div class="logManage">
+						<img src="images/logManage.png" alt="logManage" width="50px" height="50px"/>
+						<span>日志管理</span>
+						<ul class="logContent">
+							<li class="noteLog" id="sms">
+								<div class="modulebg">
+									<img src="images/noteLog.png" alt="noteLog" width="50px" height="50px"/>
+									<p>消息日志</p>
+								</div>
+							</li>
+							<li class="emailLog" id=handle>
+								<div class="modulebg">
+									<img src="images/emailLog.png" alt="emailLog" width="50px" height="50px"/>
+									<p>测试日志</p>
+								</div>
+							</li>
+							<li class="resourceLog" id="resource">
+								<div class="modulebg">
+									<img src="images/resourceLog.png" alt="resourceLog" width="50px" height="50px"/>
+									<p>资源日志</p>
+								</div>
+							</li>
+							<li class="businessLog" id="business">
+								<div class="modulebg">
+									<img src="images/businessLog.png" alt="businessLog" width="50px" height="50px"/>
+									<p>业务切换日志</p>
+								</div>
+							</li>
+							<li class="RTULog" id="rtu">
+								<div class="modulebg">
+									<img src="images/RTULog.png" alt="RTULog" width="50px" height="50px"/>
+									<p>RTU日志</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="configManage">
+						<img src="images/configManage.png" alt="configManage" />
+						<span>配置管理</span>
+						<ul class="configContent">
+							<li class="controlConfig" id="centerControl">
+								<div class="modulebg">
+									<img src="images/controlConfig.png" alt="controlConfig" />
+									<p>主控设置</p>
+								</div>
+							</li>
+							<li class="emailConfig" id="emailSetting">
+								<div class="modulebg">
+									<img src="images/emailConfig.png" alt="emailConfig" />
+									<p>邮件设置</p>
+								</div>
+							</li>
+							<li class="noteConfig" id="smsSetting">
+								<div class="modulebg">
+									<img src="images/noteConfig.png" alt="noteConfig" />
+									<p>短信配置</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="dynamicSupernatant">
+		<div id="supernatantArea">
+			<div id="dynamicClose">
+				<span id="dynClose">×</span>
+			</div>
+			<iframe id="supernatant">
+			</iframe>
+		</div>
+
+	</div>
+</body>
+
+<script>
+
+	$(".accmng").click(function() {
+		$("#loaddiv").html(""); 
+		$("#loaddiv").load("html/account/accmng.html"); 
+    	$("#load").css({"display":"block"});
+		$(".accinfo").css({"display":"none"});
+	});	
+
+	$(".pswd").click(function() {
+		$("#loaddiv").html(""); 
+		$("#loaddiv").load("html/account/pswd.html"); 
+    	$("#load").css({"display":"block"});
+		$(".accinfo").css({"display":"none"});
+	});	
+
+/***关闭曲线*****/
+$("#dynClose").click(function () {
+	$("#supernatant").attr("src", "");
+	$(".dynamicSupernatant").hide();
+})  
+	$(".accmng").click(function() {
+		$("#loaddiv").load("html/account/accmng.html"); 
+    	$("#load").css({"display":"block"});
+		$(".accinfo").css({"display":"none"});
+	});	
+
+	$(".pswd").click(function() {
+		$("#loaddiv").load("html/account/pswd.html"); 
+    	$("#load").css({"display":"block"});
+		$(".accinfo").css({"display":"none"});
+	});	
+    //实现刷新留在本页  //FIXME
+	   if(localStorage.getItem("navIndex")!=""&&localStorage.getItem("navIndex")!=null)
+		   {
+		   try{
+	    	   if (timeTicket===undefined){ 
+	    	    }else {
+	    	    	clearInterval(timeTicket)
+	    	    	timeTicket=null;
+	    	       
+	    	    }
+	    	} catch(e){
+	    	   
+	    	}
+			var ind =localStorage.getItem("navIndex");
+	            $(".containerDiv").html("");
+	            $(".sidebarDiv").html("");
+	            $(".navContentDiv:visible").hide();
+	            $(".navContentDiv:eq("+ind+")").show();
+	            var currli = $(".navBtns li:eq("+ind+")").siblings(".curr");
+	            if(currli.size() > 0){
+	                currli.removeClass("curr");
+	            }
+	            $(".navBtns li:eq("+parseInt(ind)+")").addClass("curr");
+	            if(ind==1)
+	            	$(".degradation").addClass("curr");
+	            else if(ind==2)
+	            	$(".resources").addClass("curr");
+	            else if(ind==3)
+	            	$(".alarm").addClass("curr");
+	            else if(ind==4)
+	            	$(".business").addClass("curr");
+	            else if(ind==5)
+	            	$(".personnel").addClass("curr");
+	            else if(ind==6)
+	            	$(".system").addClass("curr");
+	            else 
+		            $(".curve").addClass("curr");					
+		   } 
+		   else 
+			   $(".curve").addClass("curr");
+	   
+       if(localStorage.getItem("currentUrl")!=""&&localStorage.getItem("currentUrl")!=null)
+    	   {
+    	   $(".navContentDiv").hide();
+           $(".containerDiv").show();           
+           $(".containerDiv").load(localStorage.getItem("currentUrl"));
+    	   }    	   
+    </script>
+
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="js/laypage.js" type="text/javascript"></script>
+    <script src="js/warn/warnBank.js" type="text/javascript"></script> 
+	<style>
+		#mapArea,
+		#tab,
+		#mapfrm {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+			margin: 0;
+			font-family: "微软雅黑";
+		}
+		
+		#menu {
+			height: 100%;
+			overflow-y: auto
+		}
+		
+		td {
+			font-size: 14px
+		}
+		
+		h4 {
+			margin: 0;
+		}
+		.currtr {
+			background-color: rgba(133, 146, 160, 0.51);
+		}
+	</style>
+
+</head>
+
+<body>
+<!-- 	<div class="warnBankContent query_bank_Content tableSet"> -->
+ <div class="cableTable tableSet" style="width:94%;margin-left:3%">
+		<div class="tableSearch" style="text-align:center">
+			<span>告警来源</span>
+			<select  id="source" style="width: 150px; height: 20px;">
+			    <option value="all">==全部==</option>
+				 <option value="点名测试">点名测试</option>
+				 <option value="周期测试">周期测试</option>
+				 <option value="障碍告警测试">障碍告警测试</option>
+			</select>
+			<span>告警类型</span>
+			<select id="type" style="width: 150px; height: 20px;">
+			    <option value="all">==全部==</option>
+				<option value="ODTR告警">ODTR告警</option>
+				<option value="光功率告警">光功率告警</option>
+			</select>
+			<span class="spanbutton" id="search">查询</span>
+			<span class="spanbutton" id="modifyWarn">修改经验</span>
+			<span class="spanbutton" id="createWarn">新增经验</span>
+			<span class="spanbutton" id="deleteWarn">删除经验</span>
+		</div>
+		<table class="table table-bordered warningBankTableDetail tableDetail" style="cursor:default" id="warningBankTableDetail">
+		<thead>
+			<tr>
+				<th width="5%">序号</th>
+				<th width="6%">经验标识</th>
+				<th width="8%">告警来源</th>
+				<th width="8%">告警类型</th>
+				<th width="8%">告警原因</th>
+				<th width="25%">处理经验</th>
+				<th width="12%">创建时间</th>
+				<th width="9%">创建用户</th>
+				<th width="12%">修改时间</th>
+				<th width="9%">修改用户</th>
+			</tr>
+		</thead>
+		<tbody>	
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+			    <td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>	
+		</table>
+		<div id="pageon"></div>
+	</div>
+
+
+</body>
+
+</html>
